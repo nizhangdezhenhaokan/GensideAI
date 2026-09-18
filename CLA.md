@@ -1,48 +1,133 @@
-# BrowserOS Contributor License Agreement
+# BrowserOS 贡献者许可协议
 
-Thank you for your interest in contributing to BrowserOS ("we" or "us").
+感谢您有兴趣为 BrowserOS（以下简称“我们”或“本方”）作出贡献。
 
-This contributor agreement ("Agreement") documents the rights granted by contributors to Us. To make this document effective, please sign it and send it to us electronically following the instructions at the bottom of this document. This is a legally binding document, so please read it carefully before agreeing to it. The Agreement may cover more than one software project managed by Us.
+本贡献者协议（以下简称“本协议”）用于记录贡献者授予我们的相关权利。为使本协议生效，请您签署本协议，并按照本文末尾的说明以电子方式发送给我们。
 
-## 1. Definitions
+本协议是一份具有法律约束力的文件，因此请您在同意之前认真阅读。本协议可能适用于由我们管理的一个或多个软件项目。
 
-"You" (or "Your") shall mean the copyright owner or legal entity authorized by the copyright owner that is making this Agreement with Us. For legal entities, the entity making a Contribution and all other entities that control, are controlled by, or are under common control with that entity are considered to be a single Contributor. For the purposes of this definition, "control" means (i) the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial ownership of such entity.
+## 1. 定义
 
-"Contribution" shall mean any original work of authorship, including any modifications or additions to an existing work, that is intentionally submitted by You to Us for inclusion in, or documentation of, any of the products owned or managed by Us (the "Work"). For the purposes of this definition, "submitted" means any form of electronic, verbal, or written communication sent to Us or our representatives, including but not limited to communication on electronic mailing lists, source code control systems, and issue tracking systems that are managed by, or on behalf of, Us for the purpose of discussing and improving the Work, but excluding communication that is conspicuously marked or otherwise designated in writing by You as "Not a Contribution."
+“您”（或“您的”）是指与我们签订本协议的版权所有者，或经版权所有者授权、有权与我们签订本协议的法律实体。
 
-## 2. Grant of Copyright License
+对于法律实体而言，作出“贡献”的实体，以及控制该实体、受该实体控制，或与该实体处于共同控制之下的所有其他实体，均被视为同一个“贡献者”。
 
-Subject to the terms and conditions of this Agreement, You hereby grant to Us and to recipients of software distributed by Us a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable copyright license to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of Your Contributions, and to permit persons to whom the software is furnished to do so, subject to the following conditions:
+就本定义而言，“控制”是指：
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the software.
+1. 直接或间接拥有决定或管理该实体经营方向的权力，无论该权力是通过合同还是其他方式取得；
+2. 持有该实体百分之五十（50%）或以上的已发行股份；
+3. 或拥有该实体的实益所有权。
 
-## 3. Grant of Patent License
+“贡献”（Contribution）是指您有意提交给我们的任何原创作品，包括对现有作品所作的任何修改或新增内容，用于纳入我们拥有或管理的任何产品或其文档中（以下简称“作品”或“Work”）。
 
-Subject to the terms and conditions of this Agreement, You hereby grant to Us and to recipients of software distributed by Us a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable (except as stated in this section) patent license to make, have made, use, offer to sell, sell, import, and otherwise transfer the Work, where such license applies only to those patent claims licensable by You that are necessarily infringed by Your Contribution(s) alone or by combination of Your Contribution(s) with the Work to which such Contribution(s) was submitted.
+就本定义而言，“提交”（submitted）是指以任何电子、口头或书面形式发送给我们或我们的代表的沟通，包括但不限于通过以下方式进行的沟通：
 
-## 4. AGPL-3.0 License Compliance
+* 电子邮件列表；
+* 源代码控制系统；
+* 问题跟踪系统；
 
-You understand and agree that BrowserOS is licensed under the GNU Affero General Public License version 3.0 (AGPL-3.0). By making a Contribution, You acknowledge that:
+前提是这些系统由我们管理，或代表我们管理，并用于讨论和改进该作品。
 
-- You have read and understood the AGPL-3.0 license terms
-- Your Contribution will be made available under the AGPL-3.0 license
-- You agree to comply with all obligations under the AGPL-3.0 license for any use of the software
-- You understand that the AGPL-3.0 requires that any modified version used to provide a service over a network must make the complete source code available
+但是，如果您明确标注某项沟通内容，或以书面形式将其指定为“非贡献内容”（“Not a Contribution”），则该内容不属于“贡献”。
 
-## 5. Representations
+## 2. 著作权许可授予
 
-You represent that:
+在遵守本协议条款和条件的前提下，您特此授予我们以及我们所分发软件的接收者一项：
 
-- You are legally entitled to grant the above licenses
-- Each of Your Contributions is Your original creation
-- Your Contribution submissions include complete details of any third-party license or other restriction (including related patents and trademarks) of which you are personally aware and which are associated with any part of Your Contributions
+* 永久的；
+* 全球范围内的；
+* 非独占的；
+* 免费的；
+* 免版税的；
+* 不可撤销的；
 
-## 6. Support
+著作权许可。
 
-You are not expected to provide support for Your Contributions, except to the extent You desire to provide support. You may provide support for free, for a fee, or not at all. Unless required by applicable law or agreed to in writing, You provide Your Contributions on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied, including, without limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE.
+该许可允许我们及相关软件接收者对您的“贡献”进行以下行为：
+
+* 使用；
+* 复制；
+* 修改；
+* 合并；
+* 发布；
+* 分发；
+* 再许可；
+* 和/或出售您的“贡献”的副本；
+
+并允许获得该软件的其他人员进行上述行为，但须遵守以下条件：
+
+上述版权声明和本许可声明必须包含在该软件的所有副本或实质性部分中。
+
+## 3. 专利许可授予
+
+在遵守本协议条款和条件的前提下，您特此授予我们以及我们所分发软件的接收者一项：
+
+* 永久的；
+* 全球范围内的；
+* 非独占的；
+* 免费的；
+* 免版税的；
+* 不可撤销的（本节另有规定的除外）；
+
+专利许可。
+
+该专利许可允许我们及相关接收者：
+
+* 制造；
+* 委托制造；
+* 使用；
+* 要约销售；
+* 销售；
+* 进口；
+* 以及以其他方式转让该作品。
+
+该许可仅适用于由您拥有许可权、并且因以下情况而必然受到侵犯的专利权利要求：
+
+* 您的贡献本身；
+* 或您的贡献与其所提交至的作品相结合。
+
+## 4. 遵守 AGPL-3.0 许可证
+
+您理解并同意，BrowserOS 根据 GNU Affero General Public License version 3.0（AGPL-3.0）许可证进行授权。
+
+通过提交“贡献”，您确认：
+
+* 您已经阅读并理解 AGPL-3.0 许可证的相关条款；
+* 您的“贡献”将根据 AGPL-3.0 许可证提供；
+* 对于该软件的任何使用，您同意遵守 AGPL-3.0 许可证规定的全部义务；
+* 您理解，AGPL-3.0 要求：如果某个修改后的版本被用于通过网络提供服务，则必须提供该修改版本的完整源代码。
+
+## 5. 声明与保证
+
+您声明：
+
+* 您在法律上有权授予上述许可；
+* 您的每一项“贡献”均为您的原创作品；
+* 对于您本人所知悉、且与您的“贡献”的任何部分相关的第三方许可证或其他限制，包括相关专利和商标，您将在提交“贡献”时提供完整的相关信息。
+
+## 6. 支持
+
+除非您自愿希望提供支持，否则您无需为您的“贡献”提供任何支持。
+
+您可以：
+
+* 免费提供支持；
+* 收费提供支持；
+* 或完全不提供支持。
+
+除非适用法律另有要求，或双方另有书面约定，否则您按“现状”（“AS IS”）提供您的“贡献”，不附带任何形式的明示或默示保证或条件，包括但不限于：
+
+* 所有权保证；
+* 不侵权保证；
+* 适销性保证；
+* 特定用途适用性保证。
 
 ---
 
-**To sign this CLA, please comment on your pull request with:**
+**如需签署本 CLA，请在您的 Pull Request 下方发表评论：**
 
 I have read the CLA Document and I hereby sign the CLA
+
+中文含义为：
+
+**我已阅读 CLA 文档，并在此签署该 CLA。**
