@@ -57,7 +57,7 @@ const sectionLabelClassName =
 
 const primarySettingsSections: NavSection[] = [
   {
-    label: 'Provider Settings',
+    label: '模型提供商设置',
     items: [
       { name: 'AI & Agents', to: '/settings/ai', icon: Bot },
       {
@@ -154,7 +154,7 @@ export const SettingsSidebar: FC = () => {
           className="flex h-9 items-center gap-2 overflow-hidden whitespace-nowrap rounded-md px-3 font-medium text-sm transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
         >
           <ArrowLeft className="size-4 shrink-0" />
-          <span className="truncate">Back</span>
+          <span className="truncate">返回</span>
         </NavLink>
         <ThemeToggle
           className="mr-1 h-8 w-8 shrink-0"

@@ -198,10 +198,10 @@ export const BrowserOsAiPane: FC = () => {
 
   const handleTestProvider = async (provider: LlmProviderConfig) => {
     if (!agentServerUrl) {
-      toast.error('Test Failed', {
+      toast.error('测试失败', {
         description: (
           <span className="text-red-600 text-sm dark:text-red-400">
-            Server URL not available
+            服务器地址不可用
           </span>
         ),
         duration: 3000,
@@ -215,7 +215,7 @@ export const BrowserOsAiPane: FC = () => {
       const result = await testProvider(provider, agentServerUrl)
 
       if (result.success) {
-        toast.success('Test Successful', {
+        toast.success('测试成功', {
           description: (
             <span className="text-green-600 text-sm dark:text-green-400">
               {result.message}
@@ -252,7 +252,7 @@ export const BrowserOsAiPane: FC = () => {
       <div>
         <h2 className="font-semibold text-xl">AI &amp; Agents</h2>
         <p className="text-muted-foreground text-sm">
-          Pick what runs your chats, and connect anything else you use.
+          选择用于聊天的 AI 服务，并连接你使用的其他服务
         </p>
       </div>
 
@@ -263,22 +263,21 @@ export const BrowserOsAiPane: FC = () => {
       <section className="space-y-3">
         <div className="flex items-center justify-between gap-3">
           <h3 className="font-semibold text-base">
-            Your providers{' '}
+            我的服务提供商{' '}
             <span className="font-normal text-muted-foreground">
               ({providers.length + coding.agents.length})
             </span>
           </h3>
           <Button onClick={() => addProvider.openProviderForm()}>
             <Plus className="size-4" />
-            Add
+            添加
           </Button>
         </div>
 
         {providersUnavailable ? (
           <Alert variant="destructive">
             <AlertDescription>
-              Your providers could not be loaded because the BrowserOS server is
-              not reachable. They are still saved on this device.
+              由于无法连接 BrowserOS 服务，暂时无法加载服务提供商配置。配置仍保存在当前设备中。
             </AlertDescription>
           </Alert>
         ) : null}
@@ -325,16 +324,15 @@ export const BrowserOsAiPane: FC = () => {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Provider</AlertDialogTitle>
+            <AlertDialogTitle>删除服务提供商</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete "{providerToDelete?.name}"? This
-              action cannot be undone.
+              确定要删除"{providerToDelete?.name}"吗? 此操作无法撤销。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDeleteProvider}>
-              Delete
+              删除
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -346,17 +344,17 @@ export const BrowserOsAiPane: FC = () => {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Synced Provider</AlertDialogTitle>
+            <AlertDialogTitle>删除已同步的服务提供商</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete "
+              确定要删除 "
               {incompleteProviderToDelete?.name}
-              "? This will remove it from all your devices.
+              "? 将从你的所有设备中移除该配置
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDeleteIncompleteProvider}>
-              Delete
+              删除
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
