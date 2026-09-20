@@ -3,18 +3,14 @@ import { useEffect, useRef, useState } from 'react'
 import { createBrowserOSAction } from '@/lib/chat-actions/types'
 import {
   SIDEPANEL_AI_TRIGGERED_EVENT,
-  SIDEPANEL_MODE_CHANGED_EVENT,
   SIDEPANEL_STOP_CLICKED_EVENT,
-  SIDEPANEL_SUGGESTION_CLICKED_EVENT,
   SIDEPANEL_TAB_REMOVED_EVENT,
   SIDEPANEL_TAB_TOGGLED_EVENT,
 } from '@/lib/constants/analyticsEvents'
 import { track } from '@/lib/metrics/track'
 import { useChatSessionContext } from '@/modules/chat/chat-session-context'
-import type { ChatMode } from '@/modules/chat/chat-types'
 import { useJtbdPopup } from '@/modules/jtbd-popup/jtbd-popup.hooks'
 import { buildChatErrorProps } from './Chat.helpers'
-import { ChatEmptyState } from './ChatEmptyState'
 import { ChatError } from './ChatError'
 import { ChatFooter } from './ChatFooter'
 import { ChatMessages } from './ChatMessages'
@@ -26,7 +22,6 @@ import { IncognitoNotice } from './IncognitoNotice'
 export const Chat = () => {
   const {
     mode,
-    setMode,
     messages,
     sendMessage,
     status,
@@ -56,11 +51,6 @@ export const Chat = () => {
 
   const [input, setInput] = useState('')
   const [attachedTabs, setAttachedTabs] = useState<chrome.tabs.Tab[]>([])
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   useEffect(() => {
     ;(async () => {
@@ -88,11 +78,6 @@ export const Chat = () => {
     }
     previousChatStatus.current = status
   }, [status])
-
-  const handleModeChange = (newMode: ChatMode) => {
-    track(SIDEPANEL_MODE_CHANGED_EVENT, { from: mode, to: newMode })
-    setMode(newMode)
-  }
 
   const handleStop = () => {
     track(SIDEPANEL_STOP_CLICKED_EVENT)
@@ -148,11 +133,6 @@ export const Chat = () => {
     executeMessage()
   }
 
-  const handleSuggestionClick = (suggestion: string) => {
-    track(SIDEPANEL_SUGGESTION_CLICKED_EVENT, { mode })
-    executeMessage(suggestion)
-  }
-
   const chatErrorProps = buildChatErrorProps({
     chatError,
     selectedProvider,
@@ -166,13 +146,7 @@ export const Chat = () => {
           <div className="flex flex-1 items-center justify-center">
             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           </div>
-        ) : messages.length === 0 ? (
-          <ChatEmptyState
-            mode={mode}
-            mounted={mounted}
-            onSuggestionClick={handleSuggestionClick}
-          />
-        ) : (
+        ) : messages.length > 0 ? (
           <ChatMessages
             messages={messages}
             status={status}
@@ -186,7 +160,7 @@ export const Chat = () => {
             onTakeSurvey={onTakeSurvey}
             onDismissJtbdPopup={onDismissJtbdPopup}
           />
-        )}
+        ) : null}
         {agentUrlError && (
           <ChatError
             error={agentUrlError}
@@ -200,7 +174,6 @@ export const Chat = () => {
 
       <ChatFooter
         mode={mode}
-        onModeChange={handleModeChange}
         input={input}
         onInputChange={setInput}
         onSubmit={handleSubmit}

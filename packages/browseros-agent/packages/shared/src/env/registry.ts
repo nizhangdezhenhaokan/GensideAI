@@ -271,6 +271,48 @@ export const ENV_REGISTRY: readonly EnvKeySpec[] = [
     },
   },
   {
+    key: 'BROWSEROS_VLLM_BASE_URL',
+    section: 'server',
+    description:
+      'Fixed vLLM OpenAI-compatible base URL, including the /v1 prefix.',
+    secret: false,
+    schema: urlSchema,
+    modes: {
+      development: {
+        value: 'http://127.0.0.1:8000/v1',
+        commented: true,
+      },
+      production: {
+        value: 'http://127.0.0.1:8000/v1',
+        commented: true,
+      },
+    },
+  },
+  {
+    key: 'BROWSEROS_VLLM_API_KEY',
+    section: 'server',
+    description:
+      'Optional API key sent to the fixed vLLM OpenAI-compatible endpoint.',
+    secret: true,
+    schema: stringSchema,
+    modes: {
+      development: { value: '', commented: true },
+      production: { value: '', commented: true },
+    },
+  },
+  {
+    key: 'BROWSEROS_VLLM_MODEL',
+    section: 'server',
+    description:
+      'Fixed served model name exposed by the vLLM /v1/models endpoint.',
+    secret: false,
+    schema: stringSchema,
+    modes: {
+      development: { value: 'your-served-model-name', commented: true },
+      production: { value: 'your-served-model-name', commented: true },
+    },
+  },
+  {
     key: 'BROWSEROS_TRUSTED_ORIGINS',
     section: 'server',
     description: 'Trusted origins for local server development.',

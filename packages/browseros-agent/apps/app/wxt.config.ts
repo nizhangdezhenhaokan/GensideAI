@@ -9,6 +9,7 @@ import { PRODUCT_WEB_HOST } from './lib/constants/productWebHost'
 
 // biome-ignore lint/style/noProcessEnv: build config file needs env access
 const env = process.env
+const reactModuleUrl = import.meta.resolve('@wxt-dev/module-react')
 
 const apiUrl = new URL(parseBrowserOSApiUrl(env.VITE_PUBLIC_BROWSEROS_API))
 const apiPattern = apiUrl.port
@@ -19,16 +20,28 @@ const apiPattern = apiUrl.port
 // Extension ID will be bflpfmnmnokmjhmgnolecpppdbdophmk
 export default defineConfig({
   outDir: 'dist',
-  modules: ['@wxt-dev/module-react'],
+  // Resolve from this workspace before WXT loads user modules. Bun on Windows
+  // otherwise resolves WXT's string module id from its global package cache.
+  modules: [reactModuleUrl],
+  // web-ext's Chromium CDP runner currently fails on Windows after a
+  // successful build. Keep WXT watching and load dist/chrome-mv3-dev manually.
+  webExt: {
+    disabled: process.platform === 'win32',
+  },
   hooks: {
     // All Vite builds (including Sentry uploads) finish before this hook; WXT's
     // ZIP and the release CRX packer then consume the extension without maps.
     'build:done': (wxt, output) => archiveSourceMaps(wxt.config, output),
   },
-  manifest: {
-    name: 'Assistant',
-    key: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvBDAaDRvv61NpBeLR8etBRw82lv9VJO3sz/mA26gDzWKtVuzW4DXCl8Zfj5oWmoXLTfv3aiTigUXo/LHOoGpSucEVroMmAc7cgu2KuQ1fZPpMvYa0npD/m4h89360q8Oz0oKKaZGS905IJ04M2IkF4CuU3YEHFJBWb+cUyK9H8YVugelYbPD0IVs63T1SkGbh/t/Tfb2DpkinduSO8+x26sKydm30SRt+iZ2+7Nolcdum3LExInUiX2Pgb65Jb+mVw8NqyTVJyCEp8uq0cSHomWFQirSJ80tsDhISp4btwaRKHrXqovQx9XHQv4hCd+3LuB830eUEVMUNuCO+OyPxQIDAQAB',
-    update_url: 'https://cdn.browseros.com/extensions/update-manifest.xml',
+  manifest: ({ mode }) => ({
+    name: '小财神',
+    ...(mode === 'development'
+      ? {}
+      : {
+          key: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvBDAaDRvv61NpBeLR8etBRw82lv9VJO3sz/mA26gDzWKtVuzW4DXCl8Zfj5oWmoXLTfv3aiTigUXo/LHOoGpSucEVroMmAc7cgu2KuQ1fZPpMvYa0npD/m4h89360q8Oz0oKKaZGS905IJ04M2IkF4CuU3YEHFJBWb+cUyK9H8YVugelYbPD0IVs63T1SkGbh/t/Tfb2DpkinduSO8+x26sKydm30SRt+iZ2+7Nolcdum3LExInUiX2Pgb65Jb+mVw8NqyTVJyCEp8uq0cSHomWFQirSJ80tsDhISp4btwaRKHrXqovQx9XHQv4hCd+3LuB830eUEVMUNuCO+OyPxQIDAQAB',
+          update_url:
+            'https://cdn.browseros.com/extensions/update-manifest.xml',
+        }),
     // update_url: 'https://cdn.browseros.com/extensions/update-manifest.alpha.xml',
     externally_connectable: {
       ids: [REPORTER_EXTENSION_ID],
@@ -78,7 +91,7 @@ export default defineConfig({
       'downloads',
     ],
     host_permissions: ['http://127.0.0.1/*'],
-  },
+  }),
   vite: () => ({
     build: {
       sourcemap: 'hidden',

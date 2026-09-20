@@ -1,11 +1,4 @@
-import {
-  Bot,
-  ChevronDown,
-  Github,
-  History,
-  Plus,
-  SettingsIcon,
-} from 'lucide-react'
+import { Bot, ChevronDown, History, Plus, SettingsIcon } from 'lucide-react'
 import type { FC } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { BRAND_MARKS } from '@/components/agents/agent-brand-marks'
@@ -14,7 +7,6 @@ import type { Provider } from '@/components/chat/chatComponentTypes'
 import { CreditBadge } from '@/components/credits/CreditBadge'
 import { ThemeToggle } from '@/components/elements/theme-toggle'
 import { Feature } from '@/lib/browseros/capabilities'
-import { productRepositoryUrl } from '@/lib/constants/productUrls'
 import { BrowserOSIcon, ProviderIcon } from '@/lib/llm-providers/providerIcons'
 import type { ProviderType } from '@/lib/llm-providers/types'
 import { cn } from '@/lib/utils'
@@ -40,6 +32,11 @@ export interface ChatHeaderProps {
   onNewConversation: () => void
   hasMessages: boolean
   hideHistory?: boolean
+  /** Replaces the provider picker with a non-interactive brand label. */
+  fixedBrandName?: string
+  /** Opens sidepanel history without navigating away from the chat. */
+  onOpenHistory?: () => void
+  isHistoryOpen?: boolean
   /** Lets the full-page chat opt into spacing without changing the sidepanel. */
   className?: string
 }
@@ -51,6 +48,9 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
   onNewConversation,
   hasMessages,
   hideHistory,
+  fixedBrandName,
+  onOpenHistory,
+  isHistoryOpen,
   className,
 }) => {
   const location = useLocation()
@@ -63,92 +63,121 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
   }
 
   return (
-    <header
-      className={cn(
-        'flex items-center justify-between border-border/40 border-b bg-background/80 px-3 py-2.5 backdrop-blur-md',
-        className,
-      )}
-    >
-      <div className="flex items-center gap-2">
-        {/* Provider Selector */}
-        <ChatProviderSelector
-          providers={providers}
-          selectedProvider={selectedProvider}
-          onSelectProvider={onSelectProvider}
-        >
-          <button
-            type="button"
-            className="group relative inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-border px-2 py-1.5 text-foreground transition-colors hover:border-[var(--accent-orange)]/40 hover:bg-muted/50 data-[state=open]:border-[var(--accent-orange)]/50 data-[state=open]:bg-accent"
-            title="Change AI Provider"
-          >
-            <HeaderProviderIcon provider={selectedProvider} />
-            <span className="font-semibold text-base">
-              {selectedProvider.name}
-            </span>
-            <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
-          </button>
-        </ChatProviderSelector>
-        {selectedProvider.type === 'browseros' && <CreditsBadgeWrapper />}
-      </div>
-
-      <div className="flex items-center gap-1">
-        {!isHistoryPage && hasMessages && (
-          <button
-            type="button"
-            onClick={onNewConversation}
-            className="cursor-pointer rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
-            title="New conversation"
-          >
-            <Plus className="h-4 w-4" />
-          </button>
+    <>
+      <header
+        className={cn(
+          'flex items-center justify-between border-border/40 border-b bg-background/80 px-3 py-2.5 backdrop-blur-md',
+          className,
         )}
+      >
+        <div className="flex items-center gap-2">
+          {fixedBrandName ? (
+            <div className="inline-flex items-center rounded-lg border border-border px-2 py-1.5 text-foreground">
+              <span className="font-semibold text-base">{fixedBrandName}</span>
+            </div>
+          ) : (
+            <>
+              <ChatProviderSelector
+                providers={providers}
+                selectedProvider={selectedProvider}
+                onSelectProvider={onSelectProvider}
+              >
+                <button
+                  type="button"
+                  className="group relative inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-border px-2 py-1.5 text-foreground transition-colors hover:border-[var(--accent-orange)]/40 hover:bg-muted/50 data-[state=open]:border-[var(--accent-orange)]/50 data-[state=open]:bg-accent"
+                  title="Change AI Provider"
+                >
+                  <HeaderProviderIcon provider={selectedProvider} />
+                  <span className="font-semibold text-base">
+                    {selectedProvider.name}
+                  </span>
+                  <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
+                </button>
+              </ChatProviderSelector>
+              {selectedProvider.type === 'browseros' && <CreditsBadgeWrapper />}
+            </>
+          )}
+        </div>
 
-        {!hideHistory &&
-          (isHistoryPage ? (
+        <div className="flex items-center gap-1">
+          {!fixedBrandName && !isHistoryPage && hasMessages && (
             <button
               type="button"
-              onClick={handleNewConversationFromHistory}
+              onClick={onNewConversation}
               className="cursor-pointer rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
               title="New conversation"
             >
               <Plus className="h-4 w-4" />
             </button>
-          ) : (
-            <Link
-              to="/history"
+          )}
+
+          {!fixedBrandName &&
+            !hideHistory &&
+            (isHistoryPage ? (
+              <button
+                type="button"
+                onClick={handleNewConversationFromHistory}
+                className="cursor-pointer rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+                title="New conversation"
+              >
+                <Plus className="h-4 w-4" />
+              </button>
+            ) : (
+              <Link
+                to="/history"
+                className="cursor-pointer rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+                title="历史对话记录"
+              >
+                <History className="h-4 w-4" />
+              </Link>
+            ))}
+
+          <a
+            href="/app.html#/settings"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cursor-pointer rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+            title="Settings"
+          >
+            <SettingsIcon className="h-4 w-4" />
+          </a>
+
+          <ThemeToggle
+            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+            iconClassName="h-4 w-4"
+          />
+        </div>
+      </header>
+
+      {fixedBrandName ? (
+        <div className="flex items-center justify-between border-border/40 border-b bg-background/80 px-3 py-1.5 backdrop-blur-md">
+          <button
+            type="button"
+            onClick={
+              isHistoryPage
+                ? handleNewConversationFromHistory
+                : onNewConversation
+            }
+            className="cursor-pointer rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+            title="New conversation"
+          >
+            <Plus className="h-4 w-4" />
+          </button>
+
+          {!hideHistory ? (
+            <button
+              type="button"
+              onClick={onOpenHistory}
+              aria-expanded={isHistoryOpen}
               className="cursor-pointer rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
-              title="Chat history"
+              title="历史对话记录"
             >
               <History className="h-4 w-4" />
-            </Link>
-          ))}
-
-        <a
-          href={productRepositoryUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="cursor-pointer rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
-          title="Star on Github"
-        >
-          <Github className="h-4 w-4" />
-        </a>
-
-        <a
-          href="/app.html#/settings"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="cursor-pointer rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
-          title="Settings"
-        >
-          <SettingsIcon className="h-4 w-4" />
-        </a>
-
-        <ThemeToggle
-          className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
-          iconClassName="h-4 w-4"
-        />
-      </div>
-    </header>
+            </button>
+          ) : null}
+        </div>
+      ) : null}
+    </>
   )
 }
 

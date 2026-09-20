@@ -262,7 +262,17 @@ export const useChatSession = (options?: ChatSessionOptions) => {
 
   const providers: Provider[] = chatTargets.map(toProviderOption)
 
-  const [mode, setMode] = useState<ChatMode>('agent')
+  const [selectedMode, setSelectedMode] = useState<ChatMode>('agent')
+  const mode: ChatMode =
+    options?.origin === 'sidepanel' ? 'agent' : selectedMode
+  const setMode = useCallback(
+    (newMode: ChatMode) => {
+      if (options?.origin !== 'sidepanel') {
+        setSelectedMode(newMode)
+      }
+    },
+    [options?.origin],
+  )
   const [textToAction, setTextToAction] = useState<Map<string, ChatAction>>(
     new Map(),
   )
@@ -932,7 +942,9 @@ export const useChatSession = (options?: ChatSessionOptions) => {
   useEffect(() => {
     const unwatch = searchActionsStorage.watch((storageAction) => {
       if (storageAction) {
-        setMode(storageAction.mode)
+        if (optionsRef.current?.origin !== 'sidepanel') {
+          setSelectedMode(storageAction.mode)
+        }
         sendMessage({ text: storageAction.query, action: storageAction.action })
       }
     })

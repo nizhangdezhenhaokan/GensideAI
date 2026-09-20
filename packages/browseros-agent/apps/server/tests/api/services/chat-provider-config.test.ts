@@ -4,6 +4,7 @@ import {
   hydrateChatProvider,
 } from '../../../src/api/services/chat-provider-config'
 import type { BrowserOsChatRequest } from '../../../src/api/types'
+import { FIXED_VLLM_PROVIDER_ID } from '../../../src/lib/clients/llm/fixed-vllm-config'
 import type { ProviderRow } from '../../../src/lib/db/schema'
 
 function row(overrides: Partial<ProviderRow> = {}): ProviderRow {
@@ -55,6 +56,40 @@ function request(
 }
 
 describe('hydrateChatProvider', () => {
+  it('forces the Server-owned vLLM config over a client selection', async () => {
+    const result = await hydrateChatProvider(
+      request({
+        provider: 'anthropic',
+        model: 'client-model',
+        apiKey: 'client-secret',
+        baseUrl: 'https://client.invalid/v1',
+      }),
+      lookup([]),
+      {
+        provider: 'openai-compatible',
+        providerId: FIXED_VLLM_PROVIDER_ID,
+        model: 'server-model',
+        apiKey: 'server-secret',
+        baseUrl: 'http://127.0.0.1:8000/v1',
+      },
+    )
+
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.usedStoredProvider).toBe(true)
+    expect(result.request).toMatchObject({
+      provider: 'openai-compatible',
+      providerId: FIXED_VLLM_PROVIDER_ID,
+      model: 'server-model',
+      apiKey: 'server-secret',
+      baseUrl: 'http://127.0.0.1:8000/v1',
+      target: {
+        type: 'browseros',
+        providerId: FIXED_VLLM_PROVIDER_ID,
+      },
+    })
+  })
+
   it('hydrates stored header templates and replaces stale inline headers', async () => {
     const headers = { 'x-opencode-session': '{{conversationId}}' }
     const result = await hydrateChatProvider(

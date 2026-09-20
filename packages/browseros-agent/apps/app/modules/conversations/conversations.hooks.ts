@@ -115,3 +115,16 @@ export function useDeleteServerConversation() {
       }),
   })
 }
+
+export function useDeleteServerConversations() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (conversationIds: string[]) => {
+      await Promise.all(conversationIds.map(deleteServerConversation))
+    },
+    onSettled: () =>
+      queryClient.invalidateQueries({
+        queryKey: [SERVER_CONVERSATIONS_QUERY_KEY],
+      }),
+  })
+}

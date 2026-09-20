@@ -5,6 +5,10 @@
  */
 
 import type { LLMConfig } from '@browseros/shared/schemas/llm'
+import {
+  type FixedVllmConfig,
+  loadFixedVllmConfig,
+} from '../../lib/clients/llm/fixed-vllm-config'
 import type { ProviderRow } from '../../lib/db/schema'
 import type {
   BrowserOsChatRequest,
@@ -65,7 +69,34 @@ function toLlmConfig(
 export async function hydrateChatProvider(
   request: BrowserOsChatRequest,
   store: ChatProviderLookup,
+  fixedConfig: FixedVllmConfig | null = loadFixedVllmConfig(),
 ): Promise<HydrationResult> {
+  if (fixedConfig) {
+    return {
+      ok: true,
+      usedStoredProvider: true,
+      request: {
+        ...request,
+        provider: fixedConfig.provider,
+        providerId: fixedConfig.providerId,
+        model: fixedConfig.model,
+        baseUrl: fixedConfig.baseUrl,
+        apiKey: fixedConfig.apiKey,
+        headers: undefined,
+        upstreamProvider: undefined,
+        resourceName: undefined,
+        region: undefined,
+        accessKeyId: undefined,
+        secretAccessKey: undefined,
+        sessionToken: undefined,
+        target: {
+          type: 'browseros',
+          providerId: fixedConfig.providerId,
+        },
+      },
+    }
+  }
+
   const namedId = request.target.providerId
   const row = namedId ? await store.get(namedId) : await store.getDefault()
 

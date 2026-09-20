@@ -18,9 +18,13 @@ import { ChatInput, type ChatInputHandle } from './ChatInput'
 import { ChatModeToggle } from './ChatModeToggle'
 import { ChatSelectedText } from './ChatSelectedText'
 
+// Keep the context features available while hiding their toolbar entry points.
+// Set this to true to restore Attach Tabs, workspace, and app controls.
+const SHOW_CONTEXT_CONTROLS = false
+
 export interface ChatFooterProps {
   mode: ChatMode
-  onModeChange: (mode: ChatMode) => void
+  onModeChange?: (mode: ChatMode) => void
   input: string
   onInputChange: (value: string) => void
   onSubmit: (e: FormEvent) => void
@@ -125,89 +129,94 @@ export const ChatFooter: FC<ChatFooterProps> = ({
 
       <div className="p-3">
         <div className="flex items-center gap-2">
-          <ChatModeToggle mode={mode} onModeChange={onModeChange} />
+          {onModeChange ? (
+            <>
+              <ChatModeToggle mode={mode} onModeChange={onModeChange} />
+              <div className="h-4 w-px bg-border/50" />
+            </>
+          ) : null}
 
-          <div className="h-4 w-px bg-border/50" />
-
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              onClick={() => chatInputRef.current?.toggleTabMention()}
-              data-tab-mention-trigger
-              data-state={isTabMentionOpen ? 'open' : 'closed'}
-              aria-expanded={isTabMentionOpen}
-              aria-haspopup="dialog"
-              className="flex cursor-pointer items-center gap-1 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground data-[state=open]:bg-accent"
-              title="Attach tabs (@)"
-            >
-              <Layers className="h-4 w-4" />
-              {attachedTabs.length > 0 && (
-                <span className="font-medium text-[var(--accent-orange)] text-xs">
-                  {attachedTabs.length}
-                </span>
-              )}
-              <ChevronDown className="h-3 w-3" />
-            </button>
-
-            <WorkspaceSelector side="top">
+          {SHOW_CONTEXT_CONTROLS ? (
+            <div className="flex items-center gap-1">
               <button
                 type="button"
-                className={cn(
-                  'flex cursor-pointer items-center gap-1 rounded-lg p-1.5 transition-colors hover:bg-muted/50 data-[state=open]:bg-accent',
-                  selectedFolder
-                    ? 'text-foreground'
-                    : 'text-muted-foreground hover:text-foreground',
-                )}
-                title={
-                  selectedFolder
-                    ? selectedFolder.name
-                    : 'Select workspace folder'
-                }
-              >
-                <div className="relative">
-                  <Folder className="h-4 w-4" />
-                  {selectedFolder && (
-                    <div className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-[var(--accent-orange)]" />
-                  )}
-                </div>
-                <ChevronDown className="h-3 w-3" />
-              </button>
-            </WorkspaceSelector>
-
-            <AppSelector side="top">
-              <button
-                type="button"
+                onClick={() => chatInputRef.current?.toggleTabMention()}
+                data-tab-mention-trigger
+                data-state={isTabMentionOpen ? 'open' : 'closed'}
+                aria-expanded={isTabMentionOpen}
+                aria-haspopup="dialog"
                 className="flex cursor-pointer items-center gap-1 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground data-[state=open]:bg-accent"
-                title="Connect apps"
+                title="Attach tabs (@)"
               >
-                {connectedManagedServers.length > 0 ? (
-                  <>
-                    <div className="flex items-center -space-x-1">
-                      {connectedManagedServers.slice(0, 3).map((s) => (
-                        <div
-                          key={s.id}
-                          className="rounded-full ring-2 ring-background"
-                        >
-                          <McpServerIcon
-                            serverName={s.managedServerName ?? ''}
-                            size={14}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                    {connectedManagedServers.length > 3 && (
-                      <span className="font-medium text-xs">
-                        +{connectedManagedServers.length - 3}
-                      </span>
-                    )}
-                  </>
-                ) : (
-                  <PlugZap className="h-4 w-4" />
+                <Layers className="h-4 w-4" />
+                {attachedTabs.length > 0 && (
+                  <span className="font-medium text-[var(--accent-orange)] text-xs">
+                    {attachedTabs.length}
+                  </span>
                 )}
                 <ChevronDown className="h-3 w-3" />
               </button>
-            </AppSelector>
-          </div>
+
+              <WorkspaceSelector side="top">
+                <button
+                  type="button"
+                  className={cn(
+                    'flex cursor-pointer items-center gap-1 rounded-lg p-1.5 transition-colors hover:bg-muted/50 data-[state=open]:bg-accent',
+                    selectedFolder
+                      ? 'text-foreground'
+                      : 'text-muted-foreground hover:text-foreground',
+                  )}
+                  title={
+                    selectedFolder
+                      ? selectedFolder.name
+                      : 'Select workspace folder'
+                  }
+                >
+                  <div className="relative">
+                    <Folder className="h-4 w-4" />
+                    {selectedFolder && (
+                      <div className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-[var(--accent-orange)]" />
+                    )}
+                  </div>
+                  <ChevronDown className="h-3 w-3" />
+                </button>
+              </WorkspaceSelector>
+
+              <AppSelector side="top">
+                <button
+                  type="button"
+                  className="flex cursor-pointer items-center gap-1 rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground data-[state=open]:bg-accent"
+                  title="Connect apps"
+                >
+                  {connectedManagedServers.length > 0 ? (
+                    <>
+                      <div className="flex items-center -space-x-1">
+                        {connectedManagedServers.slice(0, 3).map((s) => (
+                          <div
+                            key={s.id}
+                            className="rounded-full ring-2 ring-background"
+                          >
+                            <McpServerIcon
+                              serverName={s.managedServerName ?? ''}
+                              size={14}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      {connectedManagedServers.length > 3 && (
+                        <span className="font-medium text-xs">
+                          +{connectedManagedServers.length - 3}
+                        </span>
+                      )}
+                    </>
+                  ) : (
+                    <PlugZap className="h-4 w-4" />
+                  )}
+                  <ChevronDown className="h-3 w-3" />
+                </button>
+              </AppSelector>
+            </div>
+          ) : null}
         </div>
 
         <ChatInput

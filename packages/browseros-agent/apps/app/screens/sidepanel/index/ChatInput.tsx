@@ -309,7 +309,9 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
           onChange={(e) => handleInputChange(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={
-            mode === 'chat' ? 'Ask about this page...' : 'What should I do?'
+            mode === 'chat'
+              ? '向智慧小财神发送任务指令或查询指令...'
+              : '向智慧小财神发送任务指令或查询指令...'
           }
           rows={1}
         />

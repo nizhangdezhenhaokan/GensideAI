@@ -1,6 +1,7 @@
 import { Loader2 } from 'lucide-react'
 import { type FC, useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router'
+import type { Provider } from '@/components/chat/chatComponentTypes'
 import {
   createAITabAction,
   createBrowserOSAction,
@@ -25,6 +26,13 @@ import { ChatFooter } from '@/screens/sidepanel/index/ChatFooter'
 import { ChatHeader } from '@/screens/sidepanel/index/ChatHeader'
 import { ChatMessages } from '@/screens/sidepanel/index/ChatMessages'
 
+const fixedHeaderProvider: Provider = {
+  id: 'browseros-fixed-vllm',
+  name: '智慧小财神',
+  type: 'browseros',
+  kind: 'llm',
+}
+
 export const NewTabChat: FC = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const hasSentInitialRef = useRef(false)
@@ -48,9 +56,7 @@ export const NewTabChat: FC = () => {
     restoreError,
     retryRestoreConversation,
     conversationId,
-    providers,
     selectedProvider,
-    handleSelectProvider,
     resetConversation,
     input,
     setInput,
@@ -135,17 +141,16 @@ export const NewTabChat: FC = () => {
     resetConversation()
   }
 
-  if (!selectedProvider) return null
-
   return (
     <div className="absolute inset-0 flex flex-col overflow-hidden">
       <ChatHeader
-        selectedProvider={selectedProvider}
-        providers={providers}
-        onSelectProvider={handleSelectProvider}
+        selectedProvider={selectedProvider ?? fixedHeaderProvider}
+        providers={[]}
+        onSelectProvider={() => {}}
         onNewConversation={handleNewConversation}
         hasMessages={messages.length > 0}
         hideHistory
+        fixedBrandName="智慧小财神"
         className="shrink-0 px-4 sm:px-8"
       />
 

@@ -78,14 +78,12 @@ const ModeEmptyState: FC<ChatEmptyStateProps> = ({
           </div>
           <div>
             <h2 className="mb-1 font-semibold text-lg">
-              {mode === 'chat'
-                ? 'Chat with this page'
-                : 'Agent at your service'}
+              {mode === 'chat' ? '与当前页面对话' : '智能体为你服务'}
             </h2>
             <p className="max-w-[230px] text-muted-foreground text-xs">
               {mode === 'chat'
-                ? 'Ask questions about the current page or any topic'
-                : 'Let AI automate tasks and browse for you'}
+                ? '你可以询问当前页面内容，也可以咨询其他问题'
+                : '让 AI 帮你浏览网页并自动执行任务'}
             </p>
           </div>
           <div className="group/prompts mt-6 flex w-full max-w-[320px] flex-col gap-2">

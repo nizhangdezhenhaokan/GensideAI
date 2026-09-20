@@ -33,11 +33,7 @@ export function useChatTargetSelection() {
     setDefaultProvider,
     isLoading: isLoadingProviders,
   } = useLlmProviders()
-  const {
-    agents,
-    loading: isLoadingAgents,
-    settled: agentsSettled,
-  } = useAcpAgents()
+  const { agents } = useAcpAgents()
 
   const [targetSelection, setTargetSelection] =
     useState<SidepanelChatTargetSelection | null>(null)
@@ -65,9 +61,8 @@ export function useChatTargetSelection() {
     () =>
       buildSidepanelChatTargets({
         providers: llmProviders,
-        agents,
       }),
-    [llmProviders, agents],
+    [llmProviders],
   )
   const providerOptions = useMemo(
     () => chatTargets.map(toProviderOption),
@@ -92,7 +87,7 @@ export function useChatTargetSelection() {
     // Only repair once providers and agents are settled. Otherwise a stored ACP
     // selection is wiped to the LLM fallback during the startup window where the
     // agents fetch has not resolved yet and the agent is absent from the list.
-    const ready = !isLoadingProviders && agentsSettled
+    const ready = !isLoadingProviders
     const decision = resolveRepairedSelection({
       selection: targetSelection,
       resolvedTarget: selectedChatTarget,
@@ -102,13 +97,7 @@ export function useChatTargetSelection() {
     if (!decision.repair) return
     setTargetSelection(decision.selection)
     void persistSidepanelChatTargetSelection(selectedChatTarget)
-  }, [
-    agentsSettled,
-    chatTargets,
-    isLoadingProviders,
-    selectedChatTarget,
-    targetSelection,
-  ])
+  }, [chatTargets, isLoadingProviders, selectedChatTarget, targetSelection])
 
   const selectedLlmProviderRef = useRef<LlmProviderConfig | null>(
     selectedLlmProvider,
@@ -155,7 +144,7 @@ export function useChatTargetSelection() {
     selectedLlmProvider,
     selectedLlmProviderRef,
     setDefaultProvider,
-    isLoadingProviders: isLoadingProviders || isLoadingAgents,
+    isLoadingProviders,
     agents,
     chatTargets,
     providerOptions,

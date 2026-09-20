@@ -1,6 +1,9 @@
 import type { ProviderRoutes } from '@browseros/server'
 import { hc } from 'hono/client'
-import { createDefaultBrowserOSProvider } from '@/lib/llm-providers/storage'
+import {
+  createDefaultBrowserOSProvider,
+  DEFAULT_PROVIDER_ID,
+} from '@/lib/llm-providers/storage'
 import type { LlmProviderConfig } from '@/lib/llm-providers/types'
 import { resolveAgentServerUrlWithRetry } from '@/modules/browseros/agent-server-url.helpers'
 import { toProviderConfigs, toProviderPayload } from './llm-providers.helpers'
@@ -82,7 +85,10 @@ export async function listProviders(): Promise<LlmProviderConfig[]> {
  */
 export async function fetchProviders(): Promise<LlmProviderConfig[]> {
   const configs = await listProviders()
-  if (configs.length > 0) return configs
+  const fixedProvider = configs.find(
+    (provider) => provider.id === DEFAULT_PROVIDER_ID,
+  )
+  if (fixedProvider) return [fixedProvider]
 
   const seeded = createDefaultBrowserOSProvider()
   await putProvider(seeded)
