@@ -174,7 +174,7 @@ describe('HTTP Server Integration Tests', () => {
             // to the extension. Chrome puts this header on every fetch the app
             // makes, including the ones the background alarm runner makes to
             // the already guarded schedule routes.
-            Origin: 'chrome-extension://bflpfmnmnokmjhmgnolecpppdbdophmk',
+            Origin: 'chrome-extension://kkalmcdibbgkillhfegffgegpdpdoobl',
           },
           body: JSON.stringify({
             conversationId,
