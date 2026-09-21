@@ -48,7 +48,7 @@
       "name": "Bun - Windows x64 baseline",
       "source": {
         "type": "local",
-        "path": "third_party/bun/bun-windows-x64-baseline.exe"
+        "path": "third_party/bin/bun-windows-x64-baseline.exe"
       },
       "destination": "resources/bin/third_party/bun.exe",
       "os": ["windows"],
