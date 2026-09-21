@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-export default defineContentScript({
-  matches: ['*://*.google.com/*'],
-  main() {},
-})
-=======
 import { mountFinanceSidebarTrigger } from '@/lib/browseros/mountFinanceSidebarTrigger'
 
 export default defineContentScript({
@@ -13,4 +7,3 @@ export default defineContentScript({
     mountFinanceSidebarTrigger()
   },
 })
->>>>>>> GensideAI/lsk
