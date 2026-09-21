@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { defineExtensionMessaging } from '@webext-core/messaging'
 
 export const RuntimeMessageType = {
@@ -24,3 +25,37 @@ const { sendMessage, onMessage } =
   defineExtensionMessaging<RuntimeMessagesProtocol>()
 
 export { onMessage as onRuntimeMessage, sendMessage as sendRuntimeMessage }
+=======
+import { defineExtensionMessaging } from '@webext-core/messaging'
+
+export const RuntimeMessageType = {
+  getTabId: 'runtime.getTabId',
+  toggleSidePanel: 'runtime.toggleSidePanel',
+  authSuccess: 'runtime.authSuccess',
+  stopAgent: 'runtime.stopAgent',
+} as const
+
+export interface RuntimeTabIdResponse {
+  tabId?: number
+}
+
+export interface RuntimeStopAgentData {
+  conversationId: string
+}
+
+export interface RuntimeSidePanelToggleResponse {
+  opened: boolean
+}
+
+type RuntimeMessagesProtocol = {
+  [RuntimeMessageType.getTabId](): RuntimeTabIdResponse
+  [RuntimeMessageType.toggleSidePanel](): RuntimeSidePanelToggleResponse
+  [RuntimeMessageType.authSuccess](): void
+  [RuntimeMessageType.stopAgent](data: RuntimeStopAgentData): void
+}
+
+const { sendMessage, onMessage } =
+  defineExtensionMessaging<RuntimeMessagesProtocol>()
+
+export { onMessage as onRuntimeMessage, sendMessage as sendRuntimeMessage }
+>>>>>>> GensideAI/lsk

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { FC } from 'react'
 import { ScheduledTaskCard } from './ScheduledTaskCard'
 import type { ScheduledJob, ScheduledJobRun } from './types'
@@ -53,3 +54,60 @@ export const ScheduledTasksList: FC<ScheduledTasksListProps> = ({
     </div>
   )
 }
+=======
+import type { FC } from 'react'
+import { ScheduledTaskCard } from './ScheduledTaskCard'
+import type { ScheduledJob, ScheduledJobRun } from './types'
+
+export interface ScheduledTasksListProps {
+  jobs: ScheduledJob[]
+  onEdit: (job: ScheduledJob) => void
+  onDelete: (jobId: string) => void
+  onToggle: (jobId: string, enabled: boolean) => void
+  onRun: (jobId: string) => void
+  onViewRun: (run: ScheduledJobRun) => void
+  onCancelRun: (runId: string) => void
+  onRetryRun: (jobId: string) => void
+}
+
+export const ScheduledTasksList: FC<ScheduledTasksListProps> = ({
+  jobs,
+  onEdit,
+  onDelete,
+  onToggle,
+  onRun,
+  onViewRun,
+  onCancelRun,
+  onRetryRun,
+}) => {
+  if (jobs.length === 0) {
+    return (
+      <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+        <div className="rounded-lg border border-border border-dashed py-8 text-center">
+          <p className="text-muted-foreground text-sm">
+            暂无定时任务。新建一个任务即可自动执行重复操作。
+          </p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-3">
+      {jobs.map((job) => (
+        <ScheduledTaskCard
+          key={job.id}
+          job={job}
+          onEdit={() => onEdit(job)}
+          onDelete={() => onDelete(job.id)}
+          onToggle={(enabled) => onToggle(job.id, enabled)}
+          onRun={() => onRun(job.id)}
+          onViewRun={onViewRun}
+          onCancelRun={onCancelRun}
+          onRetryRun={onRetryRun}
+        />
+      ))}
+    </div>
+  )
+}
+>>>>>>> GensideAI/lsk

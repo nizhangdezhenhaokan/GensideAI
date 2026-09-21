@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { CONVERSATION_ID_PLACEHOLDER } from '@browseros/shared/schemas/llm'
 import { Plus, Trash2 } from 'lucide-react'
 import { useFieldArray, useFormContext } from 'react-hook-form'
@@ -96,3 +97,103 @@ export function ProviderHeadersFields() {
     </fieldset>
   )
 }
+=======
+import { CONVERSATION_ID_PLACEHOLDER } from '@browseros/shared/schemas/llm'
+import { Plus, Trash2 } from 'lucide-react'
+import { useFieldArray, useFormContext } from 'react-hook-form'
+import { Button } from '@/components/ui/button'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import type { ProviderFormValues } from './provider-form-schema'
+
+export function ProviderHeadersFields() {
+  const form = useFormContext<ProviderFormValues>()
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: 'headers',
+  })
+
+  return (
+    <fieldset className="space-y-3">
+      <legend className="font-medium text-sm">自定义请求头</legend>
+      <p className="text-muted-foreground text-xs">
+        每次请求该提供商时都会携带这些请求头。使用{' '}
+        <code>{CONVERSATION_ID_PLACEHOLDER}</code> for a stable ID within each
+        作为每段对话的稳定标识。连接测试会使用独立的会话标识。
+      </p>
+      {fields.map((header, index) => (
+        <div key={header.id} className="space-y-2">
+          <div className="flex items-start gap-2">
+            <FormField
+              control={form.control}
+              name={`headers.${index}.name`}
+              render={({ field }) => (
+                <FormItem className="min-w-0 flex-1">
+                  <FormLabel>请求头名称</FormLabel>
+                  <FormControl>
+                    <Input placeholder="X-Custom-Header" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name={`headers.${index}.value`}
+              render={({ field }) => (
+                <FormItem className="min-w-0 flex-1">
+                  <FormLabel>请求头值</FormLabel>
+                  <FormControl>
+                    <Input autoComplete="off" placeholder="请输入值" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              className="mt-6"
+              aria-label={`删除第 ${index + 1} 个请求头`}
+              onClick={() => remove(index)}
+            >
+              <Trash2 className="size-4" />
+            </Button>
+          </div>
+          <Button
+            type="button"
+            variant="link"
+            size="sm"
+            className="h-auto p-0"
+            onClick={() =>
+              form.setValue(
+                `headers.${index}.value`,
+                CONVERSATION_ID_PLACEHOLDER,
+                { shouldDirty: true, shouldValidate: true },
+              )
+            }
+          >
+            使用对话 ID
+          </Button>
+        </div>
+      ))}
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={() => append({ name: '', value: '' })}
+      >
+        <Plus className="mr-2 size-4" />
+        添加请求头
+      </Button>
+    </fieldset>
+  )
+}
+>>>>>>> GensideAI/lsk

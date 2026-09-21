@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { ServerConversationSummary } from './conversations.hooks'
 
 export const HISTORY_PAGE_SIZE = 6
@@ -73,3 +74,80 @@ export function historyList(
   }
   return { groups, hasMore: matching.length > limit, total: matching.length }
 }
+=======
+import type { ServerConversationSummary } from './conversations.hooks'
+
+export const HISTORY_PAGE_SIZE = 6
+
+export function conversationTitle(lastUserMessage: string): string {
+  return lastUserMessage.trim() || '未命名对话'
+}
+
+/** Group by local calendar days, not elapsed hours (which breaks at midnight/DST). */
+export function historyDateGroup(timestamp: number, now: Date): string {
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+  const yesterday = new Date(today)
+  yesterday.setDate(yesterday.getDate() - 1)
+  if (timestamp >= today.getTime()) return '今天'
+  if (timestamp >= yesterday.getTime()) return '昨天'
+  return '更早'
+}
+
+export function historyTimestamp(timestamp: number, now: Date): string {
+  if (historyDateGroup(timestamp, now) === '今天') {
+    const minutes = Math.max(
+      0,
+      Math.floor((now.getTime() - timestamp) / 60_000),
+    )
+    if (minutes < 1) return '刚刚'
+    if (minutes < 60) return `${minutes} 分钟前`
+    const hours = Math.floor(minutes / 60)
+    return `${hours} 小时前`
+  }
+  return new Date(timestamp).toLocaleString(
+    undefined,
+    historyDateGroup(timestamp, now) === '昨天'
+      ? { hour: 'numeric', minute: '2-digit' }
+      : {
+          month: 'short',
+          day: 'numeric',
+          ...(new Date(timestamp).getFullYear() !== now.getFullYear()
+            ? { year: 'numeric' as const }
+            : {}),
+        },
+  )
+}
+
+/** Search all locally stored summaries before limiting the visible rows. */
+export function historyList(
+  conversations: ServerConversationSummary[],
+  search: string,
+  limit: number,
+  now: Date,
+) {
+  const query = search.trim().toLocaleLowerCase()
+  const matching = conversations
+    .filter((item) =>
+      conversationTitle(item.lastUserMessage)
+        .toLocaleLowerCase()
+        .includes(query),
+    )
+    .sort(
+      (a, b) => b.lastMessagedAt - a.lastMessagedAt || a.id.localeCompare(b.id),
+    )
+  const groups: {
+    label: string
+    conversations: ServerConversationSummary[]
+  }[] = []
+  for (const conversation of matching.slice(0, limit)) {
+    const label = historyDateGroup(conversation.lastMessagedAt, now)
+    let group = groups.at(-1)
+    if (group?.label !== label) {
+      group = { label, conversations: [] }
+      groups.push(group)
+    }
+    group.conversations.push(conversation)
+  }
+  return { groups, hasMore: matching.length > limit, total: matching.length }
+}
+>>>>>>> GensideAI/lsk

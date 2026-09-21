@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -251,3 +252,265 @@ export const ScheduledTaskCard: FC<ScheduledTaskCardProps> = ({
     </div>
   )
 }
+=======
+import dayjs from 'dayjs'
+import duration from 'dayjs/plugin/duration'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import {
+  CheckCircle2,
+  ChevronDown,
+  Loader2,
+  Pencil,
+  Play,
+  RotateCcw,
+  Square,
+  Trash2,
+  XCircle,
+} from 'lucide-react'
+import { type FC, useMemo, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/components/ui/collapsible'
+import { Switch } from '@/components/ui/switch'
+import { BrowserOSIcon, ProviderIcon } from '@/lib/llm-providers/providerIcons'
+import { useProvidersQuery } from '@/modules/llm-providers/llm-providers.hooks'
+import { useScheduledJobRuns } from '@/modules/schedules/schedules.hooks'
+import type { ScheduledJob, ScheduledJobRun } from './types'
+
+dayjs.extend(relativeTime)
+dayjs.extend(duration)
+
+export interface ScheduledTaskCardProps {
+  job: ScheduledJob
+  onEdit: () => void
+  onDelete: () => void
+  onToggle: (enabled: boolean) => void
+  onRun: () => void
+  onViewRun: (run: ScheduledJobRun) => void
+  onCancelRun: (runId: string) => void
+  onRetryRun: (jobId: string) => void
+}
+
+function formatSchedule(job: ScheduledJob): string {
+  if (job.scheduleType === 'daily' && job.scheduleTime) {
+    return `每天 ${job.scheduleTime}`
+  }
+  if (job.scheduleType === 'hourly' && job.scheduleInterval) {
+    return job.scheduleInterval === 1
+      ? '每小时执行'
+      : `每 ${job.scheduleInterval} 小时执行`
+  }
+  if (job.scheduleType === 'minutes' && job.scheduleInterval) {
+    return job.scheduleInterval === 1
+      ? '每分钟执行'
+      : `每 ${job.scheduleInterval} 分钟执行`
+  }
+  return '未设置计划'
+}
+
+const formatRelativeTime = (dateStr: string) => {
+  const elapsedSeconds = Math.max(0, dayjs().diff(dayjs(dateStr), 'second'))
+  if (elapsedSeconds < 60) return '刚刚'
+  if (elapsedSeconds < 3_600) return `${Math.floor(elapsedSeconds / 60)} 分钟前`
+  if (elapsedSeconds < 86_400)
+    return `${Math.floor(elapsedSeconds / 3_600)} 小时前`
+  return `${Math.floor(elapsedSeconds / 86_400)} 天前`
+}
+
+function formatDuration(startedAt: string, completedAt?: string): string {
+  if (!completedAt) return '运行中……'
+  const diff = dayjs(completedAt).diff(dayjs(startedAt))
+  const d = dayjs.duration(diff)
+  const mins = Math.floor(d.asMinutes())
+  const secs = d.seconds()
+  if (mins === 0) return `${secs}s`
+  return `${mins}m ${secs}s`
+}
+
+const formatRunDate = (dateStr: string) =>
+  dayjs(dateStr).format('MM月DD日 HH:mm')
+
+export const ScheduledTaskCard: FC<ScheduledTaskCardProps> = ({
+  job,
+  onEdit,
+  onDelete,
+  onToggle,
+  onRun,
+  onViewRun,
+  onCancelRun,
+  onRetryRun,
+}) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const { jobRuns } = useScheduledJobRuns()
+  const { data: providers = [] } = useProvidersQuery()
+  const providerInfo = job.providerId
+    ? (providers.find((provider) => provider.id === job.providerId) ?? null)
+    : null
+
+  const runs = useMemo(
+    () =>
+      jobRuns
+        .filter((run) => run.jobId === job.id)
+        .sort(
+          (a, b) =>
+            new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime(),
+        ),
+    [jobRuns, job.id],
+  )
+
+  return (
+    <div className="rounded-xl border border-border bg-card p-4 shadow-sm transition-all hover:border-[var(--accent-orange)]/50 hover:shadow-sm">
+      <div className="flex items-start gap-4">
+        <Switch
+          checked={job.enabled}
+          onCheckedChange={onToggle}
+          aria-label={`${job.enabled ? '停用' : '启用'} ${job.name}`}
+        />
+
+        <div className="min-w-0 flex-1">
+          <div className="mb-1 flex items-center gap-2">
+            <span className="truncate font-semibold">{job.name}</span>
+            {!job.enabled && (
+              <span className="rounded bg-muted px-1.5 py-0.5 text-muted-foreground text-xs">
+                已停用
+              </span>
+            )}
+          </div>
+          <p className="mb-2 line-clamp-1 text-muted-foreground text-sm">
+            "{job.query}"
+          </p>
+          <div className="flex items-center gap-2 text-muted-foreground text-xs">
+            <span>{formatSchedule(job)}</span>
+            {providerInfo && (
+              <>
+                <span>•</span>
+                <span className="flex items-center gap-1">
+                  {providerInfo.type === 'browseros' ? (
+                    <BrowserOSIcon size={12} />
+                  ) : (
+                    <ProviderIcon type={providerInfo.type} size={12} />
+                  )}
+                  {providerInfo.name}
+                </span>
+              </>
+            )}
+            {job.lastRunAt && (
+              <>
+                <span>•</span>
+                <span>上次运行：{formatRelativeTime(job.lastRunAt)}</span>
+              </>
+            )}
+          </div>
+        </div>
+
+        <div className="flex shrink-0 items-center gap-2">
+          <Button variant="outline" size="sm" onClick={onRun}>
+            <Play className="mr-1.5 h-3 w-3" />
+            测试
+          </Button>
+          <Button variant="outline" size="sm" onClick={onEdit}>
+            <Pencil className="mr-1.5 h-3 w-3" />
+            编辑
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            onClick={onDelete}
+            className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+            aria-label={`删除 ${job.name}`}
+          >
+            <Trash2 className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      {runs.length > 0 && (
+        <Collapsible open={isOpen} onOpenChange={setIsOpen} className="mt-4">
+          <CollapsibleTrigger className="flex w-full items-center gap-2 text-muted-foreground text-sm hover:text-foreground">
+            <ChevronDown
+              className={`h-4 w-4 transition-transform duration-200 ${
+                isOpen ? 'rotate-180' : ''
+              }`}
+            />
+            <span>运行历史（{runs.length}）</span>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="pt-3">
+            <div className="space-y-2">
+              {runs.map((run) => (
+                <div
+                  key={run.id}
+                  className="flex items-center gap-3 rounded-lg border border-border bg-background p-3"
+                >
+                  {run.status === 'completed' ? (
+                    <CheckCircle2 className="h-4 w-4 shrink-0 text-green-500" />
+                  ) : run.status === 'failed' ? (
+                    <XCircle className="h-4 w-4 shrink-0 text-destructive" />
+                  ) : (
+                    <Loader2 className="h-4 w-4 shrink-0 animate-spin text-accent-orange" />
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">
+                        {formatRunDate(run.startedAt)}
+                      </span>
+                      <span className="text-muted-foreground text-xs">
+                        {formatDuration(run.startedAt, run.completedAt)}
+                      </span>
+                    </div>
+                    {run.status === 'failed' && run.result && (
+                      <p className="mt-1 line-clamp-1 text-destructive text-xs">
+                        {run.result}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex shrink-0 items-center gap-1">
+                    {run.status === 'running' && (
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onCancelRun(run.id)
+                        }}
+                        className="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                        aria-label="取消运行"
+                      >
+                        <Square className="h-3.5 w-3.5" />
+                      </Button>
+                    )}
+                    {run.status === 'failed' && (
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          onRetryRun(run.jobId)
+                        }}
+                        className="text-muted-foreground hover:text-foreground"
+                        aria-label="重试运行"
+                      >
+                        <RotateCcw className="h-3.5 w-3.5" />
+                      </Button>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onViewRun(run)}
+                      className="shrink-0 text-muted-foreground hover:text-foreground"
+                    >
+                      View
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+      )}
+    </div>
+  )
+}
+>>>>>>> GensideAI/lsk
