@@ -12,7 +12,7 @@ from ...core.step import ValidationError
 from ..feeds.render import extract_manifest_versions, render_update_manifest
 from .manifests import ExtensionsFeedModule, parse_set_options
 
-AGENT_ID = "bflpfmnmnokmjhmgnolecpppdbdophmk"
+AGENT_ID = "kkalmcdibbgkillhfegffgegpdpdoobl"
 BUGREPORTER_ID = "adlpneommgkgeanpaekgoaolcpncohkf"
 BROWSERCLAW_ID = "pjimfkbpehlcllblajnpfamdfjhhlgkc"
 

@@ -32,7 +32,7 @@ index 0000000000000..e7b9a3a608cde
 +inline constexpr char kBrowserOSAlphaConfigUrl[] =
 +    "https://cdn.browseros.com/extensions/extensions.alpha.json";
 +
-+inline constexpr char kAgentExtensionId[] = "bflpfmnmnokmjhmgnolecpppdbdophmk";
++inline constexpr char kAgentExtensionId[] = "kkalmcdibbgkillhfegffgegpdpdoobl";
 +
 +inline constexpr char kBugReporterExtensionId[] =
 +    "adlpneommgkgeanpaekgoaolcpncohkf";

@@ -1271,7 +1271,7 @@ class PublisherTestCase(unittest.TestCase):
             canonical.replace("pjimfkbpehlcllblajnpfamdfjhhlgkc", "a" * 32),
             canonical.replace(
                 "pjimfkbpehlcllblajnpfamdfjhhlgkc",
-                "bflpfmnmnokmjhmgnolecpppdbdophmk",
+                "kkalmcdibbgkillhfegffgegpdpdoobl",
             ),
             canonical.replace(
                 "agent-0.0.118.0.crx",

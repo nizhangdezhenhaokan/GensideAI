@@ -91,7 +91,7 @@ class ProductPayloadManifestPatchTest(unittest.TestCase):
         assert assignment is not None
 
         manifest = "bundled_extensions.json"
-        agent = "bflpfmnmnokmjhmgnolecpppdbdophmk.crx"
+        agent = "kkalmcdibbgkillhfegffgegpdpdoobl.crx"
         bug_reporter = "adlpneommgkgeanpaekgoaolcpncohkf.crx"
         browserclaw = "pjimfkbpehlcllblajnpfamdfjhhlgkc.crx"
         base_sources = _source_literals(assignment.group("body"))

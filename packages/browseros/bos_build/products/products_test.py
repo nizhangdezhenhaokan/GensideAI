@@ -13,7 +13,7 @@ from bos_build.core.products import (
 )
 from bos_build.products import DEFAULT_PRODUCT_ID, PRODUCTS
 
-BROWSEROS_AGENT_EXTENSION_ID = "bflpfmnmnokmjhmgnolecpppdbdophmk"
+BROWSEROS_AGENT_EXTENSION_ID = "kkalmcdibbgkillhfegffgegpdpdoobl"
 BROWSEROS_BUG_REPORTER_EXTENSION_ID = "adlpneommgkgeanpaekgoaolcpncohkf"
 BROWSERCLAW_EXTENSION_ID = "pjimfkbpehlcllblajnpfamdfjhhlgkc"
 

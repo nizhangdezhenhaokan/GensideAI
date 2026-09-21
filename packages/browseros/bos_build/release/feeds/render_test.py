@@ -129,7 +129,7 @@ GOLDEN_UPDATE_MANIFEST = """\
   <app appid="adlpneommgkgeanpaekgoaolcpncohkf">
     <updatecheck codebase="https://cdn.browseros.com/extensions/bugreporter-54.0.0.0.crx" version="54.0.0.0" />
   </app>
-  <app appid="bflpfmnmnokmjhmgnolecpppdbdophmk">
+  <app appid="kkalmcdibbgkillhfegffgegpdpdoobl">
     <updatecheck codebase="https://cdn.browseros.com/extensions/agent-0.0.118.0.crx" version="0.0.118.0" />
   </app>
 </gupdate>
@@ -141,7 +141,7 @@ GOLDEN_EXTENSIONS_JSON = """\
     "adlpneommgkgeanpaekgoaolcpncohkf": {
       "external_update_url": "https://cdn.browseros.com/extensions/update-manifest.alpha.xml"
     },
-    "bflpfmnmnokmjhmgnolecpppdbdophmk": {
+    "kkalmcdibbgkillhfegffgegpdpdoobl": {
       "external_update_url": "https://cdn.browseros.com/extensions/update-manifest.alpha.xml"
     },
     "pjimfkbpehlcllblajnpfamdfjhhlgkc": {
@@ -351,7 +351,7 @@ class ExtensionsRenderTest(unittest.TestCase):
             ),
             {
                 "adlpneommgkgeanpaekgoaolcpncohkf",
-                "bflpfmnmnokmjhmgnolecpppdbdophmk",
+                "kkalmcdibbgkillhfegffgegpdpdoobl",
                 "pjimfkbpehlcllblajnpfamdfjhhlgkc",
             },
         )
@@ -369,7 +369,7 @@ class ExtensionsRenderTest(unittest.TestCase):
         )
         duplicate = canonical.replace(
             "pjimfkbpehlcllblajnpfamdfjhhlgkc",
-            "bflpfmnmnokmjhmgnolecpppdbdophmk",
+            "kkalmcdibbgkillhfegffgegpdpdoobl",
         )
         swapped = canonical.replace(
             "agent-0.0.118.0.crx",
@@ -432,7 +432,7 @@ class VersionHelpersTest(unittest.TestCase):
             extract_manifest_versions(GOLDEN_UPDATE_MANIFEST),
             {
                 "adlpneommgkgeanpaekgoaolcpncohkf": "54.0.0.0",
-                "bflpfmnmnokmjhmgnolecpppdbdophmk": "0.0.118.0",
+                "kkalmcdibbgkillhfegffgegpdpdoobl": "0.0.118.0",
             },
         )
 
