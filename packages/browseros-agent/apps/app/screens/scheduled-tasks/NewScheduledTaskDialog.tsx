@@ -51,9 +51,9 @@ const formSchema = z
   .object({
     name: z
       .string()
-      .min(1, 'Name is required')
-      .max(100, 'Name must be 100 characters or less'),
-    query: z.string().min(1, 'Prompt is required'),
+      .min(1, '请输入任务名称')
+      .max(100, '任务名称不能超过 100 个字符'),
+    query: z.string().min(1, '请输入任务指令'),
     scheduleType: z.enum(['daily', 'hourly', 'minutes']),
     scheduleTime: z.string().optional(),
     scheduleInterval: z.number().int().min(1).max(60).optional(),
@@ -64,7 +64,7 @@ const formSchema = z
     if (data.scheduleType === 'daily' && !data.scheduleTime) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Time is required for daily schedule',
+        message: '每日计划需要设置执行时间',
         path: ['scheduleTime'],
       })
     }
@@ -74,7 +74,7 @@ const formSchema = z
     ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Interval must be at least 1',
+        message: '执行间隔至少为 1',
         path: ['scheduleInterval'],
       })
     }
@@ -212,7 +212,7 @@ export const NewScheduledTaskDialog: FC<NewScheduledTaskDialogProps> = ({
     try {
       const refined = await refinePrompt({
         prompt: currentQuery,
-        name: currentName || 'Untitled Task',
+        name: currentName || '未命名任务',
         providerId: form.getValues('providerId'),
       })
       if (requestId !== refineRequestIdRef.current) return
@@ -220,7 +220,7 @@ export const NewScheduledTaskDialog: FC<NewScheduledTaskDialogProps> = ({
       track(SCHEDULED_TASK_PROMPT_REFINED_EVENT)
     } catch {
       if (requestId !== refineRequestIdRef.current) return
-      toast.error('Failed to rewrite prompt. Please try again.')
+      toast.error('改写任务指令失败，请重试。')
       originalPromptRef.current = null
     } finally {
       if (requestId === refineRequestIdRef.current) {
@@ -263,12 +263,12 @@ export const NewScheduledTaskDialog: FC<NewScheduledTaskDialogProps> = ({
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>
-            {isEditing ? 'Edit Scheduled Task' : 'Create Scheduled Task'}
+            {isEditing ? '编辑定时任务' : '新建定时任务'}
           </DialogTitle>
           <DialogDescription>
             {isEditing
-              ? 'Update your scheduled task configuration.'
-              : 'Create a new task that runs automatically on a schedule.'}
+              ? '修改此定时任务的配置。'
+              : '创建一个按计划自动运行的任务。'}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -278,9 +278,9 @@ export const NewScheduledTaskDialog: FC<NewScheduledTaskDialogProps> = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>任务名称</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Morning Briefing" {...field} />
+                    <Input placeholder="例如：每日早报" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -293,7 +293,7 @@ export const NewScheduledTaskDialog: FC<NewScheduledTaskDialogProps> = ({
               render={({ field }) => (
                 <FormItem>
                   <div className="flex items-center justify-between">
-                    <FormLabel>Prompt</FormLabel>
+                    <FormLabel>任务指令</FormLabel>
                     <Button
                       type="button"
                       variant="ghost"
@@ -307,12 +307,12 @@ export const NewScheduledTaskDialog: FC<NewScheduledTaskDialogProps> = ({
                       ) : (
                         <Sparkles className="h-3 w-3" />
                       )}
-                      {isRefining ? 'Rewriting...' : 'Rewrite with AI'}
+                      {isRefining ? '正在改写……' : '使用 AI 改写'}
                     </Button>
                   </div>
                   <FormControl>
                     <Textarea
-                      placeholder="What should the agent do? e.g., Check my email and summarize important messages"
+                      placeholder="希望智能体做什么？例如：检查邮件并总结重要消息"
                       className="min-h-[100px] resize-none"
                       {...field}
                       onChange={(e) => {
@@ -333,12 +333,10 @@ export const NewScheduledTaskDialog: FC<NewScheduledTaskDialogProps> = ({
                       onClick={handleUndoRefine}
                     >
                       <Undo2 className="h-3 w-3" />
-                      Undo rewrite
+                      撤销改写
                     </button>
                   ) : (
-                    <FormDescription>
-                      The instruction that will be sent to the agent
-                    </FormDescription>
+                    <FormDescription>将发送给智能体的任务指令</FormDescription>
                   )}
                   <FormMessage />
                 </FormItem>
@@ -347,7 +345,7 @@ export const NewScheduledTaskDialog: FC<NewScheduledTaskDialogProps> = ({
 
             {providers.length > 0 && resolvedProvider && (
               <FormItem>
-                <FormLabel>AI Provider</FormLabel>
+                <FormLabel>AI 服务提供方</FormLabel>
                 <ChatProviderSelector
                   providers={providerOptions}
                   selectedProvider={resolvedProvider}
@@ -377,7 +375,7 @@ export const NewScheduledTaskDialog: FC<NewScheduledTaskDialogProps> = ({
                   </Button>
                 </ChatProviderSelector>
                 <FormDescription>
-                  The AI provider used to run this task
+                  用于执行该任务的 AI 服务提供方
                 </FormDescription>
               </FormItem>
             )}
@@ -388,7 +386,7 @@ export const NewScheduledTaskDialog: FC<NewScheduledTaskDialogProps> = ({
                 name="scheduleType"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Schedule</FormLabel>
+                    <FormLabel>执行计划</FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
@@ -396,13 +394,13 @@ export const NewScheduledTaskDialog: FC<NewScheduledTaskDialogProps> = ({
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select schedule type" />
+                          <SelectValue placeholder="选择执行计划" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="daily">Daily at time</SelectItem>
-                        <SelectItem value="hourly">Every N hours</SelectItem>
-                        <SelectItem value="minutes">Every N minutes</SelectItem>
+                        <SelectItem value="daily">每天指定时间</SelectItem>
+                        <SelectItem value="hourly">每 N 小时</SelectItem>
+                        <SelectItem value="minutes">每 N 分钟</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -416,7 +414,7 @@ export const NewScheduledTaskDialog: FC<NewScheduledTaskDialogProps> = ({
                   name="scheduleTime"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Time</FormLabel>
+                      <FormLabel>执行时间</FormLabel>
                       <FormControl>
                         <Input type="time" {...field} />
                       </FormControl>
@@ -431,8 +429,8 @@ export const NewScheduledTaskDialog: FC<NewScheduledTaskDialogProps> = ({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Interval (
-                        {scheduleType === 'hourly' ? 'hours' : 'minutes'})
+                        执行间隔（
+                        {scheduleType === 'hourly' ? '小时' : '分钟'}）
                       </FormLabel>
                       <FormControl>
                         <Input
@@ -467,9 +465,7 @@ export const NewScheduledTaskDialog: FC<NewScheduledTaskDialogProps> = ({
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormLabel className="font-normal">
-                    Enable this task
-                  </FormLabel>
+                  <FormLabel className="font-normal">启用此任务</FormLabel>
                 </FormItem>
               )}
             />
@@ -480,9 +476,9 @@ export const NewScheduledTaskDialog: FC<NewScheduledTaskDialogProps> = ({
                 variant="outline"
                 onClick={() => onOpenChange(false)}
               >
-                Cancel
+                取消
               </Button>
-              <Button type="submit">{isEditing ? 'Update' : 'Create'}</Button>
+              <Button type="submit">{isEditing ? '更新' : '创建'}</Button>
             </DialogFooter>
           </form>
         </Form>

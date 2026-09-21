@@ -21,11 +21,11 @@ export function ProviderHeadersFields() {
 
   return (
     <fieldset className="space-y-3">
-      <legend className="font-medium text-sm">Custom headers</legend>
+      <legend className="font-medium text-sm">自定义请求头</legend>
       <p className="text-muted-foreground text-xs">
-        Sent with every request to this provider. Use{' '}
+        每次请求该提供商时都会携带这些请求头。使用{' '}
         <code>{CONVERSATION_ID_PLACEHOLDER}</code> for a stable ID within each
-        conversation. Connection tests use a separate session ID.
+        作为每段对话的稳定标识。连接测试会使用独立的会话标识。
       </p>
       {fields.map((header, index) => (
         <div key={header.id} className="space-y-2">
@@ -35,7 +35,7 @@ export function ProviderHeadersFields() {
               name={`headers.${index}.name`}
               render={({ field }) => (
                 <FormItem className="min-w-0 flex-1">
-                  <FormLabel>Header name</FormLabel>
+                  <FormLabel>请求头名称</FormLabel>
                   <FormControl>
                     <Input placeholder="X-Custom-Header" {...field} />
                   </FormControl>
@@ -48,9 +48,9 @@ export function ProviderHeadersFields() {
               name={`headers.${index}.value`}
               render={({ field }) => (
                 <FormItem className="min-w-0 flex-1">
-                  <FormLabel>Header value</FormLabel>
+                  <FormLabel>请求头值</FormLabel>
                   <FormControl>
-                    <Input autoComplete="off" placeholder="value" {...field} />
+                    <Input autoComplete="off" placeholder="请输入值" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -61,7 +61,7 @@ export function ProviderHeadersFields() {
               variant="ghost"
               size="icon"
               className="mt-6"
-              aria-label={`Remove header ${index + 1}`}
+              aria-label={`删除第 ${index + 1} 个请求头`}
               onClick={() => remove(index)}
             >
               <Trash2 className="size-4" />
@@ -80,7 +80,7 @@ export function ProviderHeadersFields() {
               )
             }
           >
-            Use conversation ID
+            使用对话 ID
           </Button>
         </div>
       ))}
@@ -91,7 +91,7 @@ export function ProviderHeadersFields() {
         onClick={() => append({ name: '', value: '' })}
       >
         <Plus className="mr-2 size-4" />
-        Add header
+        添加请求头
       </Button>
     </fieldset>
   )

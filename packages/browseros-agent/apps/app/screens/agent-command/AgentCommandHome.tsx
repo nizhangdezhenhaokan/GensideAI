@@ -86,15 +86,14 @@ export const AgentCommandHome: FC = () => {
         <div className="flex flex-col items-center gap-5 pt-[max(10vh,24px)] text-center">
           <div className="space-y-3">
             <h1 className="font-semibold text-[clamp(2.25rem,4.5vw,3.5rem)] leading-[1.08] tracking-[-0.025em] [text-wrap:balance]">
-              What should your agent{' '}
+              接下来想让你的智能体
               <span className="font-medium text-[var(--accent-orange)] italic">
-                work on
-              </span>{' '}
-              next?
+                做什么
+              </span>
+              ？
             </h1>
             <p className="mx-auto max-w-2xl text-muted-foreground text-sm leading-6 [text-wrap:pretty]">
-              Pick BrowserOS AI or any agent, then start a task — all without
-              leaving this tab.
+              选择 BrowserOS AI 或其他智能体，无需离开当前标签页即可开始任务。
             </p>
           </div>
 
@@ -110,8 +109,8 @@ export const AgentCommandHome: FC = () => {
               attachmentsEnabled={selectedProvider?.kind === 'acp'}
               placeholder={
                 selectedProvider
-                  ? `Ask ${selectedProvider.name} to handle a task...`
-                  : 'Loading providers...'
+                  ? `让 ${selectedProvider.name} 帮你处理一项任务……`
+                  : '正在加载智能体……'
               }
             />
           </div>

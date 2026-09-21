@@ -104,7 +104,7 @@ export const ConfiguredTargetRow: FC<ConfiguredTargetRowProps> = ({
           variant="secondary"
           className="rounded font-semibold text-[10px] uppercase tracking-wide"
         >
-          {kind}
+          {kind === 'hosted' ? '托管' : kind === 'model' ? '模型' : kind}
         </Badge>
       </span>
 
@@ -114,7 +114,7 @@ export const ConfiguredTargetRow: FC<ConfiguredTargetRowProps> = ({
             variant="secondary"
             className="rounded bg-[var(--accent-orange)]/15 font-bold text-[10px] text-[var(--accent-orange)] uppercase tracking-wide"
           >
-            Default
+            默认
           </Badge>
         ) : (
           <Button
@@ -123,7 +123,7 @@ export const ConfiguredTargetRow: FC<ConfiguredTargetRowProps> = ({
             className="hidden opacity-0 transition-opacity focus-visible:opacity-100 group-focus-within:opacity-100 group-hover:opacity-100 sm:inline-flex"
             onClick={() => actions[0]?.onSelect()}
           >
-            Set as default
+            设为默认
           </Button>
         )}
       </span>
@@ -135,7 +135,7 @@ export const ConfiguredTargetRow: FC<ConfiguredTargetRowProps> = ({
               <Button
                 variant="ghost"
                 size="icon-sm"
-                aria-label={`Actions for ${name}`}
+                  aria-label={`${name} 的操作`}
                 className="text-muted-foreground"
               >
                 {busy ? (

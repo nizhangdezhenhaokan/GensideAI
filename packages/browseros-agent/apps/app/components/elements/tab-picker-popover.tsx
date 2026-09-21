@@ -141,7 +141,7 @@ const TabPickerMentionPopover: FC<TabPickerMentionPopoverProps> = ({
         onOpenAutoFocus={(e) => e.preventDefault()}
         onCloseAutoFocus={(e) => e.preventDefault()}
         role="dialog"
-        aria-label="Select tabs to attach"
+        aria-label="选择要附加的标签页"
       >
         <Command
           className="[&_svg:not([class*='text-'])]:text-muted-foreground"
@@ -150,16 +150,15 @@ const TabPickerMentionPopover: FC<TabPickerMentionPopoverProps> = ({
           <div className="border-border/50 border-b px-3 py-2">
             <div className="flex items-center justify-between">
               <span className="font-semibold text-muted-foreground text-xs uppercase tracking-wide">
-                Attach Tabs
+                附加标签页
               </span>
               <span className="text-muted-foreground text-xs">
-                {filterText ? `Filtering: "${filterText}"` : 'Type to filter'}
+                {filterText ? `正在筛选：“${filterText}”` : '输入内容筛选'}
               </span>
             </div>
             {selectedTabs.length > 0 && (
               <span className="mt-1 block text-[var(--accent-orange)] text-xs">
-                {selectedTabs.length} tab{selectedTabs.length !== 1 ? 's' : ''}{' '}
-                selected
+                已选择 {selectedTabs.length} 个标签页
               </span>
             )}
           </div>
@@ -167,25 +166,25 @@ const TabPickerMentionPopover: FC<TabPickerMentionPopoverProps> = ({
             ref={listRef}
             className="max-h-64 overflow-auto"
             role="listbox"
-            aria-label="Available tabs"
+            aria-label="可用标签页"
             aria-multiselectable="true"
           >
             <CommandEmpty className="py-6 text-center">
               {isLoading ? (
                 <div className="text-muted-foreground text-sm">
-                  Loading tabs…
+                  正在加载标签页……
                 </div>
               ) : (
                 <>
                   <div className="text-muted-foreground text-sm">
                     {allTabs.length === 0
-                      ? 'No active tabs'
-                      : `No tabs matching "${filterText}"`}
+                      ? '没有活动标签页'
+                      : `没有匹配“${filterText}”的标签页`}
                   </div>
                   <div className="mt-1 text-muted-foreground/70 text-xs">
                     {allTabs.length === 0
-                      ? 'Open some web pages to attach them'
-                      : 'Try a different search term'}
+                      ? '打开网页后即可将其附加到任务中'
+                      : '请尝试其他搜索关键词'}
                   </div>
                 </>
               )}
@@ -241,14 +240,14 @@ const TabPickerSelectorPopover: FC<TabPickerSelectorPopoverProps> = ({
         align="start"
         className="w-72 p-0"
         role="dialog"
-        aria-label="Select tabs"
+        aria-label="选择标签页"
       >
         <Command
           className="[&_svg:not([class*='text-'])]:text-muted-foreground"
           shouldFilter={false}
         >
           <CommandInput
-            placeholder="Search tabs..."
+            placeholder="搜索标签页……"
             className="h-9"
             value={filterText}
             onValueChange={setFilterText}
@@ -256,17 +255,17 @@ const TabPickerSelectorPopover: FC<TabPickerSelectorPopoverProps> = ({
           <CommandList
             className="max-h-64 overflow-auto"
             role="listbox"
-            aria-label="Available tabs"
+            aria-label="可用标签页"
             aria-multiselectable="true"
           >
             <div className="border-border/50 border-b px-3 py-2">
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-muted-foreground text-xs uppercase tracking-wide">
-                  Tabs
+                  标签页
                 </span>
                 {selectedTabs.length > 0 && (
                   <span className="text-[var(--accent-orange)] text-xs">
-                    {selectedTabs.length} selected
+                    已选择 {selectedTabs.length} 个
                   </span>
                 )}
               </div>
@@ -275,19 +274,19 @@ const TabPickerSelectorPopover: FC<TabPickerSelectorPopoverProps> = ({
             <CommandEmpty className="py-6 text-center">
               {isLoading ? (
                 <div className="text-muted-foreground text-sm">
-                  Loading tabs…
+                  正在加载标签页……
                 </div>
               ) : (
                 <>
                   <div className="text-muted-foreground text-sm">
                     {allTabs.length === 0
-                      ? 'No active tabs'
-                      : `No tabs matching "${filterText}"`}
+                      ? '没有活动标签页'
+                      : `没有匹配“${filterText}”的标签页`}
                   </div>
                   <div className="mt-1 text-muted-foreground/70 text-xs">
                     {allTabs.length === 0
-                      ? 'Open some web pages to attach them'
-                      : 'Try a different search term'}
+                      ? '打开网页后即可将其附加到任务中'
+                      : '请尝试其他搜索关键词'}
                   </div>
                 </>
               )}

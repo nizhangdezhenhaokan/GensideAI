@@ -89,10 +89,10 @@ function CopyMarkdownButton({
       type="button"
       onClick={handleCopy}
       className="mdx-copy-button"
-      title="Copy raw markdown"
+      title="复制原始 Markdown"
     >
       {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
-      <span>{copied ? 'Copied' : 'Copy markdown'}</span>
+      <span>{copied ? '已复制' : '复制 Markdown'}</span>
     </button>
   )
 }

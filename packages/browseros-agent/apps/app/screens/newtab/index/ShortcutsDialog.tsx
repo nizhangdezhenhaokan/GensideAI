@@ -25,10 +25,10 @@ export const ShortcutsDialog = ({
       <DialogContent className="styled-scrollbar max-h-[80vh] max-w-xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-semibold text-2xl">
-            Keyboard Shortcuts
+            键盘快捷键
           </DialogTitle>
           <DialogDescription>
-            Use these shortcuts to navigate BrowserOS faster
+            使用这些快捷键，更高效地操作 BrowserOS。
           </DialogDescription>
         </DialogHeader>
 
@@ -59,7 +59,7 @@ export const ShortcutsDialog = ({
         </div>
 
         <div className="mt-8 border-border/50 border-t pt-4 text-center text-muted-foreground text-xs">
-          More shortcuts coming soon
+          更多快捷键即将推出
         </div>
       </DialogContent>
     </Dialog>

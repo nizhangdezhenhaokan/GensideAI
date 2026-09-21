@@ -59,25 +59,25 @@ const primarySettingsSections: NavSection[] = [
   {
     label: '模型提供商设置',
     items: [
-      { name: 'AI & Agents', to: '/settings/ai', icon: Bot },
+      { name: 'AI 与智能体', to: '/settings/ai', icon: Bot },
       {
-        name: 'Chat & Council Provider',
+        name: '对话与顾问服务',
         to: '/settings/chat',
         icon: MessageSquare,
       },
     ],
   },
   {
-    label: 'Other',
+    label: '其他',
     items: [
       {
-        name: 'Customize BrowserOS',
+        name: '自定义 BrowserOS',
         to: '/settings/customization',
         icon: Palette,
       },
-      { name: 'BrowserOS as MCP', to: '/settings/mcp', icon: Server },
+      { name: '将 BrowserOS 用作 MCP', to: '/settings/mcp', icon: Server },
       {
-        name: 'Usage & Billing',
+        name: '用量与计费',
         to: '/settings/usage',
         icon: CreditCard,
         feature: Feature.CREDITS_SUPPORT,
@@ -87,9 +87,9 @@ const primarySettingsSections: NavSection[] = [
 ]
 
 const helpItems: NavItem[] = [
-  { name: 'Docs', href: 'https://docs.browseros.com/', icon: BookOpen },
-  { name: 'Features', to: '/features', icon: Compass },
-  { name: 'Diagnostics', to: '/settings/diagnostics', icon: Activity },
+  { name: '文档', href: 'https://docs.browseros.com/', icon: BookOpen },
+  { name: '功能介绍', to: '/features', icon: Compass },
+  { name: '诊断信息', to: '/settings/diagnostics', icon: Activity },
 ]
 
 export const SettingsSidebar: FC = () => {
@@ -164,11 +164,11 @@ export const SettingsSidebar: FC = () => {
 
       <div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden p-2">
         <div className="mb-2 px-3 font-semibold text-muted-foreground text-xs uppercase tracking-wider">
-          Settings
+          设置
         </div>
         <div>{filteredSections.map(renderSection)}</div>
         <div className="mt-auto pt-4">
-          <div className={sectionLabelClassName}>Help</div>
+          <div className={sectionLabelClassName}>帮助</div>
           <nav className="space-y-1">
             {filteredHelpItems.map(renderNavItem)}
           </nav>

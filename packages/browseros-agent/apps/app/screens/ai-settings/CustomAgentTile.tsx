@@ -24,7 +24,7 @@ export const CustomAgentTile: FC<CustomAgentTileProps> = ({ onAdd }) => {
     <button
       type="button"
       onClick={onAdd}
-      aria-label="Add Custom ACP agent"
+      aria-label="添加自定义 ACP 智能体"
       className="group col-span-full flex w-full items-center gap-4 rounded-lg border border-[var(--accent-orange)]/40 border-dashed bg-card p-4 text-left transition-all hover:border-[var(--accent-orange)] hover:bg-[var(--accent-orange)]/5"
     >
       <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-[var(--accent-orange)]/10 text-[var(--accent-orange)]">
@@ -33,11 +33,10 @@ export const CustomAgentTile: FC<CustomAgentTileProps> = ({ onAdd }) => {
 
       <span className="min-w-0 flex-1">
         <span className="block font-medium text-foreground text-sm">
-          Custom ACP agent
+          自定义 ACP 智能体
         </span>
         <span className="block text-muted-foreground text-xs">
-          Connect opencode, Hermes, OpenClaw, pi, or any other ACP compatible
-          agent
+          连接 opencode、Hermes、OpenClaw、pi 或其他兼容 ACP 的智能体
         </span>
         <span className="mt-2 flex flex-wrap items-center gap-1.5">
           {marks.map(({ id, label, Mark }) => (
@@ -56,7 +55,7 @@ export const CustomAgentTile: FC<CustomAgentTileProps> = ({ onAdd }) => {
         aria-hidden
         className="shrink-0 rounded-md border border-border bg-secondary px-3 py-1.5 font-semibold text-foreground text-xs transition-colors group-hover:border-[var(--accent-orange)] group-hover:bg-[var(--accent-orange)] group-hover:text-white"
       >
-        Add
+        添加
       </span>
     </button>
   )

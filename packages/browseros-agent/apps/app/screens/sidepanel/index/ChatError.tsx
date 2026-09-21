@@ -55,8 +55,8 @@ const CODE_COPY: Partial<
     linkLabel: 'Open AI settings',
   },
   connection_failed: {
-    title: 'Connection failed',
-    linkLabel: 'View troubleshooting guide',
+    title: '连接失败',
+    linkLabel: '查看故障排查指南',
   },
   context_length: { title: 'Conversation too long', linkLabel: 'Learn more' },
   content_filter: { title: 'Content was rejected', linkLabel: 'Learn more' },
@@ -101,10 +101,10 @@ function fromMessage(message: string, providerType?: string): ChatErrorView {
   // fetch failure is always a local connection issue.
   if (message.includes('Failed to fetch') || message.includes('fetch failed')) {
     return {
-      title: 'Connection failed',
-      text: 'Unable to connect to BrowserOS agent. Follow below instructions.',
+      title: '连接失败',
+      text: '无法连接到 BrowserOS 智能体，请按以下说明排查。',
       url: 'https://docs.browseros.com/troubleshooting/connection-issues',
-      linkLabel: 'View troubleshooting guide',
+      linkLabel: '查看故障排查指南',
       canRetry: true,
       showSurvey: false,
     }
@@ -120,7 +120,7 @@ function fromMessage(message: string, providerType?: string): ChatErrorView {
       title: 'Daily limit reached',
       text: 'Daily credits exhausted. Credits reset at midnight UTC.',
       url: '/app.html#/settings/usage',
-      linkLabel: 'View Usage & Billing',
+      linkLabel: '查看用量与计费',
       canRetry: false,
       showSurvey: false,
     }
@@ -131,10 +131,10 @@ function fromMessage(message: string, providerType?: string): ChatErrorView {
     message.includes('BrowserOS LLM daily limit reached')
   ) {
     return {
-      title: 'Daily limit reached',
-      text: 'Add your own API key for unlimited usage.',
+      title: '已达到每日限额',
+      text: '添加自己的 API 密钥可获得不限量使用。',
       url: 'https://dub.sh/browseros-usage-limit',
-      linkLabel: 'About daily limits',
+      linkLabel: '了解每日限额',
       canRetry: false,
       showSurvey: true,
     }
@@ -155,7 +155,7 @@ function fromMessage(message: string, providerType?: string): ChatErrorView {
 
   return {
     title: 'Something went wrong',
-    text: text || 'An unexpected error occurred',
+    text: text || '发生意外错误',
     url,
     canRetry: true,
     showSurvey: false,
@@ -260,7 +260,7 @@ export const ChatError: FC<ChatErrorProps> = ({
               onClick={copyDetails}
               className="text-[10px] text-muted-foreground underline hover:text-foreground"
             >
-              {copiedDetails ? 'Copied' : 'Copy'}
+              {copiedDetails ? '已复制' : '复制'}
             </button>
           </div>
           <pre className="max-h-40 overflow-auto whitespace-pre-wrap break-words rounded border border-border bg-muted p-2 text-left text-[10px] text-muted-foreground">

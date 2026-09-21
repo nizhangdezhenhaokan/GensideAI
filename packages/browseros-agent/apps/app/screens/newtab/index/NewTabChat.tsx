@@ -151,6 +151,7 @@ export const NewTabChat: FC = () => {
         hasMessages={messages.length > 0}
         hideHistory
         fixedBrandName="智慧小财神"
+        financeStyle={false}
         className="shrink-0 px-4 sm:px-8"
       />
 
@@ -191,6 +192,7 @@ export const NewTabChat: FC = () => {
               showDontShowAgain={false}
               onTakeSurvey={() => {}}
               onDismissJtbdPopup={() => {}}
+              financeStyle={false}
             />
           </>
         )}

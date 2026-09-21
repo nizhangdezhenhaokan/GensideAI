@@ -49,8 +49,8 @@ export const ChatModeToggle: FC<ChatModeToggleProps> = ({
         </TooltipTrigger>
         <TooltipContent side="top" className="max-w-[220px]">
           {isAgentMode
-            ? 'AI can browse, click, and navigate'
-            : 'AI can only read, cannot click or navigate'}
+            ? 'AI 可以浏览、点击和跳转页面'
+            : 'AI 仅能阅读内容，不能点击或跳转页面'}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

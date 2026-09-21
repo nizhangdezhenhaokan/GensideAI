@@ -157,11 +157,11 @@ export const CustomCodingAgentDialog: FC<CustomCodingAgentDialogProps> = ({
         <DialogContent className="max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {isEdit ? 'Edit custom agent' : 'Add a custom ACP agent'}
+              {isEdit ? '编辑自定义智能体' : '添加自定义 ACP 智能体'}
             </DialogTitle>
             <DialogDescription>
-              Connect any agent that speaks ACP over stdio. It can run commands
-              and access files anywhere on your computer without approval.
+              可连接任何通过 stdio 支持 ACP
+              的智能体。它可以执行命令并访问电脑中的文件，无需逐次确认。
             </DialogDescription>
           </DialogHeader>
 
@@ -228,7 +228,7 @@ export const CustomCodingAgentDialog: FC<CustomCodingAgentDialogProps> = ({
             {probeResult && !probeResult.error ? (
               <div className="space-y-3 rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-3">
                 <p className="font-medium text-emerald-600 text-sm dark:text-emerald-400">
-                  Connected
+                  已连接
                   {probeResult.agentInfo?.name
                     ? ` · ${probeResult.agentInfo.name}`
                     : ''}
@@ -369,14 +369,14 @@ export const CustomCodingAgentDialog: FC<CustomCodingAgentDialogProps> = ({
 
           <DialogFooter>
             <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              取消
             </Button>
             <Button
               onClick={() => void handleSubmit()}
               disabled={!name.trim() || !command.trim() || pending}
             >
               {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-              {isEdit ? 'Save agent' : 'Create agent'}
+              {isEdit ? '保存智能体' : '创建智能体'}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -43,11 +43,11 @@ export const ChatProviderSelector: FC<
       <PopoverContent side="bottom" align="start" className="w-64 p-0">
         <Command>
           <CommandInput
-            placeholder="Search providers or agents..."
+            placeholder="搜索服务提供方或智能体……"
             className="h-9"
           />
           <CommandList>
-            <CommandEmpty>No provider found</CommandEmpty>
+            <CommandEmpty>未找到服务提供方</CommandEmpty>
             {groups.map((group) => (
               <CommandGroup key={group.key} heading={group.label}>
                 {group.options.map((provider) => {
@@ -97,7 +97,7 @@ export const ChatProviderSelector: FC<
                 }}
               >
                 <Plus className="h-4 w-4" />
-                Add Provider
+                添加服务提供方
               </button>
             </div>
           </CommandList>

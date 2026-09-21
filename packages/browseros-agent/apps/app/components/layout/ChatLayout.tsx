@@ -31,7 +31,7 @@ const ChatLayoutContent: FC = () => {
   }
 
   return (
-    <div className="mx-auto flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground">
+    <div className="finance-sidebar-root mx-auto flex h-screen w-screen flex-col overflow-hidden bg-background text-foreground">
       <ChatHeader
         selectedProvider={selectedProvider ?? offlineHeaderProvider}
         onSelectProvider={handleSelectProvider}
@@ -42,7 +42,7 @@ const ChatLayoutContent: FC = () => {
         onOpenHistory={() => setIsHistoryOpen((open) => !open)}
         isHistoryOpen={isHistoryOpen}
       />
-      <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
+      <div className="finance-sidebar-content relative flex min-h-0 flex-1 flex-col overflow-hidden">
         <Outlet />
         <ConversationHistoryOverlay
           open={isHistoryOpen}

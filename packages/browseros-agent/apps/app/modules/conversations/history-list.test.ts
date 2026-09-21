@@ -22,15 +22,15 @@ describe('local history navigation', () => {
     ]
     expect(historyList(conversations, '', 2, now)).toEqual({
       groups: [
-        { label: 'Today', conversations: [conversations[2]] },
-        { label: 'Yesterday', conversations: [conversations[1]] },
+        { label: '今天', conversations: [conversations[2]] },
+        { label: '昨天', conversations: [conversations[1]] },
       ],
       hasMore: true,
       total: 3,
     })
     const result = historyList(conversations, ' WEEKEND ', 2, now)
     expect(result.groups[0]).toEqual({
-      label: 'Earlier',
+      label: '更早',
       conversations: [conversations[0]],
     })
     expect(result.hasMore).toBe(false)
@@ -41,21 +41,21 @@ describe('local history navigation', () => {
     const midnight = new Date(2026, 8, 8, 0, 0)
     expect(
       historyDateGroup(new Date(2026, 8, 7, 23, 59).getTime(), midnight),
-    ).toBe('Yesterday')
+    ).toBe('昨天')
     expect(
       historyDateGroup(new Date(2026, 8, 6, 23, 59).getTime(), midnight),
-    ).toBe('Earlier')
+    ).toBe('更早')
   })
 
   it('uses the previous calendar day across DST and year boundaries', () => {
     const january = new Date(2027, 0, 1, 1)
     expect(historyDateGroup(new Date(2026, 11, 31, 2).getTime(), january)).toBe(
-      'Yesterday',
+      '昨天',
     )
     const afterSpringChange = new Date(2026, 2, 9, 0, 10)
     expect(
       historyDateGroup(new Date(2026, 2, 8, 0, 1).getTime(), afterSpringChange),
-    ).toBe('Yesterday')
+    ).toBe('昨天')
   })
 
   it('moves a continued conversation into Today without duplicating its id', () => {
@@ -78,20 +78,20 @@ describe('local history navigation', () => {
   })
 
   it('handles untitled, empty and unmatched histories', () => {
-    expect(conversationTitle('  ')).toBe('Untitled conversation')
+    expect(conversationTitle('  ')).toBe('未命名对话')
     expect(historyList([], '', 6, now)).toEqual({
       groups: [],
       total: 0,
       hasMore: false,
     })
     expect(historyList([row('1', now)], 'missing', 6, now).total).toBe(0)
-    expect(historyList([row('1', now, '')], 'untitled', 6, now).total).toBe(1)
+    expect(historyList([row('1', now, '')], '未命名', 6, now).total).toBe(1)
   })
 
   it('formats recent timestamps without negative ages', () => {
-    expect(historyTimestamp(now.getTime() + 1000, now)).toBe('Just now')
-    expect(historyTimestamp(now.getTime() - 60_000, now)).toBe('1 minute ago')
-    expect(historyTimestamp(now.getTime() - 120_000, now)).toBe('2 minutes ago')
-    expect(historyTimestamp(now.getTime() - 3_600_000, now)).toBe('1 hour ago')
+    expect(historyTimestamp(now.getTime() + 1000, now)).toBe('刚刚')
+    expect(historyTimestamp(now.getTime() - 60_000, now)).toBe('1 分钟前')
+    expect(historyTimestamp(now.getTime() - 120_000, now)).toBe('2 分钟前')
+    expect(historyTimestamp(now.getTime() - 3_600_000, now)).toBe('1 小时前')
   })
 })

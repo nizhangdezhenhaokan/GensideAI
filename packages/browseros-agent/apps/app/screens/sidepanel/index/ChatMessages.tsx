@@ -1,6 +1,7 @@
 import type { UIMessage } from 'ai'
 import { Bot } from 'lucide-react'
 import { type FC, Fragment } from 'react'
+import SmartFinanceAvatar from '@/assets/smart-finance-avatar.png'
 import {
   Conversation,
   ConversationContent,
@@ -37,6 +38,8 @@ export interface ChatMessagesProps {
   showDontShowAgain: boolean
   onTakeSurvey: (opts?: { dontShowAgain?: boolean }) => void
   onDismissJtbdPopup: (dontShowAgain: boolean) => void
+  /** 仅 Assistant 侧边栏使用财务原型头像。 */
+  financeStyle?: boolean
 }
 
 export const ChatMessages: FC<ChatMessagesProps> = ({
@@ -51,6 +54,7 @@ export const ChatMessages: FC<ChatMessagesProps> = ({
   showDontShowAgain,
   onTakeSurvey,
   onDismissJtbdPopup,
+  financeStyle = true,
 }) => {
   const isStreaming = status === 'streaming' || status === 'submitted'
 
@@ -81,6 +85,17 @@ export const ChatMessages: FC<ChatMessagesProps> = ({
             return (
               <Fragment key={message.id}>
                 <Message from={message.role}>
+                  {message.role === 'assistant' && (
+                    <img
+                      src={SmartFinanceAvatar}
+                      alt="智慧小财神"
+                      className={
+                        financeStyle
+                          ? 'finance-sidebar-message-avatar'
+                          : 'mt-1 h-7 w-7 shrink-0 rounded-md object-contain'
+                      }
+                    />
+                  )}
                   <MessageContent>
                     {action ? (
                       <UserActionMessage action={action} />
@@ -147,6 +162,7 @@ export const ChatMessages: FC<ChatMessagesProps> = ({
                     disliked={disliked[message.id] ?? false}
                     onClickLike={likeAction}
                     onClickDislike={dislikeAction}
+                    financeStyle={financeStyle}
                   />
                 ) : null}
               </Fragment>

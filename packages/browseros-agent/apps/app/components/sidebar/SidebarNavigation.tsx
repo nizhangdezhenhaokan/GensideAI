@@ -24,15 +24,15 @@ type NavItem = {
 }
 
 const primaryNavItems: NavItem[] = [
-  { name: 'Home', to: '/home', icon: Home },
+  { name: '首页', to: '/home', icon: Home },
   {
-    name: 'Connect Apps',
+    name: '连接应用',
     to: '/connect-apps',
     icon: PlugZap,
   },
-  { name: 'Scheduled Tasks', to: '/scheduled', icon: CalendarClock },
+  { name: '定时任务', to: '/scheduled', icon: CalendarClock },
   {
-    name: 'Settings',
+    name: '设置',
     to: '/settings/ai',
     icon: Settings,
   },

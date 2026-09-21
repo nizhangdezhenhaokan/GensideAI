@@ -7,7 +7,7 @@ export function providerDescription(
   provider: LlmProviderConfig,
   isBuiltIn: boolean,
 ): string {
-  if (isBuiltIn) return 'BrowserOS-hosted model with strict rate limits'
+  if (isBuiltIn) return 'BrowserOS 托管模型，存在严格的速率限制'
   return provider.baseUrl
     ? `${provider.modelId} · ${provider.baseUrl}`
     : provider.modelId
@@ -48,7 +48,7 @@ export function buildProviderActions(input: {
   const { provider, isBuiltIn, isTesting } = input
   const actions: TargetRowAction[] = [
     {
-      label: 'Set as default',
+      label: '设为默认',
       onSelect: () => input.onSelectProvider(provider.id),
     },
   ]
@@ -56,13 +56,13 @@ export function buildProviderActions(input: {
 
   actions.push(
     {
-      label: isTesting ? 'Testing...' : 'Test connection',
+      label: isTesting ? '正在测试…' : '测试连接',
       onSelect: () => input.onTestProvider(provider),
       disabled: isTesting,
     },
-    { label: 'Edit', onSelect: () => input.onEditProvider(provider) },
+    { label: '编辑', onSelect: () => input.onEditProvider(provider) },
     {
-      label: 'Delete',
+      label: '删除',
       onSelect: () => input.onDeleteProvider(provider),
       destructive: true,
     },
@@ -80,16 +80,16 @@ export function buildAgentActions(input: {
 }): TargetRowAction[] {
   const { agent, isDeleting } = input
   const actions: TargetRowAction[] = [
-    { label: 'Set as default', onSelect: () => input.onSelectAgent(agent.id) },
+    { label: '设为默认', onSelect: () => input.onSelectAgent(agent.id) },
   ]
 
   if (agent.type === 'custom' && input.onEditAgent) {
     const onEditAgent = input.onEditAgent
-    actions.push({ label: 'Edit', onSelect: () => onEditAgent(agent) })
+    actions.push({ label: '编辑', onSelect: () => onEditAgent(agent) })
   }
 
   actions.push({
-    label: 'Delete',
+    label: '删除',
     onSelect: () => void input.onDeleteAgent(agent),
     destructive: true,
     disabled: isDeleting,

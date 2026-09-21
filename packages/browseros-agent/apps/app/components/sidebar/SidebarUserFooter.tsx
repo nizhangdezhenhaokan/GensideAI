@@ -50,7 +50,7 @@ export const SidebarUserFooter: FC<SidebarUserFooterProps> = ({
           expanded ? 'opacity-100' : 'opacity-0',
         )}
       >
-        About BrowserOS
+        关于 BrowserOS
       </span>
     </a>
   )
@@ -68,7 +68,7 @@ export const SidebarUserFooter: FC<SidebarUserFooterProps> = ({
           expanded ? 'opacity-100' : 'opacity-0',
         )}
       >
-        Shortcuts
+        快捷键
       </span>
     </Button>
   )
@@ -81,7 +81,7 @@ export const SidebarUserFooter: FC<SidebarUserFooterProps> = ({
         ) : (
           <Tooltip>
             <TooltipTrigger asChild>{shortcutsButton}</TooltipTrigger>
-            <TooltipContent side="right">Shortcuts</TooltipContent>
+            <TooltipContent side="right">快捷键</TooltipContent>
           </Tooltip>
         )}
 
@@ -90,7 +90,7 @@ export const SidebarUserFooter: FC<SidebarUserFooterProps> = ({
         ) : (
           <Tooltip>
             <TooltipTrigger asChild>{aboutLink}</TooltipTrigger>
-            <TooltipContent side="right">About BrowserOS</TooltipContent>
+            <TooltipContent side="right">关于 BrowserOS</TooltipContent>
           </Tooltip>
         )}
       </div>

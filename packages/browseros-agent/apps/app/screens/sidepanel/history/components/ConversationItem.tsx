@@ -67,7 +67,7 @@ export const ConversationItem: FC<ConversationItemProps> = ({
             type="button"
             onClick={handleDeleteClick}
             className="shrink-0 rounded p-1 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
-            title="Delete conversation"
+            title="删除对话"
           >
             <Trash2 className="h-3.5 w-3.5" />
           </button>
@@ -84,7 +84,7 @@ export const ConversationItem: FC<ConversationItemProps> = ({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"

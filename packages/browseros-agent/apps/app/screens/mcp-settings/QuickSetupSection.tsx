@@ -19,11 +19,11 @@ interface ClientConfig {
 const clients: ClientConfig[] = [
   {
     id: 'generic',
-    name: 'Other agents',
+    name: '其他智能体',
     kind: 'config',
     action: (
       <>
-        Add the block below to your agent's MCP config (commonly{' '}
+        将以下配置块添加到智能体的 MCP 配置中（通常为{' '}
         <code className="rounded bg-muted px-1 py-0.5 font-mono text-[11px]">
           mcp.json
         </code>{' '}
@@ -31,8 +31,8 @@ const clients: ClientConfig[] = [
         <code className="rounded bg-muted px-1 py-0.5 font-mono text-[11px]">
           settings.json
         </code>
-        ). If the schema differs, the only values that matter are{' '}
-        <strong>type</strong> and <strong>url</strong>.
+        ）。若配置格式不同，关键字段仍是 <strong>type</strong> and{' '}
+        <strong>url</strong>.
       </>
     ),
     getSnippet: (url) =>
@@ -50,7 +50,7 @@ const clients: ClientConfig[] = [
     id: 'claude-code',
     name: 'Claude Code',
     kind: 'command',
-    action: 'Run in your terminal:',
+    action: '请在终端中运行：',
     getSnippet: (url) =>
       `claude mcp add --transport http browseros ${url} --scope user`,
   },
@@ -60,7 +60,7 @@ const clients: ClientConfig[] = [
     kind: 'config',
     action: (
       <>
-        Add this block to{' '}
+        将以下配置块添加到{' '}
         <code className="rounded bg-muted px-1 py-0.5 font-mono text-[11px]">
           claude_desktop_config.json
         </code>
@@ -85,7 +85,7 @@ const clients: ClientConfig[] = [
     id: 'codex',
     name: 'Codex',
     kind: 'command',
-    action: 'Run in your terminal:',
+    action: '请在终端中运行：',
     getSnippet: (url) => `codex mcp add browseros ${url}`,
   },
 ]
@@ -108,7 +108,7 @@ const CopyButton: FC<{ text: string; label?: string }> = ({ text, label }) => {
       variant="ghost"
       size="icon-sm"
       onClick={handleCopy}
-      aria-label={copied ? 'Copied' : (label ?? 'Copy')}
+      aria-label={copied ? '已复制' : (label ?? '复制')}
       className="shrink-0 text-muted-foreground hover:text-foreground"
     >
       {copied ? (
@@ -128,17 +128,17 @@ export const QuickSetupSection: FC<QuickSetupSectionProps> = ({
   return (
     <div className="space-y-3">
       <div>
-        <h3 className="font-semibold text-sm">Manual setup</h3>
+        <h3 className="font-semibold text-sm">手动配置</h3>
         <p className="text-muted-foreground text-xs">
-          Use the snippet for your agent, or use the Server URL with clients
-          that support URL-based MCP config.
+          可使用对应智能体的配置片段，或在支持 URL 型 MCP
+          配置的客户端中使用服务器地址。
         </p>
       </div>
 
       <div className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2">
-        <span className="text-muted-foreground text-xs">Server URL</span>
+        <span className="text-muted-foreground text-xs">服务器地址</span>
         <code className="flex-1 truncate font-mono text-xs">{serverUrl}</code>
-        <CopyButton text={serverUrl} label="Copy server URL" />
+        <CopyButton text={serverUrl} label="复制服务器地址" />
       </div>
 
       <Tabs defaultValue="generic">
@@ -170,10 +170,7 @@ export const QuickSetupSection: FC<QuickSetupSectionProps> = ({
                   )}
                   {snippet}
                 </pre>
-                <CopyButton
-                  text={snippet}
-                  label={`Copy ${client.name} setup`}
-                />
+                <CopyButton text={snippet} label={`复制 ${client.name} 配置`} />
               </div>
             </TabsContent>
           )

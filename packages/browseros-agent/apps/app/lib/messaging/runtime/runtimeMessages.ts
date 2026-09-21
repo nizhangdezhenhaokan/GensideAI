@@ -2,6 +2,7 @@ import { defineExtensionMessaging } from '@webext-core/messaging'
 
 export const RuntimeMessageType = {
   getTabId: 'runtime.getTabId',
+  toggleSidePanel: 'runtime.toggleSidePanel',
   authSuccess: 'runtime.authSuccess',
   stopAgent: 'runtime.stopAgent',
 } as const
@@ -14,8 +15,13 @@ export interface RuntimeStopAgentData {
   conversationId: string
 }
 
+export interface RuntimeSidePanelToggleResponse {
+  opened: boolean
+}
+
 type RuntimeMessagesProtocol = {
   [RuntimeMessageType.getTabId](): RuntimeTabIdResponse
+  [RuntimeMessageType.toggleSidePanel](): RuntimeSidePanelToggleResponse
   [RuntimeMessageType.authSuccess](): void
   [RuntimeMessageType.stopAgent](data: RuntimeStopAgentData): void
 }

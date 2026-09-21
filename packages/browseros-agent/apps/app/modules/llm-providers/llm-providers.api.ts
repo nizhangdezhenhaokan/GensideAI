@@ -74,11 +74,11 @@ export async function listProviders(): Promise<LlmProviderConfig[]> {
 }
 
 /**
- * Loads the provider list, seeding the built-in BrowserOS provider when the
- * server has none.
+ * Loads the provider list, seeding the built-in BrowserOS provider when it is
+ * absent.
  *
  * The seed lives here rather than in an effect so it can only run on a
- * confirmed empty response. Reacting to an empty list in the component would
+ * confirmed server response. Reacting to a missing row in the component would
  * fire on a failed load too, writing the default over a list that had simply
  * not arrived yet. The write is a PUT on a fixed id, so a retried fetch cannot
  * produce duplicates either.
@@ -88,11 +88,14 @@ export async function fetchProviders(): Promise<LlmProviderConfig[]> {
   const fixedProvider = configs.find(
     (provider) => provider.id === DEFAULT_PROVIDER_ID,
   )
-  if (fixedProvider) return [fixedProvider]
+  // 内置 BrowserOS 提供商存在时，也必须返回其余用户配置的提供商。
+  // 之前只返回 fixedProvider，会让新增的 URL、Key 和模型已保存却永远
+  // 无法在设置页显示或被设为默认。
+  if (fixedProvider) return configs
 
   const seeded = createDefaultBrowserOSProvider()
   await putProvider(seeded)
-  return [seeded]
+  return [seeded, ...configs]
 }
 
 /**

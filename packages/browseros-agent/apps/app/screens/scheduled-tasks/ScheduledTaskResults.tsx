@@ -44,7 +44,14 @@ const getStatusIcon = (status: JobRunWithDetails['status']) => {
   }
 }
 
-const formatTimestamp = (dateString: string) => dayjs(dateString).fromNow()
+const formatTimestamp = (dateString: string) => {
+  const elapsedSeconds = Math.max(0, dayjs().diff(dayjs(dateString), 'second'))
+  if (elapsedSeconds < 60) return '刚刚'
+  if (elapsedSeconds < 3_600) return `${Math.floor(elapsedSeconds / 60)} 分钟前`
+  if (elapsedSeconds < 86_400)
+    return `${Math.floor(elapsedSeconds / 3_600)} 小时前`
+  return `${Math.floor(elapsedSeconds / 86_400)} 天前`
+}
 
 export const ScheduledTaskResults: FC<ScheduledTaskResultsProps> = ({
   onViewRun,
@@ -79,7 +86,7 @@ export const ScheduledTaskResults: FC<ScheduledTaskResultsProps> = ({
     return (
       <div className="flex flex-col items-center justify-center gap-3 py-16 text-muted-foreground">
         <Calendar className="h-10 w-10 opacity-50" />
-        <p className="text-sm">No task runs yet</p>
+        <p className="text-sm">暂无任务运行记录</p>
       </div>
     )
   }
@@ -120,7 +127,7 @@ export const ScheduledTaskResults: FC<ScheduledTaskResultsProps> = ({
                   onCancelRun(run.id)
                 }}
                 className="shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                aria-label="Cancel run"
+                aria-label="取消运行"
               >
                 <Square className="h-3.5 w-3.5" />
               </Button>
@@ -134,7 +141,7 @@ export const ScheduledTaskResults: FC<ScheduledTaskResultsProps> = ({
                   onRetryRun(run.jobId)
                 }}
                 className="shrink-0 text-muted-foreground hover:text-foreground"
-                aria-label="Retry run"
+                aria-label="重试运行"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
               </Button>

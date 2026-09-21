@@ -3,7 +3,7 @@ import type { ServerConversationSummary } from './conversations.hooks'
 export const HISTORY_PAGE_SIZE = 6
 
 export function conversationTitle(lastUserMessage: string): string {
-  return lastUserMessage.trim() || 'Untitled conversation'
+  return lastUserMessage.trim() || '未命名对话'
 }
 
 /** Group by local calendar days, not elapsed hours (which breaks at midnight/DST). */
@@ -11,25 +11,25 @@ export function historyDateGroup(timestamp: number, now: Date): string {
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   const yesterday = new Date(today)
   yesterday.setDate(yesterday.getDate() - 1)
-  if (timestamp >= today.getTime()) return 'Today'
-  if (timestamp >= yesterday.getTime()) return 'Yesterday'
-  return 'Earlier'
+  if (timestamp >= today.getTime()) return '今天'
+  if (timestamp >= yesterday.getTime()) return '昨天'
+  return '更早'
 }
 
 export function historyTimestamp(timestamp: number, now: Date): string {
-  if (historyDateGroup(timestamp, now) === 'Today') {
+  if (historyDateGroup(timestamp, now) === '今天') {
     const minutes = Math.max(
       0,
       Math.floor((now.getTime() - timestamp) / 60_000),
     )
-    if (minutes < 1) return 'Just now'
-    if (minutes < 60) return `${minutes} minute${minutes === 1 ? '' : 's'} ago`
+    if (minutes < 1) return '刚刚'
+    if (minutes < 60) return `${minutes} 分钟前`
     const hours = Math.floor(minutes / 60)
-    return `${hours} hour${hours === 1 ? '' : 's'} ago`
+    return `${hours} 小时前`
   }
   return new Date(timestamp).toLocaleString(
     undefined,
-    historyDateGroup(timestamp, now) === 'Yesterday'
+    historyDateGroup(timestamp, now) === '昨天'
       ? { hour: 'numeric', minute: '2-digit' }
       : {
           month: 'short',

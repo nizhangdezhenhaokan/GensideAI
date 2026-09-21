@@ -161,8 +161,8 @@ export const ScheduledTasksPage: FC = () => {
 
       <Tabs value={activeTab} onValueChange={setSelectedTab}>
         <TabsList>
-          <TabsTrigger value="results">Results</TabsTrigger>
-          <TabsTrigger value="tasks">Scheduled Tasks</TabsTrigger>
+          <TabsTrigger value="results">运行结果</TabsTrigger>
+          <TabsTrigger value="tasks">定时任务</TabsTrigger>
         </TabsList>
 
         <TabsContent value="results">
@@ -218,17 +218,14 @@ export const ScheduledTasksPage: FC = () => {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Scheduled Task</AlertDialogTitle>
+            <AlertDialogTitle>删除定时任务</AlertDialogTitle>
             <AlertDialogDescription>
-              Delete "{jobToDelete?.name}"? This will also remove all run
-              history for this task.
+              确定删除“{jobToDelete?.name}”吗？该任务的全部运行历史也将被删除。
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDelete}>
-              Delete
-            </AlertDialogAction>
+            <AlertDialogCancel>取消</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete}>删除</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

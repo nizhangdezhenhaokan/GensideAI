@@ -37,13 +37,13 @@ const formatDateTime = (dateStr: string) =>
   dayjs(dateStr).format('MMM D, YYYY, h:mm A')
 
 function formatDuration(startedAt: string, completedAt?: string): string {
-  if (!completedAt) return 'Still running'
+  if (!completedAt) return '仍在运行'
   const diff = dayjs(completedAt).diff(dayjs(startedAt))
   const d = dayjs.duration(diff)
   const mins = Math.floor(d.asMinutes())
   const secs = d.seconds()
-  if (mins === 0) return `${secs} seconds`
-  return `${mins}m ${secs}s`
+  if (mins === 0) return `${secs} 秒`
+  return `${mins} 分 ${secs} 秒`
 }
 
 export const RunResultDialog: FC<RunResultDialogProps> = ({
@@ -76,7 +76,7 @@ export const RunResultDialog: FC<RunResultDialogProps> = ({
             ) : (
               <Loader2 className="h-5 w-5 animate-spin text-accent-orange" />
             )}
-            {jobName || 'Run Result'}
+            {jobName || '运行结果'}
           </DialogTitle>
           <div className="text-muted-foreground text-sm">
             {formatDateTime(run.startedAt)} •{' '}
@@ -89,7 +89,7 @@ export const RunResultDialog: FC<RunResultDialogProps> = ({
             <div className="flex flex-col gap-3 rounded-lg border border-destructive/30 bg-destructive/5 p-4">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <AlertCircle className="h-5 w-5" />
-                <span className="font-medium text-sm">Task failed</span>
+                <span className="font-medium text-sm">任务执行失败</span>
               </div>
               <p className="text-destructive text-sm">{run.result}</p>
             </div>
@@ -99,7 +99,7 @@ export const RunResultDialog: FC<RunResultDialogProps> = ({
             </div>
           ) : (
             <div className="rounded-lg border border-border bg-muted/50 p-4 text-muted-foreground text-sm">
-              No result available
+              暂无可用结果
             </div>
           )}
         </ScrollArea>
@@ -108,7 +108,7 @@ export const RunResultDialog: FC<RunResultDialogProps> = ({
           {run.status === 'running' && onCancelRun && (
             <Button variant="destructive" onClick={() => onCancelRun(run.id)}>
               <Square className="h-4 w-4" />
-              Cancel
+              取消运行
             </Button>
           )}
           {run.status === 'failed' && onRetryRun && (
@@ -120,7 +120,7 @@ export const RunResultDialog: FC<RunResultDialogProps> = ({
               }}
             >
               <RotateCcw className="h-4 w-4" />
-              Retry
+              重试
             </Button>
           )}
           {run.result && (
@@ -132,17 +132,17 @@ export const RunResultDialog: FC<RunResultDialogProps> = ({
               {copied ? (
                 <>
                   <Check className="h-4 w-4" />
-                  Copied
+                  已复制
                 </>
               ) : (
                 <>
                   <Copy className="h-4 w-4" />
-                  Copy
+                  复制
                 </>
               )}
             </Button>
           )}
-          <Button onClick={() => onOpenChange(false)}>Close</Button>
+          <Button onClick={() => onOpenChange(false)}>关闭</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

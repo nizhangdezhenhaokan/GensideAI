@@ -16,6 +16,10 @@ const apiPattern = apiUrl.port
   ? `${apiUrl.hostname}:${apiUrl.port}`
   : apiUrl.hostname
 
+// 开发版也使用正式扩展身份，否则 BrowserOS 原生 Assistant 入口无法识别本地侧边栏。
+const AGENT_EXTENSION_KEY =
+  'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvBDAaDRvv61NpBeLR8etBRw82lv9VJO3sz/mA26gDzWKtVuzW4DXCl8Zfj5oWmoXLTfv3aiTigUXo/LHOoGpSucEVroMmAc7cgu2KuQ1fZPpMvYa0npD/m4h89360q8Oz0oKKaZGS905IJ04M2IkF4CuU3YEHFJBWb+cUyK9H8YVugelYbPD0IVs63T1SkGbh/t/Tfb2DpkinduSO8+x26sKydm30SRt+iZ2+7Nolcdum3LExInUiX2Pgb65Jb+mVw8NqyTVJyCEp8uq0cSHomWFQirSJ80tsDhISp4btwaRKHrXqovQx9XHQv4hCd+3LuB830eUEVMUNuCO+OyPxQIDAQAB'
+
 // See https://wxt.dev/api/config.html
 // Extension ID will be bflpfmnmnokmjhmgnolecpppdbdophmk
 export default defineConfig({
@@ -35,10 +39,10 @@ export default defineConfig({
   },
   manifest: ({ mode }) => ({
     name: '小财神',
+    key: AGENT_EXTENSION_KEY,
     ...(mode === 'development'
       ? {}
       : {
-          key: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvBDAaDRvv61NpBeLR8etBRw82lv9VJO3sz/mA26gDzWKtVuzW4DXCl8Zfj5oWmoXLTfv3aiTigUXo/LHOoGpSucEVroMmAc7cgu2KuQ1fZPpMvYa0npD/m4h89360q8Oz0oKKaZGS905IJ04M2IkF4CuU3YEHFJBWb+cUyK9H8YVugelYbPD0IVs63T1SkGbh/t/Tfb2DpkinduSO8+x26sKydm30SRt+iZ2+7Nolcdum3LExInUiX2Pgb65Jb+mVw8NqyTVJyCEp8uq0cSHomWFQirSJ80tsDhISp4btwaRKHrXqovQx9XHQv4hCd+3LuB830eUEVMUNuCO+OyPxQIDAQAB',
           update_url:
             'https://cdn.browseros.com/extensions/update-manifest.xml',
         }),

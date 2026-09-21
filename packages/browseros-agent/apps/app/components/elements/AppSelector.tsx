@@ -177,25 +177,25 @@ export const AppSelector: FC<AppSelectorProps> = ({
           align="end"
           className="w-72 p-0"
           role="dialog"
-          aria-label="Connect apps"
+          aria-label="连接应用"
         >
           <Command
             className="[&_svg:not([class*='text-'])]:text-muted-foreground"
             shouldFilter={false}
           >
             <CommandInput
-              placeholder="Search apps..."
+              placeholder="搜索应用……"
               className="h-9"
               value={filterText}
               onValueChange={setFilterText}
             />
             <CommandList className="max-h-64 overflow-auto">
-              <CommandEmpty>No apps found</CommandEmpty>
+              <CommandEmpty>未找到应用</CommandEmpty>
 
               {filteredConnected.length > 0 && (
                 <CommandGroup>
                   <div className="my-2 px-2 font-semibold text-muted-foreground text-xs uppercase tracking-wide">
-                    Connected
+                    已连接
                   </div>
                   <div className="flex flex-wrap items-center gap-2 px-3 py-2">
                     {filteredConnected.map((server) => (
@@ -219,7 +219,7 @@ export const AppSelector: FC<AppSelectorProps> = ({
                         window.open(appUrl, '_blank')
                         setOpen(false)
                       }}
-                      title="Manage apps"
+                      title="管理应用"
                       className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg border border-border border-dashed text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
                     >
                       <Settings className="h-3.5 w-3.5" />
@@ -231,7 +231,7 @@ export const AppSelector: FC<AppSelectorProps> = ({
               {filteredUnauthenticated.length > 0 && (
                 <CommandGroup>
                   <div className="my-2 px-2 font-semibold text-muted-foreground text-xs uppercase tracking-wide">
-                    Needs authentication
+                    需要登录授权
                   </div>
                   {filteredUnauthenticated.map((server) => (
                     <CommandItem
@@ -260,7 +260,7 @@ export const AppSelector: FC<AppSelectorProps> = ({
               {filteredAvailable.length > 0 && (
                 <CommandGroup>
                   <div className="my-2 px-2 font-semibold text-muted-foreground text-xs uppercase tracking-wide">
-                    Available
+                    可用应用
                   </div>
                   {filteredAvailable.map((server) => (
                     <CommandItem

@@ -160,7 +160,7 @@ export const FeaturesPage: FC = () => {
             {/* Header */}
             <div className="space-y-6">
               <PillIndicator
-                text="WELCOME"
+                text="欢迎使用"
                 className={`transition-all delay-100 duration-700 ${mounted ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}
               />
 
@@ -172,7 +172,7 @@ export const FeaturesPage: FC = () => {
                     mounted ? 'scale-100 opacity-100' : 'scale-95 opacity-0',
                   )}
                 >
-                  Why Switch to{' '}
+                  为什么选择{' '}
                   <span className="text-[var(--accent-orange)]">
                     BrowserOS?
                   </span>
@@ -186,8 +186,7 @@ export const FeaturesPage: FC = () => {
                       : 'translate-y-4 opacity-0',
                   )}
                 >
-                  Watch our launch video to understand the vision of BrowserOS
-                  and key features!
+                  观看发布视频，了解 BrowserOS 的产品理念与核心功能！
                 </p>
               </div>
             </div>
@@ -225,7 +224,7 @@ export const FeaturesPage: FC = () => {
         >
           <div className="text-center">
             <p className="mb-2 font-medium text-muted-foreground text-xs">
-              Scroll for Features
+              向下滚动查看功能介绍
             </p>
             <ArrowDown className="mx-auto h-6 w-6 text-[var(--accent-orange)]" />
           </div>
@@ -236,15 +235,13 @@ export const FeaturesPage: FC = () => {
       <section className="mx-auto max-w-7xl px-6 py-16 md:py-20">
         <div className="mb-12 space-y-3 text-center">
           <p className="font-semibold text-muted-foreground text-xs uppercase tracking-widest">
-            FEATURES
+            功能介绍
           </p>
           <h2 className="font-bold text-3xl tracking-tight md:text-4xl">
-            Explore What&apos;s{' '}
-            <span className="text-[var(--accent-orange)]">Possible</span>
+            探索 <span className="text-[var(--accent-orange)]">更多可能</span>
           </h2>
           <p className="mx-auto max-w-2xl text-muted-foreground">
-            Skim the highlights below, then click any card to see a focused
-            walkthrough with video and deeper details.
+            浏览下方亮点，点击任意卡片即可查看视频演示和详细说明。
           </p>
         </div>
 
@@ -264,7 +261,7 @@ export const FeaturesPage: FC = () => {
 
         <div className="mt-8 text-center">
           <p className="text-muted-foreground text-sm">
-            💡 Tip: Click any card to open a focused walkthrough with video
+            提示：点击任意卡片即可打开包含视频的详细介绍
           </p>
         </div>
       </section>
@@ -296,10 +293,10 @@ export const FeaturesPage: FC = () => {
               </div>
               <div className="space-y-1">
                 <h3 className="font-semibold text-lg transition-colors group-hover:text-[var(--accent-orange)]">
-                  Join Discord
+                  加入 Discord
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  To suggest features / provide feedback
+                  提出功能建议或反馈
                 </p>
               </div>
             </a>
@@ -320,10 +317,10 @@ export const FeaturesPage: FC = () => {
               </div>
               <div className="space-y-1">
                 <h3 className="font-semibold text-lg transition-colors group-hover:text-[var(--accent-orange)]">
-                  Join Slack
+                  加入 Slack
                 </h3>
                 <p className="text-muted-foreground text-sm">
-                  To suggest features / provide feedback
+                  提出功能建议或反馈
                 </p>
               </div>
             </a>
@@ -346,9 +343,7 @@ export const FeaturesPage: FC = () => {
                 <h3 className="font-semibold text-lg transition-colors group-hover:text-[var(--accent-orange)]">
                   GitHub
                 </h3>
-                <p className="text-muted-foreground text-sm">
-                  Star our repository
-                </p>
+                <p className="text-muted-foreground text-sm">为项目点亮 Star</p>
               </div>
             </a>
 
@@ -364,9 +359,9 @@ export const FeaturesPage: FC = () => {
               </div>
               <div className="space-y-1">
                 <h3 className="font-semibold text-lg transition-colors group-hover:text-[var(--accent-orange)]">
-                  Documentation
+                  使用文档
                 </h3>
-                <p className="text-muted-foreground text-sm">Learn more</p>
+                <p className="text-muted-foreground text-sm">了解更多</p>
               </div>
             </a>
           </div>
@@ -380,7 +375,7 @@ export const FeaturesPage: FC = () => {
             size="lg"
             className="bg-[var(--accent-orange)] text-white shadow-[var(--accent-orange)]/25 shadow-lg hover:bg-[var(--accent-orange)]/90"
           >
-            Start Using BrowserOS
+            开始使用 BrowserOS
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>

@@ -49,7 +49,7 @@ export function SidebarHistory({
   const trigger = (
     <button
       type="button"
-      aria-label="History"
+      aria-label="历史记录"
       aria-expanded={visible}
       aria-controls={contentId}
       onClick={() => setOpen((value) => !value)}
@@ -65,7 +65,7 @@ export function SidebarHistory({
           !expanded && 'opacity-0',
         )}
       >
-        History
+        历史记录
       </span>
       {expanded && (
         <ChevronDown
@@ -84,7 +84,7 @@ export function SidebarHistory({
       {/* Content is absent while expanded; close from the trigger rather than the content's hover region. */}
       <Tooltip disableHoverableContent>
         <TooltipTrigger asChild>{trigger}</TooltipTrigger>
-        {!expanded && <TooltipContent side="right">History</TooltipContent>}
+        {!expanded && <TooltipContent side="right">历史记录</TooltipContent>}
       </Tooltip>
       <div id={contentId} hidden={!visible}>
         <div className="mx-3 my-3 space-y-2">
@@ -92,8 +92,8 @@ export function SidebarHistory({
             <Search className="size-3.5 shrink-0 text-muted-foreground" />
             <input
               type="search"
-              aria-label="Search conversations"
-              placeholder="Search conversations"
+              aria-label="搜索对话"
+              placeholder="搜索对话"
               value={search}
               onChange={(event) => {
                 setSearch(event.target.value)
@@ -104,7 +104,7 @@ export function SidebarHistory({
           </label>
           <section
             className="styled-scrollbar max-h-[min(28rem,50dvh)] space-y-2 overflow-y-auto"
-            aria-label="Recent conversations"
+            aria-label="最近对话"
           >
             {isPending && !isError && (
               <p
@@ -112,7 +112,7 @@ export function SidebarHistory({
                 className="flex items-center gap-2 px-2 py-3 text-muted-foreground text-xs"
               >
                 <Loader2 className="size-3.5 animate-spin" />
-                Loading conversations…
+                正在加载对话……
               </p>
             )}
             {isError && (
@@ -120,13 +120,13 @@ export function SidebarHistory({
                 role="alert"
                 className="px-2 py-2 text-muted-foreground text-xs"
               >
-                <p>Couldn’t load history.</p>
+                <p>无法加载历史记录。</p>
                 <button
                   type="button"
                   onClick={() => void refetch()}
                   className="mt-1 underline underline-offset-2"
                 >
-                  Try again
+                  重试
                 </button>
               </div>
             )}
@@ -135,9 +135,7 @@ export function SidebarHistory({
                 role="status"
                 className="px-2 py-3 text-muted-foreground text-xs"
               >
-                {search.trim()
-                  ? 'No conversations found.'
-                  : 'Your conversations will appear here.'}
+                {search.trim() ? '未找到相关对话。' : '你的对话将显示在这里。'}
               </p>
             )}
             {groups.map((group) => (
@@ -188,7 +186,7 @@ export function SidebarHistory({
                 onClick={() => setLimit((value) => value + HISTORY_PAGE_SIZE)}
                 className="w-full rounded-md px-2 py-2 text-left text-muted-foreground text-xs hover:bg-sidebar-accent"
               >
-                Show older
+                显示更早记录
               </button>
             )}
           </section>

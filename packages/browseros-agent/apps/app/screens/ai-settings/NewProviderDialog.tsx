@@ -225,6 +225,8 @@ export interface NewProviderDialogProps {
   onOpenChange: (open: boolean) => void
   initialValues?: Partial<LlmProviderConfig>
   onSave: (provider: LlmProviderConfig) => Promise<void>
+  /** 新建时限定可选类型；编辑既有配置时仍显示其原始类型。 */
+  allowedProviderTypes?: ProviderType[]
 }
 
 export const NewProviderDialog: FC<NewProviderDialogProps> = ({
@@ -232,6 +234,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
   onOpenChange,
   initialValues,
   onSave,
+  allowedProviderTypes,
 }) => {
   const [isTesting, setIsTesting] = useState(false)
   const [testResult, setTestResult] = useState<TestResult | null>(null)
@@ -241,15 +244,23 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
   const { supports } = useCapabilities()
   const { baseUrl: agentServerUrl } = useAgentServerUrl()
 
+  const defaultProviderType = allowedProviderTypes?.[0] ?? 'openai'
   const filteredProviderTypeOptions = getVisibleProviderTypeOptions(supports)
+    .filter(
+      (option) =>
+        Boolean(initialValues?.id) ||
+        !allowedProviderTypes?.length ||
+        allowedProviderTypes.includes(option.value),
+    )
 
   const form = useForm<ProviderFormValues>({
     resolver: zodResolver(providerFormSchema),
     defaultValues: {
-      type: initialValues?.type || 'openai',
+      type: initialValues?.type || defaultProviderType,
       name: initialValues?.name || '',
       baseUrl:
-        initialValues?.baseUrl || getDefaultBaseUrlForProviders('openai'),
+        initialValues?.baseUrl ||
+        getDefaultBaseUrlForProviders(defaultProviderType),
       modelId: initialValues?.modelId || '',
       apiKey: initialValues?.apiKey || '',
       headers: headerEntries(initialValues?.headers),
@@ -345,7 +356,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
       onClick={resetContextWindow}
       className="cursor-pointer text-primary hover:underline"
     >
-      Reset
+      重置
     </button>
   )
 
@@ -411,11 +422,13 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
   useEffect(() => {
     if (initialValues) {
       form.reset({
-        type: initialValues.type || 'openai',
+        type: initialValues.type || defaultProviderType,
         name: initialValues.name || '',
         baseUrl:
           initialValues.baseUrl ||
-          getDefaultBaseUrlForProviders(initialValues.type || 'openai'),
+          getDefaultBaseUrlForProviders(
+            initialValues.type || defaultProviderType,
+          ),
         modelId: initialValues.modelId || '',
         apiKey: initialValues.apiKey || '',
         headers: headerEntries(initialValues.headers),
@@ -441,7 +454,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
 
   useEffect(() => {
     if (open && !initialValues) {
-      const defaultType = 'openai'
+      const defaultType = defaultProviderType
       form.reset({
         type: defaultType,
         name: '',
@@ -559,7 +572,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
     } catch (error) {
       setTestResult({
         success: false,
-        message: error instanceof Error ? error.message : 'Test failed',
+        message: error instanceof Error ? error.message : '测试失败',
       })
     } finally {
       setIsTesting(false)
@@ -674,7 +687,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
       const name = watchedType === 'github-copilot' ? 'GitHub' : 'Qwen Code'
       return (
         <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-green-700 text-sm dark:border-green-800 dark:bg-green-950 dark:text-green-300">
-          Credentials are managed via {name} OAuth. No API key needed.
+          凭据由 {name} OAuth 管理，无需 API 密钥。
         </div>
       )
     }
@@ -682,7 +695,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
     if (watchedType === 'chatgpt-pro') {
       return (
         <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-green-700 text-sm dark:border-green-800 dark:bg-green-950 dark:text-green-300">
-          Credentials are managed via OAuth. No API key needed.
+          凭据由 OAuth 管理，无需 API 密钥。
         </div>
       )
     }
@@ -841,7 +854,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
           name="baseUrl"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Base URL *</FormLabel>
+              <FormLabel>基础 URL *</FormLabel>
               <FormControl>
                 <Input placeholder="https://api.openai.com/v1" {...field} />
               </FormControl>
@@ -853,10 +866,9 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
               )}
               {watchedType === 'openai-compatible' && (
                 <FormDescription>
-                  <code>/chat/completions</code> is appended automatically, so
-                  enter only the base URL (e.g.{' '}
-                  <code>https://opencode.ai/zen/go/v1</code>), not the full
-                  endpoint.
+                  系统会自动拼接 <code>/chat/completions</code>，因此仅需填写
+                  基础 URL（例如 <code>https://opencode.ai/zen/go/v1</code>），
+                  无需填写完整接口地址。
                 </FormDescription>
               )}
               <FormMessage />
@@ -873,7 +885,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
             return (
               <FormItem>
                 <FormLabel>
-                  API Key{isApiKeyOptional || savedApiKey ? '' : ' *'}
+                  API 密钥{isApiKeyOptional || savedApiKey ? '' : ' *'}
                 </FormLabel>
                 <FormControl>
                   <Input
@@ -882,14 +894,14 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
                       savedApiKey
                         ? KEEP_SAVED_PLACEHOLDER
                         : isApiKeyOptional
-                          ? 'Enter your API key (optional)'
-                          : 'Enter your API key'
+                          ? '请输入 API 密钥（可选）'
+                          : '请输入 API 密钥'
                     }
                     {...field}
                   />
                 </FormControl>
                 <FormDescription>
-                  Your API key is encrypted and stored locally.{' '}
+                  您的 API 密钥将加密后保存在本机。{' '}
                   {setupGuideUrl && (
                     <a
                       href={setupGuideUrl}
@@ -915,12 +927,12 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>
-            {initialValues?.id ? 'Edit Provider' : 'Configure New Provider'}
+            {initialValues?.id ? '编辑服务提供方' : '配置新的服务提供方'}
           </DialogTitle>
           <DialogDescription>
             {initialValues?.id
-              ? 'Update your LLM provider configuration.'
-              : 'Add a new LLM provider configuration with API key and model settings.'}
+              ? '更新 LLM 服务提供方配置。'
+              : '通过 API 密钥和模型设置添加新的 LLM 服务提供方。'}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -931,14 +943,14 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
                 name="type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Provider Type *</FormLabel>
+                    <FormLabel>提供商类型 *</FormLabel>
                     <Select
                       onValueChange={(v) => handleTypeChange(v as ProviderType)}
                       value={field.value}
                     >
                       <FormControl>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select provider type" />
+                          <SelectValue placeholder="请选择提供商类型" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -958,9 +970,9 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Provider Name *</FormLabel>
+                    <FormLabel>提供商名称 *</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., Work OpenAI" {...field} />
+                      <Input placeholder="例如：公司模型服务" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -975,7 +987,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
               name="modelId"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
-                  <FormLabel>Model *</FormLabel>
+                  <FormLabel>模型 ID *</FormLabel>
                   {modelInfoList.length === 0 ? (
                     <FormControl>
                       <Input
@@ -984,7 +996,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
                             ? 'Enter your deployment name'
                             : watchedType === 'bedrock'
                               ? 'e.g., anthropic.claude-3-5-sonnet-20241022-v2:0'
-                              : 'Enter model ID'
+                              : '请输入模型 ID'
                         }
                         {...field}
                       />
@@ -1024,7 +1036,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
                       >
                         <Command shouldFilter={false}>
                           <CommandInput
-                            placeholder="Search or paste a model ID..."
+                            placeholder="搜索或粘贴模型 ID……"
                             value={modelSearch}
                             onValueChange={(v) => {
                               setModelSearch(v)
@@ -1106,7 +1118,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
             {showReasoning && renderReasoningControls()}
 
             <div className="space-y-4 border-border border-t pt-4">
-              <h4 className="font-medium text-sm">Model Configuration</h4>
+              <h4 className="font-medium text-sm">模型配置</h4>
               <FormField
                 control={form.control}
                 name="supportsImages"
@@ -1119,7 +1131,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
                       />
                     </FormControl>
                     <FormLabel className="font-normal">
-                      Supports Images
+                      支持图片输入
                     </FormLabel>
                   </FormItem>
                 )}
@@ -1130,7 +1142,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
                   name="contextWindow"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Context Window Size</FormLabel>
+                      <FormLabel>上下文窗口大小</FormLabel>
                       <FormControl>
                         <Input
                           type="number"
@@ -1143,19 +1155,19 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
                       </FormControl>
                       {contextExceedsMax && (
                         <p className="text-destructive text-sm">
-                          Context window cannot exceed{' '}
-                          {formatContextWindow(modelDefaultContext ?? 0)}.{' '}
+                          上下文窗口不能超过{' '}
+                          {formatContextWindow(modelDefaultContext ?? 0)}。{' '}
                           {resetContextLink}
                         </p>
                       )}
                       {!contextExceedsMax && contextIsCustom && (
                         <FormDescription>
-                          Custom value added. {resetContextLink}
+                          已使用自定义值。{resetContextLink}
                         </FormDescription>
                       )}
                       {!contextExceedsMax && !contextIsCustom && (
                         <FormDescription>
-                          Auto-filled based on model
+                          根据模型自动填写
                         </FormDescription>
                       )}
                       <FormMessage />
@@ -1168,7 +1180,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
-                        Temperature ({temperatureRange.min}-
+                        温度参数 ({temperatureRange.min}-
                         {temperatureRange.max})
                       </FormLabel>
                       <FormControl>
@@ -1186,8 +1198,8 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
                       </FormControl>
                       <FormDescription>
                         {temperatureDisabled
-                          ? 'This model does not support temperature'
-                          : 'Controls response randomness'}
+                          ? '此模型不支持温度参数'
+                          : '控制回答的随机性'}
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -1228,7 +1240,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
                 variant="outline"
                 onClick={() => onOpenChange(false)}
               >
-                Cancel
+                取消
               </Button>
               <Button
                 type="button"
@@ -1240,7 +1252,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
                 {isTesting ? 'Testing...' : 'Test'}
               </Button>
               <Button type="submit" disabled={isTesting || contextExceedsMax}>
-                {initialValues?.id ? 'Update' : 'Save'}
+                {initialValues?.id ? '更新' : '保存'}
               </Button>
             </DialogFooter>
           </form>

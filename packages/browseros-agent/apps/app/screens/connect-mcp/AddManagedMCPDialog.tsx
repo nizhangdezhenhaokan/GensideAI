@@ -64,16 +64,14 @@ export const AddManagedMCPDialog: FC<AddManagedMCPDialogProps> = ({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Add built-in app</DialogTitle>
-          <DialogDescription>
-            Select a built-in app to connect
-          </DialogDescription>
+          <DialogTitle>添加内置应用</DialogTitle>
+          <DialogDescription>选择要连接的内置应用</DialogDescription>
         </DialogHeader>
 
         <div className="relative">
           <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            placeholder="Search apps..."
+            placeholder="搜索应用……"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-9"
@@ -84,7 +82,7 @@ export const AddManagedMCPDialog: FC<AddManagedMCPDialogProps> = ({
           {filteredUnauthenticated.length > 0 && (
             <div className="space-y-2">
               <p className="px-1 font-medium text-muted-foreground text-xs uppercase tracking-wider">
-                Needs authentication
+                需要授权
               </p>
               {filteredUnauthenticated.map((server) => (
                 <Button
@@ -116,7 +114,7 @@ export const AddManagedMCPDialog: FC<AddManagedMCPDialogProps> = ({
             <div className="space-y-2">
               {filteredUnauthenticated.length > 0 && (
                 <p className="px-1 font-medium text-muted-foreground text-xs uppercase tracking-wider">
-                  Available
+                  可用应用
                 </p>
               )}
               {filteredAvailable?.map((args) => {
@@ -150,7 +148,7 @@ export const AddManagedMCPDialog: FC<AddManagedMCPDialogProps> = ({
 
           {!hasResults && (
             <p className="py-6 text-center text-muted-foreground text-sm">
-              No apps found
+              未找到应用
             </p>
           )}
         </div>

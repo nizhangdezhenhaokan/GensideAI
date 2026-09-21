@@ -17,13 +17,13 @@ export function groupProviderOptions(
       ? [
           {
             key: 'llm' as const,
-            label: 'BrowserOS agent + your LLM',
+            label: 'BrowserOS 智能体与 LLM',
             options: llm,
           },
         ]
       : []),
     ...(acp.length
-      ? [{ key: 'acp' as const, label: '3p agents', options: acp }]
+      ? [{ key: 'acp' as const, label: '第三方智能体', options: acp }]
       : []),
   ]
 }
@@ -49,7 +49,7 @@ export function getProviderSubtitle(provider: Provider): string | undefined {
   return [
     provider.adapterName,
     provider.modelLabel,
-    provider.modelControl === 'best-effort' ? 'best effort' : undefined,
+    provider.modelControl === 'best-effort' ? '尽力支持' : undefined,
   ]
     .filter(Boolean)
     .join(' · ')

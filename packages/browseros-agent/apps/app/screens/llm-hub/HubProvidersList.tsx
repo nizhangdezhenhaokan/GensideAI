@@ -24,7 +24,7 @@ export const HubProvidersList: FC<HubProvidersListProps> = ({
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <div className="flex items-center justify-center gap-3 py-8 text-muted-foreground">
           <Loader2 className="h-5 w-5 animate-spin" />
-          <span>Loading providers...</span>
+          <span>正在加载服务提供方……</span>
         </div>
       </div>
     )
@@ -34,7 +34,7 @@ export const HubProvidersList: FC<HubProvidersListProps> = ({
     return (
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="font-medium">Configured AI Providers</h3>
+          <h3 className="font-medium">已配置的 AI 服务提供方</h3>
           <Button
             variant="outline"
             size="sm"
@@ -42,13 +42,11 @@ export const HubProvidersList: FC<HubProvidersListProps> = ({
             className="border-[var(--accent-orange)] bg-[var(--accent-orange)]/10 text-[var(--accent-orange)] hover:bg-[var(--accent-orange)]/20 hover:text-[var(--accent-orange)]"
           >
             <Plus className="mr-1.5 h-4 w-4" />
-            Add provider
+            添加服务提供方
           </Button>
         </div>
         <div className="rounded-lg border border-border border-dashed py-8 text-center">
-          <p className="text-muted-foreground text-sm">
-            No providers configured yet.
-          </p>
+          <p className="text-muted-foreground text-sm">暂未配置服务提供方。</p>
         </div>
       </div>
     )
@@ -57,7 +55,7 @@ export const HubProvidersList: FC<HubProvidersListProps> = ({
   return (
     <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="font-medium">Configured AI Providers</h3>
+        <h3 className="font-medium">已配置的 AI 服务提供方</h3>
         <Button
           variant="outline"
           size="sm"
@@ -65,7 +63,7 @@ export const HubProvidersList: FC<HubProvidersListProps> = ({
           className="border-[var(--accent-orange)] bg-[var(--accent-orange)]/10 text-[var(--accent-orange)] hover:bg-[var(--accent-orange)]/20 hover:text-[var(--accent-orange)]"
         >
           <Plus className="mr-1.5 h-4 w-4" />
-          Add provider
+          添加服务提供方
         </Button>
       </div>
       <div className="space-y-3">

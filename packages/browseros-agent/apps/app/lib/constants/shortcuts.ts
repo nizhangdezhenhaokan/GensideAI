@@ -4,7 +4,7 @@
 export const SHORTCUTS_LIST = [
   {
     key: 'A',
-    description: 'Toggle Agent',
+    description: '打开或收起智能体侧边栏',
     modifier: {
       windows: 'Alt',
       mac: '⌥',
@@ -13,7 +13,7 @@ export const SHORTCUTS_LIST = [
   },
   {
     key: 'K',
-    description: 'Toggle LLM Chat',
+    description: '打开或收起 AI 对话',
     modifier: {
       windows: 'Ctrl+Shift',
       mac: '⌘+Shift',
@@ -22,7 +22,7 @@ export const SHORTCUTS_LIST = [
   },
   {
     key: 'L',
-    description: 'Switch providers in LLM Chat',
+    description: '切换 AI 对话服务提供方',
     modifier: {
       windows: 'Ctrl+Shift',
       mac: '⌘+Shift',

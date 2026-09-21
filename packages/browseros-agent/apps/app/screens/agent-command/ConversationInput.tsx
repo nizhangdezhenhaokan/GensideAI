@@ -86,7 +86,7 @@ function InputActionButton({
       onClick={onClick}
       size="icon"
       disabled={disabled}
-      title={streaming && hasContent ? 'Queue message' : undefined}
+      title={streaming && hasContent ? '消息将排队发送' : undefined}
       className="h-10 w-10 flex-shrink-0 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90"
     >
       {showSpinner ? (
@@ -105,8 +105,8 @@ function StopButton({ onStop }: { onStop: () => void }) {
       size="icon"
       variant="ghost"
       onClick={onStop}
-      title="Stop current turn — queued messages will start next."
-      aria-label="Stop current turn"
+      title="停止当前对话，已排队的消息将在下一轮开始。"
+      aria-label="停止当前对话"
       className="h-8 w-8 flex-shrink-0 rounded-lg bg-destructive/10 text-destructive transition-colors hover:bg-destructive/15 hover:text-destructive"
     >
       <Square className="h-3.5 w-3.5 fill-current" />
@@ -193,9 +193,9 @@ function CalmContextControls({
           className="inline-flex h-6 items-center gap-1.5 rounded-full px-2.5 text-[11.5px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground data-[state=open]:bg-accent data-[state=open]:text-foreground"
         >
           <Folder className="size-3" />
-          <span>Workspace</span>
+          <span>工作区</span>
           <span className="font-mono text-[10.5px] text-muted-foreground/70">
-            {selectedFolder?.name ?? 'none'}
+            {selectedFolder?.name ?? '无'}
           </span>
         </button>
       </WorkspaceSelector>
@@ -214,7 +214,7 @@ function CalmContextControls({
           )}
         >
           <Layers className="size-3" />
-          <span>Tabs</span>
+          <span>标签页</span>
           <span
             className={cn(
               'font-mono text-[10.5px]',
@@ -231,11 +231,11 @@ function CalmContextControls({
         type="button"
         onClick={onAttachClick}
         disabled={attachDisabled || !attachmentsEnabled}
-        title="Attach files"
+        title="添加附件"
         className="inline-flex h-6 items-center gap-1.5 rounded-full px-2.5 text-[11.5px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
       >
         <Paperclip className="size-3" />
-        <span>Attach</span>
+        <span>附件</span>
       </button>
       <AppSelector side="bottom">
         <button
@@ -256,7 +256,7 @@ function CalmContextControls({
           ) : (
             <FileText className="size-3" />
           )}
-          <span>Apps</span>
+          <span>应用</span>
           <ChevronDown className="size-3" />
         </button>
       </AppSelector>
@@ -264,7 +264,7 @@ function CalmContextControls({
         <kbd className="inline-flex h-4 min-w-4 items-center justify-center rounded border border-border bg-accent/30 px-1 font-mono text-[10px] text-muted-foreground">
           ↵
         </kbd>
-        <span>to run</span>
+        <span>运行</span>
         <span className="text-muted-foreground/40">·</span>
         <kbd className="inline-flex h-4 min-w-4 items-center justify-center rounded border border-border bg-accent/30 px-1 font-mono text-[10px] text-muted-foreground">
           ⇧
@@ -272,7 +272,7 @@ function CalmContextControls({
         <kbd className="inline-flex h-4 min-w-4 items-center justify-center rounded border border-border bg-accent/30 px-1 font-mono text-[10px] text-muted-foreground">
           ↵
         </kbd>
-        <span>new line</span>
+        <span>换行</span>
       </div>
     </div>
   )
@@ -320,7 +320,7 @@ export const ConversationInput: FC<ConversationInputProps> = ({
   const stageFiles = async (files: File[]) => {
     if (files.length === 0) return
     if (!attachmentsEnabled) {
-      setAttachmentError('Attachments are not supported for this agent yet.')
+      setAttachmentError('该智能体暂不支持附件。')
       return
     }
     setIsStaging(true)
@@ -433,7 +433,7 @@ export const ConversationInput: FC<ConversationInputProps> = ({
 
   const openFilePicker = () => {
     if (!attachmentsEnabled) {
-      setAttachmentError('Attachments are not supported for this agent yet.')
+      setAttachmentError('该智能体暂不支持附件。')
       return
     }
     fileInputRef.current?.click()
@@ -456,7 +456,7 @@ export const ConversationInput: FC<ConversationInputProps> = ({
         // Drag/drop on a region isn't a click affordance — wrap the
         // composer in a labeled <section> so the a11y rule is satisfied
         // without misrepresenting the surface as interactive.
-        aria-label="Message composer"
+        aria-label="消息输入框"
         className={cn('relative', isDragOver && 'ring-2 ring-primary/60')}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -596,7 +596,7 @@ function AttachmentChip({
           type="button"
           onClick={onRemove}
           className="absolute top-1 right-1 inline-flex size-5 items-center justify-center rounded-full bg-background/80 text-muted-foreground opacity-0 transition-opacity hover:text-foreground group-hover:opacity-100"
-          aria-label={`Remove ${attachment.name}`}
+          aria-label={`移除 ${attachment.name}`}
         >
           <X className="size-3" />
         </button>
@@ -611,7 +611,7 @@ function AttachmentChip({
         type="button"
         onClick={onRemove}
         className="ml-1 inline-flex size-4 items-center justify-center text-muted-foreground hover:text-foreground"
-        aria-label={`Remove ${attachment.name}`}
+        aria-label={`移除 ${attachment.name}`}
       >
         <X className="size-3" />
       </button>

@@ -116,6 +116,19 @@ export default defineBackground(() => {
     return { tabId: sender.tab?.id }
   })
 
+  // 网页悬浮入口只能获取发送消息的标签页，因此由后台完成原生侧边栏切换。
+  onRuntimeMessage(RuntimeMessageType.toggleSidePanel, async ({ sender }) => {
+    const tabId = sender.tab?.id
+    const windowId = sender.tab?.windowId
+    if (typeof tabId !== 'number' || typeof windowId !== 'number') {
+      throw new Error(
+        `无法切换智慧小财神侧边栏：消息缺少有效标签页上下文，tabId=${String(tabId)}，windowId=${String(windowId)}`,
+      )
+    }
+
+    return toggleSidePanel({ tabId, windowId })
+  })
+
   onRuntimeMessage(RuntimeMessageType.authSuccess, async ({ sender }) => {
     if (!sender.tab?.id) return
 

@@ -23,6 +23,7 @@ import { ChatSelectedText } from './ChatSelectedText'
 const SHOW_CONTEXT_CONTROLS = false
 
 export interface ChatFooterProps {
+  className?: string
   mode: ChatMode
   onModeChange?: (mode: ChatMode) => void
   input: string
@@ -37,6 +38,7 @@ export interface ChatFooterProps {
 }
 
 export const ChatFooter: FC<ChatFooterProps> = ({
+  className,
   mode,
   onModeChange,
   input,
@@ -111,7 +113,12 @@ export const ChatFooter: FC<ChatFooterProps> = ({
   })
 
   return (
-    <footer className="border-border/40 border-t bg-background/80 backdrop-blur-md">
+    <footer
+      className={cn(
+        'border-border/40 border-t bg-background/80 backdrop-blur-md',
+        className,
+      )}
+    >
       <ChatAttachedTabs tabs={attachedTabs} onRemoveTab={onRemoveTab} />
       {visibleSelectedText && (
         <ChatSelectedText

@@ -39,12 +39,12 @@ describe('groupProviderOptions', () => {
     expect(groupProviderOptions(options)).toEqual([
       {
         key: 'llm',
-        label: 'BrowserOS agent + your LLM',
+        label: 'BrowserOS 智能体与 LLM',
         options: [options[0], options[1]],
       },
       {
         key: 'acp',
-        label: '3p agents',
+        label: '第三方智能体',
         options: [options[2], options[3]],
       },
     ])
@@ -53,10 +53,10 @@ describe('groupProviderOptions', () => {
 
 describe('getProviderSearchValue', () => {
   it('matches created-agent group labels and item labels', () => {
-    expect(getProviderSearchValue(options[2], '3p agents')).toContain(
-      '3p agents',
+    expect(getProviderSearchValue(options[2], '第三方智能体')).toContain(
+      '第三方智能体',
     )
-    expect(getProviderSearchValue(options[2], '3p agents')).toContain(
+    expect(getProviderSearchValue(options[2], '第三方智能体')).toContain(
       'Review Bot',
     )
     expect(getProviderSearchValue(options[2], '3p agents')).toContain(
@@ -68,7 +68,7 @@ describe('getProviderSearchValue', () => {
 describe('getProviderSubtitle', () => {
   it('describes created-agent runtime context without model-target copy', () => {
     expect(getProviderSubtitle(options[2])).toBe(
-      'Claude Code · Haiku · best effort',
+      'Claude Code · Haiku · 尽力支持',
     )
     expect(getProviderSubtitle(options[3])).toBe('Codex · GPT-5.5')
     expect(getProviderSubtitle(options[0])).toBeUndefined()

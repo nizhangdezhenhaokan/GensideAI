@@ -88,11 +88,11 @@ export const BentoCard: FC<BentoCardProps> = ({ feature, mounted, index }) => {
             <div className="flex flex-1 items-end justify-between pt-2">
               {feature.videoDuration && (
                 <span className="font-mono text-muted-foreground text-xs">
-                  Video: {feature.videoDuration} mins
+                  视频：{feature.videoDuration} 分钟
                 </span>
               )}
               <div className="flex items-center gap-1 font-medium text-[var(--accent-orange)] text-xs transition-all group-hover:gap-2">
-                Open details
+                查看详情
                 <ArrowRight className="h-3 w-3" />
               </div>
             </div>

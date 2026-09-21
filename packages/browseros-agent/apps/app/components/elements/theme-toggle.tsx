@@ -14,9 +14,9 @@ import type { Theme } from '@/lib/theme/theme-storage'
 import { cn } from '@/lib/utils'
 
 const themes: { value: Theme; icon: typeof Monitor; label: string }[] = [
-  { value: 'system', icon: Monitor, label: 'System' },
-  { value: 'light', icon: Sun, label: 'Light' },
-  { value: 'dark', icon: Moon, label: 'Dark' },
+  { value: 'system', icon: Monitor, label: '跟随系统' },
+  { value: 'light', icon: Sun, label: '浅色模式' },
+  { value: 'dark', icon: Moon, label: '深色模式' },
 ]
 
 export interface ThemeToggleProps {
@@ -44,11 +44,11 @@ export const ThemeToggle: FC<ThemeToggleProps> = ({
         <Button
           variant="ghost"
           size={hideLabel ? 'icon' : 'default'}
-          aria-label={`Current theme: ${currentTheme?.label}`}
+          aria-label={`当前主题：${currentTheme?.label}`}
           className={cn(className)}
         >
           <CurrentIcon className={cn('h-5 w-5', iconClassName)} />
-          {!hideLabel && <span>{currentTheme?.label || 'Theme'}</span>}
+          {!hideLabel && <span>{currentTheme?.label || '主题'}</span>}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

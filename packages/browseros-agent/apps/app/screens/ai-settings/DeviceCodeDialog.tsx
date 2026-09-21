@@ -36,10 +36,9 @@ export const DeviceCodeDialog: FC<DeviceCodeDialogProps> = ({
     <Dialog open={!!deviceCode} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Connect to {deviceCode?.providerName}</DialogTitle>
+          <DialogTitle>连接到 {deviceCode?.providerName}</DialogTitle>
           <DialogDescription>
-            Paste this code on the {deviceCode?.providerName} page that just
-            opened in your browser.
+            请在浏览器刚打开的 {deviceCode?.providerName} 页面中粘贴此代码。
           </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col items-center gap-4 py-4">
@@ -61,7 +60,7 @@ export const DeviceCodeDialog: FC<DeviceCodeDialogProps> = ({
             </Button>
           </div>
           <p className="text-center text-muted-foreground text-xs">
-            This dialog will close automatically once authentication completes.
+            身份验证完成后，此窗口会自动关闭。
           </p>
           {deviceCode?.verificationUri && (
             <a
@@ -70,7 +69,7 @@ export const DeviceCodeDialog: FC<DeviceCodeDialogProps> = ({
               rel="noopener noreferrer"
               className="flex items-center gap-1 text-[var(--accent-orange)] text-xs transition-colors hover:underline"
             >
-              Open verification page
+              打开验证页面
               <ExternalLink className="h-3 w-3" />
             </a>
           )}

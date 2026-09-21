@@ -72,18 +72,16 @@ export const NewCodingAgentDialog: FC<NewCodingAgentDialogProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            Set up {type ? adapterLabel(type) : 'agent'}
-          </DialogTitle>
+          <DialogTitle>配置 {type ? adapterLabel(type) : '智能体'}</DialogTitle>
           <DialogDescription>
-            BrowserOS uses your existing CLI login. This agent can run commands
-            and access files anywhere on your computer without approval.
+            BrowserOS 将使用现有的 CLI
+            登录。该智能体可以执行命令并访问电脑中的文件，无需逐次确认。
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-2">
           <div className="space-y-2">
-            <Label htmlFor="coding-agent-name">Name</Label>
+            <Label htmlFor="coding-agent-name">名称</Label>
             <Input
               id="coding-agent-name"
               value={name}
@@ -93,7 +91,7 @@ export const NewCodingAgentDialog: FC<NewCodingAgentDialogProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label>Model</Label>
+            <Label>模型</Label>
             <Select
               value={modelId || AGENT_DEFAULT}
               onValueChange={(value) =>
@@ -104,7 +102,7 @@ export const NewCodingAgentDialog: FC<NewCodingAgentDialogProps> = ({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value={AGENT_DEFAULT}>Agent default</SelectItem>
+                <SelectItem value={AGENT_DEFAULT}>智能体默认值</SelectItem>
                 {(probe.data?.models ?? []).map((model) => (
                   <SelectItem key={model.id} value={model.id}>
                     {model.name ?? model.id}
@@ -116,7 +114,7 @@ export const NewCodingAgentDialog: FC<NewCodingAgentDialogProps> = ({
 
           {(probe.data?.reasoning?.values.length ?? 0) > 0 ? (
             <div className="space-y-2">
-              <Label>Reasoning effort</Label>
+              <Label>推理强度</Label>
               <Select
                 value={reasoningEffort || AGENT_DEFAULT}
                 onValueChange={(value) =>
@@ -127,7 +125,7 @@ export const NewCodingAgentDialog: FC<NewCodingAgentDialogProps> = ({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={AGENT_DEFAULT}>Agent default</SelectItem>
+                  <SelectItem value={AGENT_DEFAULT}>智能体默认值</SelectItem>
                   {(probe.data?.reasoning?.values ?? []).map((effort) => (
                     <SelectItem key={effort} value={effort}>
                       {effort}
@@ -140,8 +138,8 @@ export const NewCodingAgentDialog: FC<NewCodingAgentDialogProps> = ({
 
           {probe.isLoading ? (
             <p className="flex items-center gap-2 text-muted-foreground text-sm">
-              <Loader2 className="h-4 w-4 animate-spin" /> Inspecting installed
-              agent…
+              <Loader2 className="h-4 w-4 animate-spin" />{' '}
+              正在检查已安装的智能体……
             </p>
           ) : null}
           {probeError ? (
@@ -156,7 +154,7 @@ export const NewCodingAgentDialog: FC<NewCodingAgentDialogProps> = ({
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            取消
           </Button>
           <Button
             onClick={() => void handleCreate()}
@@ -165,7 +163,7 @@ export const NewCodingAgentDialog: FC<NewCodingAgentDialogProps> = ({
             {createAgent.isPending ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : null}
-            Create agent
+            创建智能体
           </Button>
         </DialogFooter>
       </DialogContent>

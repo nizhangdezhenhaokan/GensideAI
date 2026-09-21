@@ -56,7 +56,7 @@ describe('MCPSettingsPage', () => {
   it('mounts the permanent BrowserClaw banner between the server header and integrations', () => {
     const html = renderToStaticMarkup(createElement(MCPSettingsPage))
 
-    expect(html).toContain('For better MCP support, use BrowserOS neo')
+    expect(html).toContain('想获得更完善的 MCP 支持，请使用 BrowserOS neo')
 
     // Pin the stub positions first: a missing stub would return -1 and turn the
     // ordering bounds below into assertions that are trivially true.
@@ -65,7 +65,7 @@ describe('MCPSettingsPage', () => {
     expect(headerIndex).toBeGreaterThan(-1)
     expect(integrationsIndex).toBeGreaterThan(-1)
 
-    const bannerIndex = html.indexOf('For better MCP support')
+    const bannerIndex = html.indexOf('想获得更完善的 MCP 支持')
     expect(bannerIndex).toBeGreaterThan(headerIndex)
     expect(bannerIndex).toBeLessThan(integrationsIndex)
   })

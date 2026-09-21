@@ -22,12 +22,12 @@ import { AddManagedMCPDialog } from './AddManagedMCPDialog'
 import { AvailableManagedServers } from './AvailableManagedServers'
 
 const failedToAddMcp = (serverName: string, e: unknown) => {
-  toast.error(`Failed to add app: ${serverName}`)
+  toast.error(`添加应用失败：${serverName}`)
   sentry.captureException(e)
 }
 
 const failedToRemoveMcp = (serverName: string, e: unknown) => {
-  toast.error(`Failed to remove app: ${serverName}`)
+  toast.error(`移除应用失败：${serverName}`)
   sentry.captureException(e)
 }
 
@@ -131,12 +131,12 @@ export const ConnectMCP: FC = () => {
         apiKey,
         apiKeyUrl: apiKeyServer.apiKeyUrl,
       })
-      toast.success(`${apiKeyServer.name} connected successfully`)
+      toast.success(`${apiKeyServer.name} 已连接`)
       setApiKeyServer(null)
       mutateUserIntegrations()
     } catch (e) {
       toast.error(
-        `Failed to connect ${apiKeyServer.name}: ${e instanceof Error ? e.message : 'Unknown error'}`,
+        `连接 ${apiKeyServer.name} 失败：${e instanceof Error ? e.message : '未知错误'}`,
       )
       sentry.captureException(e)
     }
@@ -219,10 +219,9 @@ export const ConnectMCP: FC = () => {
             <Server className="h-6 w-6 text-[var(--accent-orange)]" />
           </div>
           <div className="flex-1">
-            <h2 className="mb-1 font-semibold text-xl">Connected Apps</h2>
+            <h2 className="mb-1 font-semibold text-xl">已连接应用</h2>
             <p className="mb-6 text-muted-foreground text-sm">
-              Connect BrowserOS assistant to apps to send email, schedule
-              calendar events, write docs, and more
+              将 BrowserOS 助手连接到应用，以发送邮件、创建日程、编写文档等
             </p>
 
             <div className="flex flex-wrap gap-3">
@@ -232,7 +231,7 @@ export const ConnectMCP: FC = () => {
                 className="border-[var(--accent-orange)] bg-[var(--accent-orange)]/10 text-[var(--accent-orange)] hover:bg-[var(--accent-orange)]/20"
               >
                 <Plus className="h-4 w-4" />
-                <span>Add built-in app</span>
+                <span>添加内置应用</span>
               </Button>
 
               <Button
@@ -240,7 +239,7 @@ export const ConnectMCP: FC = () => {
                 onClick={() => setAddingCustomMcp(true)}
               >
                 <Plus className="h-4 w-4" />
-                <span>Add custom app</span>
+                <span>添加自定义应用</span>
               </Button>
             </div>
           </div>
@@ -250,7 +249,7 @@ export const ConnectMCP: FC = () => {
       {/* Created Servers */}
       {createdServers.length > 0 && (
         <div className="rounded-xl border border-border bg-card p-6 shadow-sm transition-all hover:shadow-md">
-          <h3 className="mb-4 font-semibold text-lg">Your Connected Apps</h3>
+          <h3 className="mb-4 font-semibold text-lg">你的已连接应用</h3>
           <div className="space-y-3">
             {createdServers.map((server) => (
               <div
@@ -274,7 +273,7 @@ export const ConnectMCP: FC = () => {
                           : 'bg-muted text-muted-foreground'
                       }`}
                     >
-                      {server.type === 'managed' ? 'Built-in' : 'Custom'}
+                      {server.type === 'managed' ? '内置' : '自定义'}
                     </span>
                   </div>
                   <p className="text-muted-foreground text-sm">
@@ -291,7 +290,7 @@ export const ConnectMCP: FC = () => {
                     )?.is_authenticated ? (
                     <span className="flex items-center gap-1 rounded-full bg-green-500/10 px-2 py-1 font-medium text-green-600 text-xs">
                       <Check className="h-3 w-3" />
-                      Authenticated
+                      已授权
                     </span>
                   ) : (
                     <Button
@@ -302,7 +301,7 @@ export const ConnectMCP: FC = () => {
                         openAuthUrlForMCP(server.managedServerName)
                       }
                     >
-                      Authenticate
+                      授权
                     </Button>
                   ))}
                 <Button
@@ -320,7 +319,7 @@ export const ConnectMCP: FC = () => {
                     }
                   }}
                   className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-                  title="Remove server"
+                  title="移除应用"
                 >
                   {deletingServerId === server.id ? (
                     <Loader2 className="h-4 w-4 animate-spin" />

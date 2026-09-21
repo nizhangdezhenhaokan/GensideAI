@@ -30,8 +30,8 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 
 const formSchema = z.object({
-  name: z.string().min(1, 'Server name is required'),
-  url: z.string().url('Please enter a valid URL'),
+  name: z.string().min(1, '请输入服务器名称'),
+  url: z.string().url('请输入有效的 URL'),
   description: z.string().optional(),
 })
 
@@ -82,10 +82,8 @@ export const AddCustomMCPDialog: FC<AddCustomMCPDialogProps> = ({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Add Custom App</DialogTitle>
-          <DialogDescription>
-            Configure your custom app connection
-          </DialogDescription>
+          <DialogTitle>添加自定义应用</DialogTitle>
+          <DialogDescription>配置自定义应用连接</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -95,9 +93,9 @@ export const AddCustomMCPDialog: FC<AddCustomMCPDialogProps> = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Server Name</FormLabel>
+                  <FormLabel>服务器名称</FormLabel>
                   <FormControl>
-                    <Input placeholder="My Custom App" {...field} />
+                    <Input placeholder="我的自定义应用" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -109,8 +107,8 @@ export const AddCustomMCPDialog: FC<AddCustomMCPDialogProps> = ({
               name="url"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>MCP Server URL</FormLabel>
-                  <FormDescription>(only supports HTTP)</FormDescription>
+                  <FormLabel>MCP 服务器 URL</FormLabel>
+                  <FormDescription>（仅支持 HTTP）</FormDescription>
                   <FormControl>
                     <Input
                       type="url"
@@ -128,10 +126,10 @@ export const AddCustomMCPDialog: FC<AddCustomMCPDialogProps> = ({
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description (Optional)</FormLabel>
+                  <FormLabel>描述（可选）</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Describe what this server does..."
+                      placeholder="描述此服务器的用途……"
                       rows={3}
                       className="resize-none"
                       {...field}
@@ -145,19 +143,17 @@ export const AddCustomMCPDialog: FC<AddCustomMCPDialogProps> = ({
             <Collapsible>
               <CollapsibleTrigger className="group flex w-full cursor-pointer items-center gap-2 rounded-md border border-[var(--accent-orange)]/30 bg-[var(--accent-orange)]/5 px-3 py-2 text-left text-sm transition-colors hover:bg-[var(--accent-orange)]/10">
                 <Lightbulb className="h-4 w-4 shrink-0 text-[var(--accent-orange)]" />
-                <span className="flex-1 font-medium">
-                  How do I find the URL?
-                </span>
+                <span className="flex-1 font-medium">如何获取 URL？</span>
                 <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 group-data-[state=open]:rotate-90" />
               </CollapsibleTrigger>
               <CollapsibleContent className="mt-2 rounded-md border border-[var(--accent-orange)]/30 bg-[var(--accent-orange)]/5 px-3 py-2 text-muted-foreground text-sm">
-                Many apps like Notion, Slack, or Stripe offer an MCP server you
-                can run locally. Check the app's docs for an MCP setup guide —
-                you'll get a URL (usually starting with{' '}
+                Notion、Slack、Stripe 等应用提供了可在本地运行的 MCP
+                服务器。请查阅应用文档中的 MCP 配置指南，即可获得一个
+                URL（通常以{' '}
                 <code className="inline rounded bg-muted px-1 text-xs">
                   http://
                 </code>
-                ) to paste here.
+                ）开头），并粘贴到这里。
               </CollapsibleContent>
             </Collapsible>
 
@@ -167,13 +163,13 @@ export const AddCustomMCPDialog: FC<AddCustomMCPDialogProps> = ({
                 variant="outline"
                 onClick={() => handleOpenChange(false)}
               >
-                Cancel
+                取消
               </Button>
               <Button
                 type="submit"
                 className="bg-[var(--accent-orange)] text-white hover:bg-[var(--accent-orange-bright)]"
               >
-                Add Server
+                添加服务器
               </Button>
             </DialogFooter>
           </form>

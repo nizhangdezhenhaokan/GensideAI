@@ -12,7 +12,10 @@ import {
 } from '@/lib/constants/analyticsEvents'
 import { CHATGPT_PROVIDER_DISPLAY_NAME } from '@/lib/llm-providers/provider-display-names'
 import type { ProviderTemplate } from '@/lib/llm-providers/providerTemplates'
-import type { LlmProviderConfig } from '@/lib/llm-providers/types'
+import type {
+  LlmProviderConfig,
+  ProviderType,
+} from '@/lib/llm-providers/types'
 import type { AcpAgent, AcpAgentType } from '@/modules/agents/acp-agent-types'
 import { useAgentServerUrl } from '@/modules/browseros/agent-server-url.hooks'
 import {
@@ -250,9 +253,10 @@ export function useAddProvider(input: {
 }
 
 /** The dialogs the add path can open. Rendered by every screen that adds. */
-export const AddProviderDialogs: FC<{ controller: AddProviderController }> = ({
-  controller,
-}) => {
+export const AddProviderDialogs: FC<{
+  controller: AddProviderController
+  allowedProviderTypes?: ProviderType[]
+}> = ({ controller, allowedProviderTypes }) => {
   const d = controller.dialogs
   return (
     <>
@@ -261,6 +265,7 @@ export const AddProviderDialogs: FC<{ controller: AddProviderController }> = ({
         onOpenChange={d.setIsNewDialogOpen}
         initialValues={d.templateValues}
         onSave={d.onSaveProvider}
+        allowedProviderTypes={allowedProviderTypes}
       />
       <NewCodingAgentDialog
         type={d.newAgentType}

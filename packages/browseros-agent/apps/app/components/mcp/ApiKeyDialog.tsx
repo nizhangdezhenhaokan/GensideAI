@@ -24,7 +24,7 @@ import {
 import { Input } from '@/components/ui/input'
 
 const formSchema = z.object({
-  apiKey: z.string().min(1, 'API key is required'),
+  apiKey: z.string().min(1, '请输入 API 密钥'),
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -73,9 +73,9 @@ export const ApiKeyDialog: FC<ApiKeyDialogProps> = ({
               />
             </div>
             <div>
-              <DialogTitle>Connect {serverName}</DialogTitle>
+              <DialogTitle>连接 {serverName}</DialogTitle>
               <DialogDescription>
-                Enter your {serverName} API key to connect
+                输入 {serverName} 的 API 密钥以完成连接
               </DialogDescription>
             </div>
           </div>
@@ -91,11 +91,11 @@ export const ApiKeyDialog: FC<ApiKeyDialogProps> = ({
               name="apiKey"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>API Key</FormLabel>
+                  <FormLabel>API 密钥</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder="Paste your API key here"
+                      placeholder="在此粘贴 API 密钥"
                       autoComplete="off"
                       {...field}
                     />
@@ -112,7 +112,7 @@ export const ApiKeyDialog: FC<ApiKeyDialogProps> = ({
                 onClick={() => onOpenChange(false)}
                 disabled={isSubmitting}
               >
-                Cancel
+                取消
               </Button>
               <Button
                 type="submit"
@@ -122,10 +122,10 @@ export const ApiKeyDialog: FC<ApiKeyDialogProps> = ({
                 {isSubmitting ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Connecting...
+                    正在连接……
                   </>
                 ) : (
-                  'Connect'
+                  '连接'
                 )}
               </Button>
             </DialogFooter>

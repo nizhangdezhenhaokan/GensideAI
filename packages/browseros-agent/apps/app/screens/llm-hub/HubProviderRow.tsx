@@ -44,7 +44,7 @@ export const HubProviderRow: FC<HubProviderRowProps> = ({
 
       <div className="flex shrink-0 items-center gap-2">
         <Button variant="outline" size="sm" onClick={onEdit}>
-          Edit
+          编辑
         </Button>
         <Button
           variant="ghost"
@@ -52,7 +52,7 @@ export const HubProviderRow: FC<HubProviderRowProps> = ({
           disabled={!canDelete}
           className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive disabled:opacity-30"
           onClick={onDelete}
-          aria-label={`Remove ${provider.name}`}
+          aria-label={`移除 ${provider.name}`}
         >
           <Trash2 className="h-4 w-4" />
         </Button>

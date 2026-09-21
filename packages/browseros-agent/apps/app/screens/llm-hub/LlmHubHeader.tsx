@@ -9,9 +9,9 @@ export const LlmHubHeader: FC = () => {
           <MessageSquare className="h-6 w-6 text-[var(--accent-orange)]" />
         </div>
         <div>
-          <h2 className="mb-1 font-semibold text-xl">LLM Chat & Hub</h2>
+          <h2 className="mb-1 font-semibold text-xl">LLM 对话与聚合中心</h2>
           <p className="text-muted-foreground text-sm">
-            Curate and configure your favourite LLM chat providers
+            管理并配置常用的 LLM 对话服务提供方
           </p>
         </div>
       </div>

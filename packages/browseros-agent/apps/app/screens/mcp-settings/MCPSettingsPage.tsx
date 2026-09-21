@@ -17,7 +17,7 @@ export const MCPSettingsPage: FC = () => {
     try {
       setServerUrl(await getMcpServerUrl())
     } catch (err) {
-      setUrlError(err instanceof Error ? err.message : 'Failed to load')
+      setUrlError(err instanceof Error ? err.message : '加载失败')
     } finally {
       setUrlLoading(false)
     }

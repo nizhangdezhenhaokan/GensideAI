@@ -6,14 +6,12 @@ import { getBrowserOSAdapter } from '@/lib/browseros/adapter'
 import { Capabilities, Feature } from '@/lib/browseros/capabilities'
 import { BROWSEROS_PREFS } from '@/lib/browseros/prefs'
 export type ToolbarSettingsState = {
-  showLlmChat: boolean
   showToolbarLabels: boolean
   verticalTabsEnabled: boolean
   supportsVerticalTabs: boolean
 }
 
 const DEFAULT_NATIVE_TOOLBAR_SETTINGS_STATE: ToolbarSettingsState = {
-  showLlmChat: true,
   showToolbarLabels: true,
   verticalTabsEnabled: true,
   supportsVerticalTabs: false,
@@ -22,10 +20,9 @@ const DEFAULT_NATIVE_TOOLBAR_SETTINGS_STATE: ToolbarSettingsState = {
 export async function loadToolbarSettingsState(): Promise<ToolbarSettingsState> {
   try {
     const adapter = getBrowserOSAdapter()
-    const [chatPref, labelsPref] = await Promise.all([
-      adapter.getPref(BROWSEROS_PREFS.SHOW_LLM_CHAT),
-      adapter.getPref(BROWSEROS_PREFS.SHOW_TOOLBAR_LABELS),
-    ])
+    const labelsPref = await adapter.getPref(
+      BROWSEROS_PREFS.SHOW_TOOLBAR_LABELS,
+    )
     const supportsVerticalTabs = await Capabilities.supports(
       Feature.VERTICAL_TABS_SUPPORT,
     )
@@ -35,7 +32,6 @@ export async function loadToolbarSettingsState(): Promise<ToolbarSettingsState> 
       : true
 
     return {
-      showLlmChat: chatPref?.value !== false,
       showToolbarLabels: labelsPref?.value !== false,
       verticalTabsEnabled,
       supportsVerticalTabs,
@@ -46,7 +42,6 @@ export async function loadToolbarSettingsState(): Promise<ToolbarSettingsState> 
 }
 
 export const ToolbarSettingsCard: FC = () => {
-  const [showLlmChat, setShowLlmChat] = useState(true)
   const [showToolbarLabels, setShowToolbarLabels] = useState(true)
   const [verticalTabsEnabled, setVerticalTabsEnabled] = useState(true)
   const [supportsVerticalTabs, setSupportsVerticalTabs] = useState(false)
@@ -56,7 +51,6 @@ export const ToolbarSettingsCard: FC = () => {
     const loadPrefs = async () => {
       try {
         const state = await loadToolbarSettingsState()
-        setShowLlmChat(state.showLlmChat)
         setShowToolbarLabels(state.showToolbarLabels)
         setVerticalTabsEnabled(state.verticalTabsEnabled)
         setSupportsVerticalTabs(state.supportsVerticalTabs)
@@ -82,49 +76,26 @@ export const ToolbarSettingsCard: FC = () => {
       setter(value)
       return true
     } catch {
-      toast.error('Failed to update setting')
+      toast.error('更新设置失败')
       return false
     }
   }
 
   return (
     <div className="rounded-xl border border-border bg-card p-6 shadow-sm transition-all hover:shadow-md">
-      <h3 className="mb-4 font-semibold text-lg">Toolbar Settings</h3>
+      <h3 className="mb-4 font-semibold text-lg">工具栏设置</h3>
 
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <div className="space-y-0.5">
-            <Label htmlFor="show-llm-chat" className="font-medium text-sm">
-              Show Chat Button
-            </Label>
-            <p className="text-muted-foreground text-xs">
-              Display the Chat button in the browser toolbar
-            </p>
-          </div>
-          <Switch
-            id="show-llm-chat"
-            checked={showLlmChat}
-            onCheckedChange={(checked) =>
-              handleToggle(
-                BROWSEROS_PREFS.SHOW_LLM_CHAT,
-                checked,
-                setShowLlmChat,
-              )
-            }
-            disabled={isLoading}
-          />
-        </div>
-
-        <div className="flex items-center justify-between border-border border-t pt-4">
           <div className="space-y-0.5">
             <Label
               htmlFor="show-toolbar-labels"
               className="font-medium text-sm"
             >
-              Show Button Labels
+              显示按钮文字
             </Label>
             <p className="text-muted-foreground text-xs">
-              Display text labels next to toolbar button icons
+              在工具栏按钮图标旁显示文字标签
             </p>
           </div>
           <Switch
@@ -148,10 +119,10 @@ export const ToolbarSettingsCard: FC = () => {
                 htmlFor="vertical-tabs-enabled"
                 className="font-medium text-sm"
               >
-                Use Vertical Tabs
+                使用垂直标签页
               </Label>
               <p className="text-muted-foreground text-xs">
-                Turn off to switch back to the horizontal tab strip
+                关闭后将恢复为水平标签页栏
               </p>
             </div>
             <Switch

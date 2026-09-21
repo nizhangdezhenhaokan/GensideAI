@@ -42,7 +42,7 @@ export const SidebarBranding: FC<SidebarBrandingProps> = ({
     profile?.firstName || profile?.lastName
       ? [profile.firstName, profile.lastName].filter(Boolean).join(' ')
       : null
-  const displayName = profileName || user?.name || 'User'
+  const displayName = profileName || user?.name || '用户'
   const displayImage = profile?.avatarUrl || user?.image
 
   const getInitials = (name?: string | null) => {
@@ -105,7 +105,7 @@ export const SidebarBranding: FC<SidebarBrandingProps> = ({
                     : 'font-medium text-primary',
                 )}
               >
-                {isLoggedIn ? 'Personal' : 'Sign in'}
+                {isLoggedIn ? '个人空间' : '登录'}
               </span>
             </div>
           </button>
@@ -123,14 +123,14 @@ export const SidebarBranding: FC<SidebarBrandingProps> = ({
                     {displayName}
                   </p>
                   <p className="text-muted-foreground text-xs leading-none">
-                    Personal
+                    个人空间
                   </p>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => navigate('/profile')}>
                 <User className="mr-2 size-4" />
-                Update Profile
+                更新个人资料
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
@@ -138,13 +138,13 @@ export const SidebarBranding: FC<SidebarBrandingProps> = ({
                 variant="destructive"
               >
                 <LogOut className="mr-2 size-4" />
-                Sign out
+                退出登录
               </DropdownMenuItem>
             </>
           ) : (
             <DropdownMenuItem onClick={() => navigate('/login')}>
               <LogIn className="mr-2 size-4" />
-              Sign in
+              登录
             </DropdownMenuItem>
           )}
         </DropdownMenuContent>

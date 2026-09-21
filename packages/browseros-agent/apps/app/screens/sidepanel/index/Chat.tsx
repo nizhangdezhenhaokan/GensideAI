@@ -14,6 +14,7 @@ import { buildChatErrorProps } from './Chat.helpers'
 import { ChatError } from './ChatError'
 import { ChatFooter } from './ChatFooter'
 import { ChatMessages } from './ChatMessages'
+import { FinanceChatWelcome } from './FinanceChatWelcome'
 import { IncognitoNotice } from './IncognitoNotice'
 
 /**
@@ -141,7 +142,7 @@ export const Chat = () => {
 
   return (
     <>
-      <main className="mt-4 flex h-full flex-1 flex-col space-y-4 overflow-y-auto">
+      <main className="finance-sidebar-messages mt-4 flex h-full min-h-0 flex-1 flex-col space-y-4 overflow-hidden">
         {isRestoringConversation ? (
           <div className="flex flex-1 items-center justify-center">
             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -160,7 +161,9 @@ export const Chat = () => {
             onTakeSurvey={onTakeSurvey}
             onDismissJtbdPopup={onDismissJtbdPopup}
           />
-        ) : null}
+        ) : (
+          <FinanceChatWelcome />
+        )}
         {agentUrlError && (
           <ChatError
             error={agentUrlError}
@@ -173,6 +176,7 @@ export const Chat = () => {
       {isIncognito && <IncognitoNotice />}
 
       <ChatFooter
+        className="finance-sidebar-footer"
         mode={mode}
         input={input}
         onInputChange={setInput}

@@ -1,6 +1,17 @@
-import { Bot, ChevronDown, History, Plus, SettingsIcon } from 'lucide-react'
+import {
+  Bot,
+  ChevronDown,
+  Clock3,
+  History,
+  MessageCircle,
+  MoreHorizontal,
+  Plus,
+  SettingsIcon,
+} from 'lucide-react'
 import type { FC } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
+import SmartFinanceAuditInactive from '@/assets/finance-audit-inactive.png'
+import SmartFinanceAvatar from '@/assets/smart-finance-avatar.png'
 import { BRAND_MARKS } from '@/components/agents/agent-brand-marks'
 import { ChatProviderSelector } from '@/components/chat/ChatProviderSelector'
 import type { Provider } from '@/components/chat/chatComponentTypes'
@@ -39,6 +50,8 @@ export interface ChatHeaderProps {
   isHistoryOpen?: boolean
   /** Lets the full-page chat opt into spacing without changing the sidepanel. */
   className?: string
+  /** 仅侧边栏启用财务原型的头像、工具栏和样式。 */
+  financeStyle?: boolean
 }
 
 export const ChatHeader: FC<ChatHeaderProps> = ({
@@ -52,6 +65,7 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
   onOpenHistory,
   isHistoryOpen,
   className,
+  financeStyle = true,
 }) => {
   const location = useLocation()
   const navigate = useNavigate()
@@ -66,13 +80,27 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
     <>
       <header
         className={cn(
-          'flex items-center justify-between border-border/40 border-b bg-background/80 px-3 py-2.5 backdrop-blur-md',
+          financeStyle
+            ? 'finance-sidebar-header flex items-center justify-between border-border/40 border-b bg-background/80 px-3 py-2.5 backdrop-blur-md'
+            : 'flex items-center justify-between border-border/40 border-b bg-background/80 px-3 py-2.5 backdrop-blur-md',
           className,
         )}
       >
         <div className="flex items-center gap-2">
           {fixedBrandName ? (
-            <div className="inline-flex items-center rounded-lg border border-border px-2 py-1.5 text-foreground">
+            <div
+              className={cn(
+                financeStyle && 'finance-sidebar-brand',
+                'inline-flex items-center text-foreground',
+              )}
+            >
+              {financeStyle && (
+                <img
+                  src={SmartFinanceAvatar}
+                  alt="智慧小财神"
+                  className="finance-sidebar-brand-avatar"
+                />
+              )}
               <span className="font-semibold text-base">{fixedBrandName}</span>
             </div>
           ) : (
@@ -99,7 +127,41 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
           )}
         </div>
 
-        <div className="flex items-center gap-1">
+        <div
+          className={cn(
+            financeStyle && 'finance-sidebar-header-actions',
+            'flex items-center gap-1',
+          )}
+        >
+          {fixedBrandName && financeStyle ? (
+            <>
+              <button
+                type="button"
+                className="finance-sidebar-icon-button is-active"
+                title="智能对话"
+              >
+                <MessageCircle className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                className="finance-sidebar-icon-button"
+                title="智能审核"
+              >
+                <img
+                  src={SmartFinanceAuditInactive}
+                  alt="智能审核"
+                  className="finance-sidebar-audit-icon"
+                />
+              </button>
+              <button
+                type="button"
+                className="finance-sidebar-icon-button"
+                title="更多插件"
+              >
+                <MoreHorizontal className="h-5 w-5" />
+              </button>
+            </>
+          ) : null}
           {!fixedBrandName && !isHistoryPage && hasMessages && (
             <button
               type="button"
@@ -132,25 +194,29 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
               </Link>
             ))}
 
-          <a
-            href="/app.html#/settings"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="cursor-pointer rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
-            title="Settings"
-          >
-            <SettingsIcon className="h-4 w-4" />
-          </a>
+          {!fixedBrandName ? (
+            <>
+              <a
+                href="/app.html#/settings"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cursor-pointer rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+                title="Settings"
+              >
+                <SettingsIcon className="h-4 w-4" />
+              </a>
 
-          <ThemeToggle
-            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
-            iconClassName="h-4 w-4"
-          />
+              <ThemeToggle
+                className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
+                iconClassName="h-4 w-4"
+              />
+            </>
+          ) : null}
         </div>
       </header>
 
-      {fixedBrandName ? (
-        <div className="flex items-center justify-between border-border/40 border-b bg-background/80 px-3 py-1.5 backdrop-blur-md">
+      {fixedBrandName && financeStyle ? (
+        <div className="finance-sidebar-toolbar flex items-center justify-between border-border/40 border-b bg-background/80 px-3 py-1.5 backdrop-blur-md">
           <button
             type="button"
             onClick={
@@ -159,9 +225,17 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
                 : onNewConversation
             }
             className="cursor-pointer rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
-            title="New conversation"
+            title="新建临时对话"
           >
             <Plus className="h-4 w-4" />
+          </button>
+
+          <button
+            type="button"
+            className="finance-sidebar-main-chat-button"
+            title="主对话"
+          >
+            <img src={SmartFinanceAvatar} alt="主对话" />
           </button>
 
           {!hideHistory ? (
@@ -170,9 +244,9 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
               onClick={onOpenHistory}
               aria-expanded={isHistoryOpen}
               className="cursor-pointer rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted/50 hover:text-foreground"
-              title="历史对话记录"
+              title="历史临时对话记录"
             >
-              <History className="h-4 w-4" />
+              <Clock3 className="h-4 w-4" />
             </button>
           ) : null}
         </div>

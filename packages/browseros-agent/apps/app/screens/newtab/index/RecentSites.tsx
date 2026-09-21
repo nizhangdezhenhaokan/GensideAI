@@ -36,7 +36,7 @@ export const RecentSites: FC = () => {
   return (
     <div className="space-y-4">
       <h2 className="text-center font-medium text-muted-foreground text-xs uppercase tracking-wide">
-        Recent sites
+        最近访问
       </h2>
       <div className="flex flex-wrap items-center justify-center gap-6">
         {recentSites.map((site) => {

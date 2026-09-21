@@ -42,18 +42,17 @@ export const CloudSyncRetiredNotice: FC = () => {
       </div>
       <div className="min-w-0 flex-1">
         <p className="font-semibold text-sm">
-          Your data now stays on this device
+          您的数据现仅保存在此设备上
         </p>
         <p className="text-muted-foreground text-xs">
-          Cloud sync has been turned off. Your providers, agents and schedules
-          are stored on this machine and keep working. Chats saved to the cloud
-          stay visible in history for now.
+          云端同步已关闭。您的模型提供商、智能体和定时任务均保存在本机，仍可正常使用；
+          之前保存到云端的对话暂时仍会显示在历史记录中。
         </p>
       </div>
       <button
         type="button"
         onClick={dismiss}
-        aria-label="Dismiss"
+        aria-label="关闭提示"
         className="shrink-0 rounded-sm p-1 text-muted-foreground opacity-50 transition-opacity hover:opacity-100"
       >
         <X className="h-3.5 w-3.5" />

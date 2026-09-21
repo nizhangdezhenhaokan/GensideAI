@@ -22,6 +22,8 @@ export interface ChatMessageActionsProps {
   disliked: boolean
   onClickLike: () => void
   onClickDislike: (comment?: string) => void
+  /** 仅侧边栏把操作按钮对齐到财务原型回答气泡。 */
+  financeStyle?: boolean
 }
 
 export const ChatMessageActions: FC<ChatMessageActionsProps> = ({
@@ -31,6 +33,7 @@ export const ChatMessageActions: FC<ChatMessageActionsProps> = ({
   disliked,
   onClickLike,
   onClickDislike,
+  financeStyle = true,
 }) => {
   const [dislikeDialogOpen, setDislikeDialogOpen] = useState(false)
   const [dislikeComment, setDislikeComment] = useState('')
@@ -57,14 +60,16 @@ export const ChatMessageActions: FC<ChatMessageActionsProps> = ({
   }
 
   return (
-    <MessageActions>
+    <MessageActions
+      className={financeStyle ? 'finance-message-actions' : undefined}
+    >
       <MessageAction
         onClick={() => {
           navigator.clipboard.writeText(messageText)
           track(SIDEPANEL_MESSAGE_COPIED_EVENT)
         }}
-        label="Copy"
-        tooltip="Copy to clipboard"
+        label="复制"
+        tooltip="复制到剪贴板"
       >
         <CopyIcon className="size-3" />
       </MessageAction>
@@ -123,7 +128,7 @@ export const ChatMessageActions: FC<ChatMessageActionsProps> = ({
             </DialogDescription>
           </DialogHeader>
           <Input
-            placeholder="Add a comment (optional)"
+            placeholder="添加反馈意见（可选）"
             value={dislikeComment}
             onChange={(e) => setDislikeComment(e.target.value)}
             onKeyDown={(e) => {
@@ -134,9 +139,9 @@ export const ChatMessageActions: FC<ChatMessageActionsProps> = ({
           />
           <DialogFooter>
             <Button variant="outline" onClick={handleDislikeCancel}>
-              Cancel
+              取消
             </Button>
-            <Button onClick={handleDislikeSubmit}>Submit</Button>
+            <Button onClick={handleDislikeSubmit}>提交</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
