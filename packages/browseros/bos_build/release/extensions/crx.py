@@ -163,8 +163,13 @@ def pack_extension_command(
 
 
 def _run(cmd: List[str]) -> subprocess.CompletedProcess:
-    return subprocess.run(cmd, capture_output=True, text=True)
-
+    return subprocess.run(
+        cmd,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
 
 def pack_crx(
     dist_dir: Path,
