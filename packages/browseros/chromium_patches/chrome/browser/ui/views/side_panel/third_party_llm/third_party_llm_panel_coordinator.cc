@@ -415,11 +415,8 @@ index 0000000000000000000000000000000000000000..cf3c654ac43ad44eafa600b6fbe6d30b
 +
 +std::vector<LlmProviderInfo> ThirdPartyLlmPanelCoordinator::GetDefaultProviders() const {
 +  std::vector<LlmProviderInfo> defaults;
-+  defaults.push_back({u"ChatGPT", GURL("https://chatgpt.com")});
-+  defaults.push_back({u"Claude", GURL("https://claude.ai")});
-+  defaults.push_back({u"Grok", GURL("https://grok.com")});
-+  defaults.push_back({u"Gemini", GURL("https://gemini.google.com")});
-+  defaults.push_back({u"Perplexity", GURL("https://www.perplexity.ai")});
++  // 产品仅保留 DeepSeek，避免新用户配置自动恢复其他第三方聊天入口。
++  defaults.push_back({u"DeepSeek", GURL("https://chat.deepseek.com")});
 +  return defaults;
 +}
 +

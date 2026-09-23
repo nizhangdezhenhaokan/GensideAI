@@ -161,7 +161,7 @@ export const providerTypeOptions: { value: ProviderType; label: string }[] = [
   { value: 'ollama', label: 'Ollama' },
   { value: 'lmstudio', label: 'LM Studio' },
   { value: 'bedrock', label: 'AWS Bedrock' },
-  { value: 'browseros', label: 'BrowserOS' },
+  { value: 'browseros', label: 'GensideAI' },
 ]
 
 /**

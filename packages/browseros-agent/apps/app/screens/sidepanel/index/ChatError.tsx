@@ -43,7 +43,7 @@ const CODE_COPY: Partial<
 > = {
   credits_exhausted: {
     title: 'Daily limit reached',
-    linkLabel: 'View Usage & Billing',
+    linkLabel: 'Open AI settings',
   },
   rate_limited: { title: 'Rate limited', linkLabel: 'About daily limits' },
   auth_failed: {
@@ -72,7 +72,9 @@ function fromEnvelope(envelope: ChatErrorEnvelope): ChatErrorView {
   const known = CODE_COPY[envelope.code]
   const url =
     envelope.docsUrl ??
-    (envelope.code === 'auth_failed' || envelope.code === 'provider_config'
+    (envelope.code === 'auth_failed' ||
+    envelope.code === 'provider_config' ||
+    envelope.code === 'credits_exhausted'
       ? AI_SETTINGS_URL
       : undefined)
 
@@ -102,26 +104,10 @@ function fromMessage(message: string, providerType?: string): ChatErrorView {
   if (message.includes('Failed to fetch') || message.includes('fetch failed')) {
     return {
       title: '连接失败',
-      text: '无法连接到 BrowserOS 智能体，请按以下说明排查。',
+      text: '无法连接到 GensideAI 智能体，请按以下说明排查。',
       url: 'https://docs.browseros.com/troubleshooting/connection-issues',
       linkLabel: '查看故障排查指南',
       canRetry: true,
-      showSurvey: false,
-    }
-  }
-
-  if (
-    isBrowserosProvider &&
-    (message.includes('CREDITS_EXHAUSTED') ||
-      message.includes('Credits exhausted') ||
-      message.includes('Daily credits exhausted'))
-  ) {
-    return {
-      title: 'Daily limit reached',
-      text: 'Daily credits exhausted. Credits reset at midnight UTC.',
-      url: '/app.html#/settings/usage',
-      linkLabel: '查看用量与计费',
-      canRetry: false,
       showSurvey: false,
     }
   }
@@ -133,7 +119,7 @@ function fromMessage(message: string, providerType?: string): ChatErrorView {
     return {
       title: '已达到每日限额',
       text: '添加自己的 API 密钥可获得不限量使用。',
-      url: 'https://dub.sh/browseros-usage-limit',
+      url: AI_SETTINGS_URL,
       linkLabel: '了解每日限额',
       canRetry: false,
       showSurvey: true,

@@ -8,13 +8,11 @@ import { websocket } from 'hono/bun'
 import type { ContentfulStatusCode } from 'hono/utils/http-status'
 import { toChatError } from '../agent/chat-error'
 import { HttpAgentError } from '../agent/errors'
-import { INLINED_ENV } from '../env'
 import { initializeOAuth, shutdownOAuth } from '../lib/clients/oauth'
 import { getDb } from '../lib/db'
 import { logger } from '../lib/logger'
 import { Sentry } from '../lib/sentry'
 import { createApiRoutes } from './routes'
-import { KlavisService } from './services/klavis'
 import { ServerActivity } from './services/server-activity'
 import type { HttpServerConfig } from './types'
 
@@ -52,21 +50,13 @@ export async function createHttpServer(config: HttpServerConfig) {
     : null
   if (!browserosId) shutdownOAuth()
 
-  const klavis = new KlavisService({ browserosId })
-  klavis.start()
-
   const activity = new ServerActivity()
 
   const app = createApiRoutes({
     config: { ...config, activity },
-    gatewayBaseUrl: INLINED_ENV.BROWSEROS_CONFIG_URL
-      ? new URL(INLINED_ENV.BROWSEROS_CONFIG_URL).origin
-      : undefined,
-    klavis,
     tokenManager,
     onShutdown: () => {
       shutdownOAuth()
-      void klavis.stop()
       onShutdown?.()
     },
   })

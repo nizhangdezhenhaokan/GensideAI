@@ -75,18 +75,20 @@ describe('buildChatRequestBody', () => {
       browserContext: {
         windowId: 2,
         activeTab: { id: 10, url: 'https://amazon.com', title: 'Amazon' },
-        enabledMcpServers: ['slack'],
+        customMcpServers: [
+          { name: '我的 MCP', url: 'http://127.0.0.1:3001/mcp' },
+        ],
       },
       userSystemPrompt: 'Stay in the current tab.',
-      declinedApps: ['gmail'],
     })
 
     expect(body.browserContext).toMatchObject({
       windowId: 2,
       activeTab: { id: 10, url: 'https://amazon.com' },
-      enabledMcpServers: ['slack'],
+      customMcpServers: [
+        { name: '我的 MCP', url: 'http://127.0.0.1:3001/mcp' },
+      ],
     })
     expect(body.userSystemPrompt).toBe('Stay in the current tab.')
-    expect(body.declinedApps).toEqual(['gmail'])
   })
 })

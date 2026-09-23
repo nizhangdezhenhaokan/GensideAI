@@ -17,7 +17,7 @@ export interface BuildSidepanelPreparedSendMessagesRequestInput
   extends CommonSidepanelRequestInput {
   agentServerUrl: string
   target: SidepanelChatTarget | undefined
-  fallbackProvider: LlmProviderConfig
+  fallbackProvider?: LlmProviderConfig
   message?: string
   attachments?: Array<{ mediaType: string; data: string }>
 }
@@ -61,7 +61,6 @@ export function buildSidepanelPreparedSendMessagesRequest({
         userWorkingDir: common.userWorkingDir,
         supportsImages: common.supportsImages,
         previousConversation: common.previousConversation,
-        declinedApps: common.declinedApps,
         selectedText: common.selectedText,
         selectedTextSource: common.selectedTextSource,
         attachments: common.attachments?.length

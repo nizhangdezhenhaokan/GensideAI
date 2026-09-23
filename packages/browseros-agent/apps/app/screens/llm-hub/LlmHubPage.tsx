@@ -77,15 +77,15 @@ export const LlmHubPage: FC = () => {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove Provider</AlertDialogTitle>
+            <AlertDialogTitle>删除服务提供商</AlertDialogTitle>
             <AlertDialogDescription>
-              Remove {providerToDelete?.name} from your LLM chat providers?
+              确定要从 LLM 对话提供商中删除“{providerToDelete?.name}”吗？
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDelete}>
-              Remove
+              删除
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

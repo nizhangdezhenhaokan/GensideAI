@@ -65,8 +65,8 @@ export async function testProvider(
     return {
       success: false,
       message:
-        `Could not reach the local BrowserOS server at ${agentServerUrl}. ` +
-        `Make sure BrowserOS is running and try again. (${detail})`,
+        `无法连接本地 GensideAI 服务：${agentServerUrl}。` +
+        `请确认服务正在运行后重试。（${detail}）`,
       responseTime,
     }
   }

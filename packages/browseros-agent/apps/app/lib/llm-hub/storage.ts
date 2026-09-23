@@ -7,13 +7,62 @@ export interface LlmHubProvider {
   url: string
 }
 
+const DEFAULT_DEEPSEEK_PROVIDER: LlmHubProvider = {
+  name: 'DeepSeek',
+  url: 'https://chat.deepseek.com',
+}
+
+const LEGACY_DEFAULT_PROVIDER_HOSTS = new Map([
+  ['ChatGPT', 'chatgpt.com'],
+  ['Claude', 'claude.ai'],
+  ['Grok', 'grok.com'],
+  ['Gemini', 'gemini.google.com'],
+  ['Perplexity', 'perplexity.ai'],
+])
+
+// 仅清除旧版内置的名称与官网地址组合，避免误删用户自定义的同名提供方。
+export function migrateLegacyHubProviders(
+  providers: LlmHubProvider[],
+): LlmHubProvider[] {
+  const retained = providers.filter((provider) => {
+    const legacyHost = LEGACY_DEFAULT_PROVIDER_HOSTS.get(provider.name)
+    if (!legacyHost) return true
+
+    try {
+      const url = new URL(provider.url)
+      return !(
+        url.hostname.toLowerCase().replace(/^www\./, '') === legacyHost &&
+        (url.pathname === '/' || url.pathname === '') &&
+        !url.search &&
+        !url.hash
+      )
+    } catch {
+      return true
+    }
+  })
+
+  if (retained.some((provider) => provider.name === 'DeepSeek')) {
+    return retained
+  }
+
+  return [DEFAULT_DEEPSEEK_PROVIDER, ...retained]
+}
+
 export async function loadProviders(): Promise<LlmHubProvider[]> {
   try {
     const adapter = getBrowserOSAdapter()
     const providersPref = await adapter.getPref(
       BROWSEROS_PREFS.THIRD_PARTY_LLM_PROVIDERS,
     )
-    return (providersPref?.value as LlmHubProvider[]) || []
+    const providers = (providersPref?.value as LlmHubProvider[]) || []
+    const migrated = migrateLegacyHubProviders(providers)
+    if (
+      migrated.length !== providers.length ||
+      migrated.some((provider, index) => provider !== providers[index])
+    ) {
+      await adapter.setPref(BROWSEROS_PREFS.THIRD_PARTY_LLM_PROVIDERS, migrated)
+    }
+    return migrated
   } catch {
     return []
   }

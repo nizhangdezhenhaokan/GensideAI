@@ -1,51 +1,32 @@
 /**
- * Pure builders for the model-visible notices that describe mid-conversation
- * changes to a cached agent session's inputs (connected MCP servers, workspace,
- * chat mode). Kept side-effect free so ChatService.processMessage stays plain
- * control flow: detect the change, rebuild once, then emit these notices.
+ * 纯函数：生成会话运行中 MCP、工作区与模式变化时供模型阅读的说明文本。
  */
 
-/** Notice for a change in the connected MCP / app-integration set. */
+/** 通知模型自定义 MCP 服务集合发生变更。 */
 export function describeMcpChange(
   previousMcpKey: string | undefined,
   currentMcpKey: string,
 ): string {
-  const oldParts = (previousMcpKey ?? '').split(',').filter(Boolean)
-  const newParts = currentMcpKey.split(',').filter(Boolean)
-  const oldKlavisState = oldParts.find((s) => s.startsWith('klavis:'))
-  const newKlavisState = newParts.find((s) => s.startsWith('klavis:'))
-  const oldServers = new Set(oldParts.filter((s) => !s.startsWith('klavis:')))
-  const newServers = new Set(newParts.filter((s) => !s.startsWith('klavis:')))
-  const added = [...newServers].filter((s) => !oldServers.has(s))
-  const removed = [...oldServers].filter((s) => !newServers.has(s))
+  const oldServers = new Set((previousMcpKey ?? '').split(',').filter(Boolean))
+  const newServers = new Set(currentMcpKey.split(',').filter(Boolean))
+  const added = [...newServers].filter((server) => !oldServers.has(server))
+  const removed = [...oldServers].filter((server) => !newServers.has(server))
 
   const parts: string[] = []
   if (removed.length > 0) {
     parts.push(
-      `The following app integrations were disconnected: ${removed.join(', ')}. Their tools are no longer available.`,
+      `The following custom MCP services were removed: ${removed.join(', ')}. Their tools are no longer available.`,
     )
   }
   if (added.length > 0) {
     parts.push(
-      `The following app integrations were connected: ${added.join(', ')}. Their tools are now available.`,
+      `The following custom MCP services were added: ${added.join(', ')}. Their tools are now available.`,
     )
   }
-  if (parts.length === 0) {
-    if (
-      oldKlavisState !== 'klavis:ready' &&
-      newKlavisState === 'klavis:ready' &&
-      newServers.size > 0
-    ) {
-      parts.push(
-        `Klavis app integration tools are now available for the following connected apps: ${[...newServers].join(', ')}.`,
-      )
-    } else {
-      parts.push(
-        'Connected app integrations changed during this conversation. Use only tools that are currently registered.',
-      )
-    }
-  }
-  return parts.join(' ')
+  return (
+    parts.join(' ') ||
+    'Custom MCP services changed during this conversation. Use only tools that are currently registered.'
+  )
 }
 
 /** Notice for a workspace connect, disconnect, or switch mid-conversation. */

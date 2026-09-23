@@ -26,6 +26,7 @@ import { loadOrCreateInstallationId } from './lib/installation-id'
 import { logger } from './lib/logger'
 import { selfHealMcpLinks } from './lib/mcp-manager'
 import { metrics } from './lib/metrics'
+import { seedDefaultQwenProvider } from './lib/providers/default-qwen-provider'
 import { isPortInUseError } from './lib/port-binding'
 import { Sentry } from './lib/sentry'
 import { VERSION } from './version'
@@ -152,6 +153,7 @@ export class Application {
       dbPath: getDbPath(),
       resourcesDir: this.config.resourcesDir,
     })
+    await seedDefaultQwenProvider()
 
     let installationId: string | undefined
     try {

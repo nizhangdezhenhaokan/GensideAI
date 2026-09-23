@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import {
   Calendar,
@@ -8,11 +9,23 @@ import {
   Loader2,
   RotateCcw,
   Square,
+  Trash2,
   XCircle,
 } from 'lucide-react'
 import { type FC, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router'
+import { toast } from 'sonner'
 import { RunResultDialog } from '@/components/ai-elements/run-result-dialog'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -53,7 +66,8 @@ const getStatusIcon = (status: JobRunWithDetails['status']) => {
   }
 }
 
-const formatTimestamp = (dateString: string) => dayjs(dateString).fromNow()
+const formatTimestamp = (dateString: string) =>
+  dayjs(dateString).locale('zh-cn').fromNow()
 
 export const ScheduleResults: FC = () => {
   const navigate = useNavigate()
@@ -62,13 +76,15 @@ export const ScheduleResults: FC = () => {
     return stored !== 'true'
   })
   const [viewingRun, setViewingRun] = useState<JobRunWithDetails | null>(null)
+  const [runToDelete, setRunToDelete] = useState<string | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open)
     localStorage.setItem(SCHEDULE_RESULTS_COLLAPSED_KEY, (!open).toString())
   }
 
-  const { jobRuns, cancelJobRun } = useScheduledJobRuns()
+  const { jobRuns, cancelJobRun, removeJobRun } = useScheduledJobRuns()
   const { jobs, runJob } = useScheduledJobs()
 
   const runningCount = countRunningRuns(jobRuns)
@@ -93,6 +109,21 @@ export const ScheduleResults: FC = () => {
     track(SCHEDULED_TASK_RETRIED_EVENT)
   }
 
+  // 等服务端确认删除后再关闭弹窗，失败时保留记录供用户重试。
+  const handleDeleteRun = async () => {
+    if (!runToDelete || isDeleting) return
+    setIsDeleting(true)
+    try {
+      await removeJobRun(runToDelete)
+      if (viewingRun?.id === runToDelete) setViewingRun(null)
+      setRunToDelete(null)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : '删除执行记录失败')
+    } finally {
+      setIsDeleting(false)
+    }
+  }
+
   const handleViewMore = () => {
     track(SCHEDULED_TASK_VIEW_MORE_IN_NEWTAB_EVENT)
     navigate('/scheduled')
@@ -114,11 +145,11 @@ export const ScheduleResults: FC = () => {
           <div className="flex items-center gap-3">
             <Calendar className="h-4 w-4 text-muted-foreground" />
             <span className="font-medium text-foreground text-sm">
-              Scheduled Task Outputs
+              定时任务执行结果
             </span>
             {runningCount > 0 && (
               <Badge variant="secondary" className="text-xs">
-                {runningCount} running
+                {runningCount} 个任务运行中
               </Badge>
             )}
           </div>
@@ -163,7 +194,7 @@ export const ScheduleResults: FC = () => {
                     handleCancelRun(run.id)
                   }}
                   className="shrink-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                  aria-label="Cancel run"
+                  aria-label="取消任务"
                 >
                   <Square className="h-3.5 w-3.5" />
                 </Button>
@@ -177,16 +208,30 @@ export const ScheduleResults: FC = () => {
                     handleRetryRun(run.jobId)
                   }}
                   className="shrink-0 text-muted-foreground hover:text-foreground"
-                  aria-label="Retry run"
+                  aria-label="重试任务"
                 >
                   <RotateCcw className="h-3.5 w-3.5" />
+                </Button>
+              )}
+              {run.status !== 'running' && (
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setRunToDelete(run.id)
+                  }}
+                  className="shrink-0 text-muted-foreground hover:text-destructive"
+                  aria-label="删除执行记录"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
                 </Button>
               )}
             </div>
           </Button>
         ))}
         <Button variant="ghost" onClick={handleViewMore} className="w-full">
-          View more
+          查看更多
         </Button>
       </CollapsibleContent>
 
@@ -197,6 +242,31 @@ export const ScheduleResults: FC = () => {
         onCancelRun={handleCancelRun}
         onRetryRun={handleRetryRun}
       />
+      <AlertDialog
+        open={runToDelete !== null}
+        onOpenChange={(open) => !open && !isDeleting && setRunToDelete(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>删除执行记录</AlertDialogTitle>
+            <AlertDialogDescription>
+              确定删除这条执行记录吗？删除后无法恢复，定时任务本身不会被删除。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>取消</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={isDeleting}
+              onClick={(event) => {
+                event.preventDefault()
+                void handleDeleteRun()
+              }}
+            >
+              删除
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Collapsible>
   )
 }

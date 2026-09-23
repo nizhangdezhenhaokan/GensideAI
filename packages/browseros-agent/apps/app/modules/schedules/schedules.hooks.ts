@@ -9,6 +9,7 @@ import type {
 } from '@/lib/schedules/scheduleTypes'
 import {
   deleteScheduledJob,
+  deleteScheduledJobRun,
   listScheduledJobRuns,
   listScheduledJobs,
   putScheduledJob,
@@ -143,16 +144,27 @@ export interface UseScheduledJobRunsReturn {
   jobRuns: ScheduledJobRun[]
   isUnavailable: boolean
   cancelJobRun: (runId: string) => Promise<unknown>
+  removeJobRun: (runId: string) => Promise<void>
 }
 
 export function useScheduledJobRuns(): UseScheduledJobRunsReturn {
+  const queryClient = useQueryClient()
   const runsQuery = useScheduledJobRunsQuery()
   useScheduleRevision()
+
+  const removeMutation = useMutation({
+    mutationFn: deleteScheduledJobRun,
+    onSuccess: () =>
+      queryClient.invalidateQueries({
+        queryKey: useScheduledJobRunsQuery.getKey(),
+      }),
+  })
 
   return {
     jobRuns: runsQuery.data ?? [],
     isUnavailable: runsQuery.isError,
     cancelJobRun: (runId) =>
       sendScheduleMessage('cancelScheduledJobRun', { runId }),
+    removeJobRun: (runId) => removeMutation.mutateAsync(runId),
   }
 }

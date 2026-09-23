@@ -76,14 +76,10 @@ export async function getChatServerResponse(
   const personalization = await personalizationStorage.getValue()
 
   const mcpServers = (await mcpServerStorage.getValue()) ?? []
-  const enabledMcpServers = mcpServers
-    .filter((s) => s.type === 'managed')
-    .map((s) => s.managedServerName)
-    .filter((name): name is string => !!name)
-  const customMcpServers = mcpServers
-    .filter((s) => s.type === 'custom' && !!s.config?.url)
-    // biome-ignore lint/style/noNonNullAssertion: filter guarantees url exists
-    .map((s) => ({ name: s.displayName, url: s.config!.url }))
+  const customMcpServers = mcpServers.map((server) => ({
+    name: server.displayName,
+    url: server.config.url,
+  }))
 
   const response = await fetch(`${agentServerUrl}/chat`, {
     method: 'POST',
@@ -99,15 +95,10 @@ export async function getChatServerResponse(
         conversationId,
         mode: request.mode ?? 'agent',
         browserContext:
-          request.activeTab ||
-          request.windowId ||
-          enabledMcpServers.length ||
-          customMcpServers.length
+          request.activeTab || request.windowId || customMcpServers.length
             ? {
                 windowId: request.windowId,
                 activeTab: request.activeTab,
-                enabledMcpServers:
-                  enabledMcpServers.length > 0 ? enabledMcpServers : undefined,
                 customMcpServers:
                   customMcpServers.length > 0 ? customMcpServers : undefined,
               }

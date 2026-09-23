@@ -1249,7 +1249,7 @@ export const NewProviderDialog: FC<NewProviderDialogProps> = ({
                 disabled={!canTest || isTesting}
               >
                 {isTesting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {isTesting ? 'Testing...' : 'Test'}
+                {isTesting ? '正在测试…' : '测试连接'}
               </Button>
               <Button type="submit" disabled={isTesting || contextExceedsMax}>
                 {initialValues?.id ? '更新' : '保存'}

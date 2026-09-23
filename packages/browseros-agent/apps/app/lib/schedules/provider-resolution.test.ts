@@ -26,7 +26,7 @@ const createBrowserOSProvider = () => ({
 // reliability audit) covers the general class regardless.
 mock.module('@/lib/llm-providers/storage', () => ({
   DEFAULT_PROVIDER_ID: 'browseros',
-  createDefaultBrowserOSProvider: createBrowserOSProvider,
+  createDefaultQwenProvider: createBrowserOSProvider,
   createDefaultProvidersConfig: () => [createBrowserOSProvider()],
   loadProviders: async () =>
     (storageValues.get('providers') as LlmProviderConfig[]) ?? [],

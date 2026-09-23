@@ -41,7 +41,6 @@ import {
   type SaveConversationInput,
 } from '../../lib/conversations/conversation-store'
 import { logger } from '../../lib/logger'
-import type { KlavisService } from '../services/klavis'
 import type {
   BrowserMcpModule,
   BrowserToolLease,
@@ -69,7 +68,6 @@ import {
 
 export interface ChatServiceDeps {
   sessionStore: SessionStore
-  klavis?: KlavisService
   browser: Browser
   browserMcp: Pick<BrowserMcpModule, 'createLease'>
   browserosId?: string
@@ -220,7 +218,6 @@ export class ChatService {
       chatMode: request.mode === 'chat',
       isScheduledTask: request.isScheduledTask,
       origin: request.origin,
-      declinedApps: request.declinedApps,
       browserosId: this.deps.browserosId,
     }
 
@@ -847,14 +844,9 @@ export class ChatService {
   }
 
   private buildMcpServerKey(browserContext?: BrowserContext): string {
-    const managed = browserContext?.enabledMcpServers?.slice().sort() ?? []
     const custom =
       browserContext?.customMcpServers?.map((s) => s.url).sort() ?? []
-    const klavisState =
-      managed.length > 0
-        ? `klavis:${this.deps.klavis?.getProxyStatus().state ?? 'disabled'}`
-        : null
-    return [klavisState, ...managed, ...custom].filter(Boolean).join(',')
+    return custom.filter(Boolean).join(',')
   }
 }
 

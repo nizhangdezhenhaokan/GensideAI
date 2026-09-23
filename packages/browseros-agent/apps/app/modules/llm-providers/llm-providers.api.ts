@@ -1,9 +1,5 @@
 import type { ProviderRoutes } from '@browseros/server'
 import { hc } from 'hono/client'
-import {
-  createDefaultBrowserOSProvider,
-  DEFAULT_PROVIDER_ID,
-} from '@/lib/llm-providers/storage'
 import type { LlmProviderConfig } from '@/lib/llm-providers/types'
 import { resolveAgentServerUrlWithRetry } from '@/modules/browseros/agent-server-url.helpers'
 import { toProviderConfigs, toProviderPayload } from './llm-providers.helpers'
@@ -21,7 +17,7 @@ export async function putProvider(config: LlmProviderConfig): Promise<void> {
     json: toProviderPayload(config),
   })
   if (!response.ok) {
-    throw new Error(`Failed to save provider (${response.status})`)
+    throw new Error(`保存服务提供商失败（HTTP ${response.status}）`)
   }
   await bumpProviderRevision()
 }
@@ -32,23 +28,17 @@ export async function deleteProvider(providerId: string): Promise<void> {
     param: { providerId },
   })
   if (!response.ok && response.status !== 404) {
-    throw new Error(`Failed to delete provider (${response.status})`)
+    throw new Error(`删除服务提供商失败（HTTP ${response.status}）`)
   }
   await bumpProviderRevision()
 }
 
-/**
- * The selected provider's id, or null when none is set.
- *
- * Held on the server beside the providers it points at, so it covers acp
- * agents as readily as llm ones. It used to sit in extension storage, which
- * meant selecting an agent left this pointing at the previous llm provider.
- */
+/** 获取服务端保存的默认服务提供商 ID。 */
 export async function fetchDefaultProviderId(): Promise<string | null> {
   const client = await providersClient()
   const response = await client.default.$get()
   if (!response.ok) {
-    throw new Error(`Failed to load the default provider (${response.status})`)
+    throw new Error(`加载默认服务提供商失败（HTTP ${response.status}）`)
   }
   const { provider } = await response.json()
   return provider?.id ?? null
@@ -58,58 +48,35 @@ export async function putDefaultProvider(providerId: string): Promise<void> {
   const client = await providersClient()
   const response = await client.default.$put({ json: { providerId } })
   if (!response.ok) {
-    throw new Error(`Failed to set the default provider (${response.status})`)
+    throw new Error(`设置默认服务提供商失败（HTTP ${response.status}）`)
   }
   await bumpProviderRevision()
 }
 
+/** 获取服务端的完整服务提供商清单。 */
 export async function listProviders(): Promise<LlmProviderConfig[]> {
   const client = await providersClient()
   const response = await client.index.$get()
   if (!response.ok) {
-    throw new Error(`Failed to load providers (${response.status})`)
+    throw new Error(`加载服务提供商失败（HTTP ${response.status}）`)
   }
   const { providers } = await response.json()
   return toProviderConfigs(providers)
 }
 
 /**
- * Loads the provider list, seeding the built-in BrowserOS provider when it is
- * absent.
+ * 获取前端可选择的模型。
  *
- * The seed lives here rather than in an effect so it can only run on a
- * confirmed server response. Reacting to a missing row in the component would
- * fire on a failed load too, writing the default over a list that had simply
- * not arrived yet. The write is a PUT on a fixed id, so a retried fetch cannot
- * produce duplicates either.
+ * BrowserOS 托管模型仅保留在服务端历史数据中，智慧小财神前端不展示、
+ * 不选择该模型，避免覆盖用户已经配置好的智谱模型。
  */
 export async function fetchProviders(): Promise<LlmProviderConfig[]> {
   const configs = await listProviders()
-  const fixedProvider = configs.find(
-    (provider) => provider.id === DEFAULT_PROVIDER_ID,
-  )
-  // 内置 BrowserOS 提供商存在时，也必须返回其余用户配置的提供商。
-  // 之前只返回 fixedProvider，会让新增的 URL、Key 和模型已保存却永远
-  // 无法在设置页显示或被设为默认。
-  if (fixedProvider) return configs
-
-  const seeded = createDefaultBrowserOSProvider()
-  await putProvider(seeded)
-  return [seeded, ...configs]
+  return configs.filter((provider) => provider.type !== 'browseros')
 }
 
 /**
- * The list for callers outside React, returning null when the server could not
- * be reached.
- *
- * Null rather than an empty array because the two mean different things to a
- * caller resolving an explicitly chosen provider: absent means the provider
- * was deleted and falling back is right, unreachable means the choice is
- * simply unknown and running anyway would use the wrong credentials.
- *
- * These callers must not seed either. A background alarm firing while the
- * server is still starting would otherwise write the default into a database
- * the migration had not filled yet.
+ * 为非 React 调用方提供的列表读取接口；服务不可用时返回 null。
  */
 export async function listProvidersOrNull(): Promise<
   LlmProviderConfig[] | null

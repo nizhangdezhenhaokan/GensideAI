@@ -6,7 +6,9 @@ import {
   normalizeProviderNames,
 } from './provider-name-normalization'
 import {
+  DEFAULT_PROVIDER_BASE_URL,
   DEFAULT_PROVIDER_ID,
+  DEFAULT_PROVIDER_MODEL_ID,
   DEFAULT_PROVIDER_NAME,
 } from './provider-selection'
 import { dropRemovedProviderConfigs } from './removed-provider-types'
@@ -78,16 +80,16 @@ export async function loadProviders(): Promise<LlmProviderConfig[]> {
   return normalizedProviders
 }
 
-export function createDefaultBrowserOSProvider(): LlmProviderConfig {
+export function createDefaultQwenProvider(): LlmProviderConfig {
   const timestamp = Date.now()
   return {
     id: DEFAULT_PROVIDER_ID,
-    type: 'browseros',
+    type: 'openai-compatible',
     name: DEFAULT_PROVIDER_NAME,
-    baseUrl: 'https://api.browseros.com/v1',
-    modelId: 'browseros-auto',
-    supportsImages: true,
-    contextWindow: 200000,
+    baseUrl: DEFAULT_PROVIDER_BASE_URL,
+    modelId: DEFAULT_PROVIDER_MODEL_ID,
+    supportsImages: false,
+    contextWindow: 128000,
     temperature: 0.2,
     createdAt: timestamp,
     updatedAt: timestamp,
@@ -95,7 +97,7 @@ export function createDefaultBrowserOSProvider(): LlmProviderConfig {
 }
 
 export function createDefaultProvidersConfig(): LlmProviderConfig[] {
-  return [createDefaultBrowserOSProvider()]
+  return [createDefaultQwenProvider()]
 }
 
 export const defaultProviderIdStorage = storage.defineItem<string>(

@@ -21,7 +21,7 @@ export interface ToolInvocationInfo {
   approval?: { id: string; approved?: boolean; reason?: string }
 }
 
-export type NudgeType = 'schedule_suggestion' | 'app_connection'
+export type NudgeType = 'schedule_suggestion'
 
 export interface NudgeData {
   type: NudgeType
@@ -34,7 +34,7 @@ export type MessageSegment =
   | { type: 'tool-batch'; key: string; tools: ToolInvocationInfo[] }
   | { type: 'nudge'; key: string; nudgeType: NudgeType; data: NudgeData }
 
-const NUDGE_TOOLS = new Set(['suggest_schedule', 'suggest_app_connection'])
+const NUDGE_TOOLS = new Set(['suggest_schedule'])
 
 function parseNudgeOutput(output: unknown): NudgeData | null {
   try {
@@ -48,10 +48,7 @@ function parseNudgeOutput(output: unknown): NudgeData | null {
     if (!text) return null
 
     const parsed = JSON.parse(text)
-    if (
-      parsed?.type === 'schedule_suggestion' ||
-      parsed?.type === 'app_connection'
-    ) {
+    if (parsed?.type === 'schedule_suggestion') {
       return parsed as NudgeData
     }
   } catch {

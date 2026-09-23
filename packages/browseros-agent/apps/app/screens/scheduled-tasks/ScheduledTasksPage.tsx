@@ -1,5 +1,6 @@
 import { type FC, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router'
+import { toast } from 'sonner'
 import { RunResultDialog } from '@/components/ai-elements/run-result-dialog'
 import {
   AlertDialog,
@@ -41,7 +42,7 @@ import type { ScheduledJob } from './types'
 export const ScheduledTasksPage: FC = () => {
   const { jobs, addJob, editJob, toggleJob, removeJob, runJob } =
     useScheduledJobs()
-  const { jobRuns, cancelJobRun } = useScheduledJobRuns()
+  const { jobRuns, cancelJobRun, removeJobRun } = useScheduledJobRuns()
 
   const [selectedTab, setSelectedTab] = useState<string | null>(null)
   // Derived rather than set from an effect, so it settles when the history
@@ -50,6 +51,8 @@ export const ScheduledTasksPage: FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingJob, setEditingJob] = useState<ScheduledJob | null>(null)
   const [deleteJobId, setDeleteJobId] = useState<string | null>(null)
+  const [deleteRunId, setDeleteRunId] = useState<string | null>(null)
+  const [isDeletingRun, setIsDeletingRun] = useState(false)
   const [viewingRunId, setViewingRunId] = useState<string | null>(null)
   const viewingRun = viewingRunId
     ? (jobRuns.find((r) => r.id === viewingRunId) ?? null)
@@ -151,6 +154,21 @@ export const ScheduledTasksPage: FC = () => {
     track(SCHEDULED_TASK_VIEW_RESULTS_EVENT)
   }
 
+  // 只删除单条执行记录，保留定时任务及其余运行历史。
+  const confirmDeleteRun = async () => {
+    if (!deleteRunId || isDeletingRun) return
+    setIsDeletingRun(true)
+    try {
+      await removeJobRun(deleteRunId)
+      if (viewingRunId === deleteRunId) setViewingRunId(null)
+      setDeleteRunId(null)
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : '删除执行记录失败')
+    } finally {
+      setIsDeletingRun(false)
+    }
+  }
+
   const jobToDelete = deleteJobId
     ? jobs.find((j) => j.id === deleteJobId)
     : null
@@ -170,6 +188,7 @@ export const ScheduledTasksPage: FC = () => {
             onViewRun={handleViewRun}
             onCancelRun={handleCancelRun}
             onRetryRun={handleRetryRun}
+            onDeleteRun={setDeleteRunId}
           />
         </TabsContent>
 
@@ -226,6 +245,32 @@ export const ScheduledTasksPage: FC = () => {
           <AlertDialogFooter>
             <AlertDialogCancel>取消</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDelete}>删除</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={deleteRunId !== null}
+        onOpenChange={(open) => !open && !isDeletingRun && setDeleteRunId(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>删除执行记录</AlertDialogTitle>
+            <AlertDialogDescription>
+              确定删除这条执行记录吗？删除后无法恢复，定时任务本身不会被删除。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeletingRun}>取消</AlertDialogCancel>
+            <AlertDialogAction
+              disabled={isDeletingRun}
+              onClick={(event) => {
+                event.preventDefault()
+                void confirmDeleteRun()
+              }}
+            >
+              删除
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

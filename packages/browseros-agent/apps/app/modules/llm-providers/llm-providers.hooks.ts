@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { createQuery } from 'react-query-kit'
 import {
+  isDefaultQwenProvider,
   resolveDefaultProviderId,
   resolveSelectedProvider,
 } from '@/lib/llm-providers/provider-selection'
@@ -148,6 +149,17 @@ export function useLlmProviders(): UseLlmProvidersReturn {
   // Derived on read rather than repaired in storage: the write would be a side
   // effect of rendering, and every reader resolves the id the same way anyway.
   const defaultProviderId = resolveDefaultProviderId(providers, storedDefaultId)
+
+  useEffect(() => {
+    // 仅迁移旧版 BrowserOS 默认项：检测到已配置 Qwen 模型后立即持久化为默认，
+    // 后续用户手动选择的其他模型不会被此迁移覆盖。
+    if (storedDefaultId !== 'browseros') return
+
+    const qwenProvider = providers.find(isDefaultQwenProvider)
+    if (!qwenProvider) return
+
+    setDefaultMutation.mutate(qwenProvider.id)
+  }, [providers, setDefaultMutation, storedDefaultId])
 
   return {
     providers,

@@ -277,7 +277,6 @@ export class AiSdkAgent {
         config.resolvedConfig.chatMode
       ) {
         delete tools.suggest_schedule
-        delete tools.suggest_app_connection
       }
 
       // Build system prompt with optional section exclusions
@@ -295,8 +294,6 @@ export class AiSdkAgent {
         scheduledTaskPageId: config.browserContext?.activeTab?.pageId,
         workspaceDir: workspaceDirForPrompt,
         chatMode: config.resolvedConfig.chatMode,
-        connectedApps: config.browserContext?.enabledMcpServers,
-        declinedApps: config.resolvedConfig.declinedApps,
         origin: config.resolvedConfig.origin,
         generatedOutputReadAvailable: 'filesystem_read' in filesystemTools,
       })

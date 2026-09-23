@@ -93,7 +93,7 @@ export const AgentCommandHome: FC = () => {
               ？
             </h1>
             <p className="mx-auto max-w-2xl text-muted-foreground text-sm leading-6 [text-wrap:pretty]">
-              选择 BrowserOS AI 或其他智能体，无需离开当前标签页即可开始任务。
+              选择 GensideAI 或其他智能体，无需离开当前标签页即可开始任务。
             </p>
           </div>
 

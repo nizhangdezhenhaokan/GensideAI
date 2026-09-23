@@ -74,7 +74,7 @@ export const NewCodingAgentDialog: FC<NewCodingAgentDialogProps> = ({
         <DialogHeader>
           <DialogTitle>配置 {type ? adapterLabel(type) : '智能体'}</DialogTitle>
           <DialogDescription>
-            BrowserOS 将使用现有的 CLI
+            GensideAI 将使用现有的 CLI
             登录。该智能体可以执行命令并访问电脑中的文件，无需逐次确认。
           </DialogDescription>
         </DialogHeader>

@@ -66,10 +66,8 @@ describe('BrowserClawPromoBanner', () => {
       }),
     )
 
-    expect(html).toContain('Meet BrowserOS neo — the browser for AI agents')
-    expect(html).toContain(
-      'A new product from the BrowserOS team — free, open source, and ready to download',
-    )
+    expect(html).toContain('探索另一款面向 AI 智能体的开源浏览器')
+    expect(html).toContain('免费、开源，可前往项目网站了解详情并下载。')
     expect(html).toContain('Check it out')
   })
 

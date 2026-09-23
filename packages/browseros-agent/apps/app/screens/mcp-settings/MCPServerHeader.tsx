@@ -74,7 +74,7 @@ export const MCPServerHeader: FC<MCPServerHeaderProps> = ({
         </div>
         <div className="flex-1">
           <div className="mb-1 flex items-center justify-between">
-            <h2 className="font-semibold text-xl">BrowserOS MCP 服务器</h2>
+            <h2 className="font-semibold text-xl">GensideAI MCP 服务器</h2>
             <a
               href={DOCS_URL}
               target="_blank"
@@ -86,7 +86,7 @@ export const MCPServerHeader: FC<MCPServerHeaderProps> = ({
             </a>
           </div>
           <p className="mb-6 text-muted-foreground text-sm">
-            将 BrowserOS 连接到 Claude Code、Gemini CLI 等 MCP 客户端。
+            将 GensideAI 连接到 Claude Code、Gemini CLI 等 MCP 客户端。
           </p>
 
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">

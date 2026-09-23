@@ -19,7 +19,6 @@ import {
 } from '@/components/ai-elements/reasoning'
 import type { ChatAction } from '@/lib/chat-actions/types'
 import { ChatMessageActions } from './ChatMessageActions'
-import { ConnectAppCard } from './ConnectAppCard'
 import { getMessageSegments } from './getMessageSegments'
 import { JtbdPopup } from './JtbdPopup'
 import { ScheduleSuggestionCard } from './ScheduleSuggestionCard'
@@ -132,15 +131,8 @@ export const ChatMessages: FC<ChatMessagesProps> = ({
                               />
                             )
                           case 'nudge':
-                            return segment.nudgeType ===
-                              'schedule_suggestion' ? (
+                            return (
                               <ScheduleSuggestionCard
-                                key={segment.key}
-                                data={segment.data}
-                                isLastMessage={isLastMessage}
-                              />
-                            ) : (
-                              <ConnectAppCard
                                 key={segment.key}
                                 data={segment.data}
                                 isLastMessage={isLastMessage}

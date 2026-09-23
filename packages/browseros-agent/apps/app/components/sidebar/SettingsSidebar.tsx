@@ -4,13 +4,13 @@ import {
   BookOpen,
   Bot,
   Compass,
-  CreditCard,
   MessageSquare,
   Palette,
   Server,
 } from 'lucide-react'
 import type { FC } from 'react'
 import { NavLink } from 'react-router'
+import { toast } from 'sonner'
 import { ThemeToggle } from '@/components/elements/theme-toggle'
 import { Feature } from '@/lib/browseros/capabilities'
 import { cn } from '@/lib/utils'
@@ -27,20 +27,20 @@ type InternalNavItem = BaseNavItem & {
   to: string
 }
 
-type ExternalNavItem = BaseNavItem & {
-  href: string
+type ComingSoonNavItem = BaseNavItem & {
+  action: 'coming-soon'
   to?: never
 }
 
-type NavItem = InternalNavItem | ExternalNavItem
+type NavItem = InternalNavItem | ComingSoonNavItem
 
 type NavSection = {
   label: string
   items: NavItem[]
 }
 
-function isExternalNavItem(item: NavItem): item is ExternalNavItem {
-  return 'href' in item
+function isComingSoonNavItem(item: NavItem): item is ComingSoonNavItem {
+  return 'action' in item
 }
 
 const getNavLinkClassName = (isActive: boolean) =>
@@ -71,24 +71,18 @@ const primarySettingsSections: NavSection[] = [
     label: '其他',
     items: [
       {
-        name: '自定义 BrowserOS',
+        name: '自定义 GensideAI',
         to: '/settings/customization',
         icon: Palette,
       },
-      { name: '将 BrowserOS 用作 MCP', to: '/settings/mcp', icon: Server },
-      {
-        name: '用量与计费',
-        to: '/settings/usage',
-        icon: CreditCard,
-        feature: Feature.CREDITS_SUPPORT,
-      },
+      { name: '将 GensideAI 用作 MCP', to: '/settings/mcp', icon: Server },
     ],
   },
 ]
 
 const helpItems: NavItem[] = [
-  { name: '文档', href: 'https://docs.browseros.com/', icon: BookOpen },
-  { name: '功能介绍', to: '/features', icon: Compass },
+  { name: '文档', action: 'coming-soon', icon: BookOpen },
+  { name: '功能介绍', action: 'coming-soon', icon: Compass },
   { name: '诊断信息', to: '/settings/diagnostics', icon: Activity },
 ]
 
@@ -111,18 +105,19 @@ export const SettingsSidebar: FC = () => {
   const renderNavItem = (item: NavItem) => {
     const Icon = item.icon
 
-    if (isExternalNavItem(item)) {
+    if (isComingSoonNavItem(item)) {
       return (
-        <a
-          key={item.href}
-          href={item.href}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          key={item.name}
+          type="button"
+          onClick={() =>
+            toast.info('正在开发中，敬请期待！', { position: 'top-center' })
+          }
           className={getNavLinkClassName(false)}
         >
           <Icon className="size-4 shrink-0" />
           <span className="truncate">{item.name}</span>
-        </a>
+        </button>
       )
     }
 

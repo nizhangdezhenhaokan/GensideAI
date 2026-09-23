@@ -11,7 +11,7 @@ export const OnboardingAiPage: FC = () => {
       <div className="w-full max-w-lg space-y-5 rounded-2xl border border-border bg-card p-8 text-center">
         <h1 className="font-semibold text-3xl tracking-tight">智慧小财神</h1>
         <p className="text-muted-foreground">
-          大模型已由 BrowserOS Server 统一配置，无需选择或添加服务提供商。
+          大模型已由 GensideAI 服务统一配置，无需选择或添加服务提供商。
         </p>
         <Button onClick={() => navigate('/home', { replace: true })}>
           开始使用

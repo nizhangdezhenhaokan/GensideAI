@@ -134,6 +134,29 @@ describe('hydrateChatProvider', () => {
     expect(result.request.provider).toBe('anthropic')
   })
 
+  it('routes a legacy BrowserOS provider id to the selected default model', async () => {
+    const result = await hydrateChatProvider(
+      request({ target: { type: 'browseros', providerId: 'browseros' } }),
+      lookup([
+        row({
+          id: 'browseros',
+          type: 'browseros',
+          modelId: 'browseros-auto',
+        }),
+        row({
+          id: 'qwen3-8-flash',
+          type: 'openai-compatible',
+          isDefault: true,
+        }),
+      ]),
+    )
+
+    expect(result.ok).toBe(true)
+    if (!result.ok) return
+    expect(result.request.target.providerId).toBe('qwen3-8-flash')
+    expect(result.request.provider).toBe('openai-compatible')
+  })
+
   // The row is the source of truth, so a client holding a copy from before an
   // edit does not get to override it.
   it('prefers the stored row over anything sent inline', async () => {
@@ -177,6 +200,21 @@ describe('hydrateChatProvider', () => {
       model: 'gpt-5.5',
       apiKey: 'sk-inline',
     })
+  })
+
+  it('refuses an inline legacy BrowserOS hosted configuration', async () => {
+    const result = await hydrateChatProvider(
+      request({
+        target: { type: 'browseros', providerId: 'browseros' },
+        provider: 'browseros',
+        model: 'browseros-auto',
+      }),
+      lookup([]),
+    )
+
+    expect(result.ok).toBe(false)
+    if (result.ok) return
+    expect(result.error).toMatch(/Legacy BrowserOS hosted provider/)
   })
 
   it('refuses a request that names nothing and has no selection', async () => {

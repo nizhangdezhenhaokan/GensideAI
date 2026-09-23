@@ -17,7 +17,7 @@ const sections = [
   {
     key: 'aboutYou' as const,
     title: 'Add more info about you',
-    description: 'Help BrowserOS understand who you are',
+    description: '帮助 GensideAI 更好地了解您',
   },
   {
     key: 'expectations' as const,
@@ -66,7 +66,7 @@ export const Personalize = () => {
           value={personalization}
           autoFocus
           onChange={setPersonalization}
-          placeholder="Tell BrowserOS about yourself..."
+          placeholder="告诉 GensideAI 您的偏好……"
           className="styled-scrollbar h-96 overflow-y-auto"
         />
         <p className="text-muted-foreground text-xs">

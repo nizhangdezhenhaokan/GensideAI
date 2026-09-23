@@ -129,7 +129,7 @@ export function productName(product: DiagnosticsSnapshot['product']): string {
 
 export function formatMemory(bytes: number | null): string {
   return bytes === null
-    ? 'Unavailable'
+    ? '不可用'
     : `${(bytes / 1024 ** 3).toFixed(1)} GiB`
 }
 
@@ -137,35 +137,35 @@ export function diagnosticSections(snapshot: DiagnosticsSnapshot) {
   const { versions, system, memory } = snapshot
   return [
     {
-      title: 'Versions',
+      title: '版本信息',
       rows: [
         ['BrowserOS', versions.browseros],
         ['Chromium', versions.chromium],
         [
-          snapshot.product === 'browseros-neo' ? 'MCP server' : 'Agent server',
+          snapshot.product === 'browseros-neo' ? 'MCP 服务器' : '智能体服务',
           versions.server,
         ],
-        ['App extension', versions.appExtension],
-        ['Bug Reporter extension', versions.reporterExtension],
+        ['应用扩展', versions.appExtension],
+        ['问题反馈扩展', versions.reporterExtension],
       ],
     },
     {
-      title: 'System',
+      title: '系统信息',
       rows: [
         [
-          'Operating system',
+          '操作系统',
           [system.os, system.osVersion].filter(Boolean).join(' ') || null,
         ],
-        ['Architecture', system.architecture],
-        ['Processor', system.processor],
-        ['Logical cores', system.logicalCores?.toString() ?? null],
+        ['系统架构', system.architecture],
+        ['处理器', system.processor],
+        ['逻辑核心数', system.logicalCores?.toString() ?? null],
       ],
     },
     {
-      title: 'Memory',
+      title: '内存',
       rows: [
-        ['Total system memory', formatMemory(memory.totalBytes)],
-        ['Available system memory', formatMemory(memory.availableBytes)],
+        ['系统总内存', formatMemory(memory.totalBytes)],
+        ['可用系统内存', formatMemory(memory.availableBytes)],
       ],
     },
   ]
@@ -174,16 +174,16 @@ export function diagnosticSections(snapshot: DiagnosticsSnapshot) {
 /** Plain text is also the canonical content for the copy button and support messages. */
 export function formatDiagnostics(snapshot: DiagnosticsSnapshot): string {
   return [
-    `${productName(snapshot.product)} diagnostics (v1)`,
-    `Collected at: ${snapshot.collectedAt}`,
+    `${productName(snapshot.product)} 诊断信息（v1）`,
+    `采集时间：${snapshot.collectedAt}`,
     ...diagnosticSections(snapshot).flatMap((section) => [
       '',
       section.title,
       ...section.rows.map(
-        ([label, value]) => `${label}: ${value ?? 'Unavailable'}`,
+        ([label, value]) => `${label}：${value ?? '不可用'}`,
       ),
     ]),
     '',
-    'Memory is a system-wide sample at collection time.',
+    '内存数据为采集时的系统范围采样值。',
   ].join('\n')
 }

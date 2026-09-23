@@ -1,6 +1,6 @@
 import { getAgentServerUrl } from '@/lib/browseros/helpers'
 import {
-  createDefaultBrowserOSProvider,
+  createDefaultQwenProvider,
   defaultProviderIdStorage,
 } from '@/lib/llm-providers/storage'
 import type { LlmProviderConfig } from '@/lib/llm-providers/types'
@@ -18,9 +18,7 @@ const resolveProvider = async (
   // its model and credentials are in the list that failed to load. Callers here
   // already catch and surface this.
   if (loaded === null) {
-    throw new Error(
-      'Cannot reach the BrowserOS server to load the selected provider',
-    )
+    throw new Error('无法连接到 GensideAI 服务，未能加载选定的模型提供商')
   }
 
   const providers = loaded
@@ -32,7 +30,7 @@ const resolveProvider = async (
     const provider = resolveChatProvider(providers, defaultProviderId)
     if (provider) return provider
   }
-  return createDefaultBrowserOSProvider()
+  return createDefaultQwenProvider()
 }
 
 interface RefinePromptResponse {

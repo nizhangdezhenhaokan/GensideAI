@@ -5,7 +5,7 @@ import type {
   ExecutionStepState,
 } from './types'
 
-const NUDGE_TOOL_NAMES = new Set(['suggest_schedule', 'suggest_app_connection'])
+const NUDGE_TOOL_NAMES = new Set(['suggest_schedule'])
 const TERMINAL_STEP_STATES = new Set<ExecutionStepState>([
   'output-available',
   'output-error',

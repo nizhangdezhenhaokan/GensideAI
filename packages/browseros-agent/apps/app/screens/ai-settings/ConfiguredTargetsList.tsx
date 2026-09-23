@@ -5,7 +5,7 @@ import {
   BRAND_MARKS,
 } from '@/components/agents/agent-brand-marks'
 import { InlineErrorAlert } from '@/components/agents/PageAlerts'
-import { BrowserOSIcon, ProviderIcon } from '@/lib/llm-providers/providerIcons'
+import { ProviderIcon } from '@/lib/llm-providers/providerIcons'
 import type { LlmProviderConfig } from '@/lib/llm-providers/types'
 import type { AcpAgent } from '@/modules/agents/acp-agent-types'
 import { ConfiguredTargetRow } from './ConfiguredTargetRow'
@@ -59,8 +59,10 @@ export const ConfiguredTargetsList: FC<ConfiguredTargetsListProps> = ({
       ) : null}
 
       <div className="divide-y divide-border overflow-hidden rounded-xl border border-border bg-card">
-        {providers.map((provider) => {
-          const isBuiltIn = provider.id === 'browseros'
+        {providers
+          .filter((provider) => provider.type !== 'browseros')
+          .map((provider) => {
+          const isBuiltIn = false
           const isTesting = testingProviderId === provider.id
           const actions = buildProviderActions({
             provider,
@@ -78,20 +80,14 @@ export const ConfiguredTargetsList: FC<ConfiguredTargetsListProps> = ({
               id={provider.id}
               name={provider.name}
               description={providerDescription(provider, isBuiltIn)}
-              icon={
-                isBuiltIn ? (
-                  <BrowserOSIcon size={20} />
-                ) : (
-                  <ProviderIcon type={provider.type} size={20} />
-                )
-              }
-              kind={isBuiltIn ? 'hosted' : 'model'}
+              icon={<ProviderIcon type={provider.type} size={20} />}
+              kind="model"
               isSelected={selectedProviderId === provider.id}
               busy={isTesting}
               actions={actions}
             />
           )
-        })}
+          })}
 
         {agents.map((agent) => {
           const Mark = BRAND_MARKS[agentBrandKey(agent) ?? '']

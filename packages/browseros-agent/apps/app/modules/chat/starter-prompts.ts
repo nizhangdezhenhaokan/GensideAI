@@ -49,7 +49,7 @@ const defaults: Record<ChatMode, StarterPrompt[]> = {
         'Go to https://dub.sh/browseros-launch in current tab. Find and click the upvote button',
     },
     {
-      display: 'Support BrowserOS on Github',
+      display: '查看开源项目',
       prompt:
         'Go to http://git.new/browseros in current tab and star the repository',
     },

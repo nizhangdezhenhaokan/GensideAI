@@ -39,7 +39,7 @@ describe('groupProviderOptions', () => {
     expect(groupProviderOptions(options)).toEqual([
       {
         key: 'llm',
-        label: 'BrowserOS 智能体与 LLM',
+        label: 'LLM',
         options: [options[0], options[1]],
       },
       {

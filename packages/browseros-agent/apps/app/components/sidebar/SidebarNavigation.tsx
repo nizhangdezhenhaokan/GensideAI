@@ -26,7 +26,7 @@ type NavItem = {
 const primaryNavItems: NavItem[] = [
   { name: '首页', to: '/home', icon: Home },
   {
-    name: '连接应用',
+    name: '连接 MCP',
     to: '/connect-apps',
     icon: PlugZap,
   },

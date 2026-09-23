@@ -31,7 +31,6 @@ export interface ChatRequestBrowserContext {
     url?: string
     title?: string
   }[]
-  enabledMcpServers?: string[]
   customMcpServers?: {
     name: string
     url?: string
@@ -58,7 +57,6 @@ export interface ChatRequestBodyParams {
   supportsImages?: boolean
   previousConversation?: ChatHistoryEntry[] | string
   historyMode?: 'local' | 'cloud'
-  declinedApps?: string[]
   selectedText?: string
   selectedTextSource?: {
     url: string
@@ -79,7 +77,6 @@ export const buildChatRequestBody = ({
   supportsImages,
   previousConversation,
   historyMode,
-  declinedApps,
   selectedText,
   selectedTextSource,
   isScheduledTask,
@@ -106,7 +103,6 @@ export const buildChatRequestBody = ({
   supportsReasoning: provider ? resolvesSupportsReasoning(provider) : undefined,
   previousConversation,
   historyMode,
-  declinedApps: declinedApps?.length ? declinedApps : undefined,
   selectedText,
   selectedTextSource,
   isScheduledTask,

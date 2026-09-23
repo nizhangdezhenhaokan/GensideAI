@@ -17,7 +17,7 @@ export function groupProviderOptions(
       ? [
           {
             key: 'llm' as const,
-            label: 'BrowserOS 智能体与 LLM',
+            label: 'LLM',
             options: llm,
           },
         ]

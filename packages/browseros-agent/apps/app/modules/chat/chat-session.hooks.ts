@@ -1,7 +1,6 @@
 import { useChat } from '@ai-sdk/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { DefaultChatTransport, type FileUIPart, type UIMessage } from 'ai'
-import { compact } from 'es-toolkit/array'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import useDeepCompareEffect from 'use-deep-compare-effect'
@@ -23,9 +22,6 @@ import {
   PROVIDER_SELECTED_EVENT,
 } from '@/lib/constants/analyticsEvents'
 import { formatConversationHistory } from '@/lib/conversations/formatConversationHistory'
-import { declinedAppsStorage } from '@/lib/declined-apps/storage'
-import { resolveChatProvider } from '@/lib/llm-providers/provider-runtime'
-import { createDefaultBrowserOSProvider } from '@/lib/llm-providers/storage'
 import type { ChatRequestBrowserContext } from '@/lib/messaging/server/buildChatRequestBody'
 import { track } from '@/lib/metrics/track'
 import { searchActionsStorage } from '@/lib/search-actions/searchActionsStorage'
@@ -39,7 +35,6 @@ import {
   fetchServerConversation,
   SERVER_CONVERSATIONS_QUERY_KEY,
 } from '@/modules/conversations/conversations.hooks'
-import { useInvalidateCredits } from '@/modules/credits/credits.hooks'
 import { useGraphqlQuery } from '@/modules/graphql/graphql-query.hooks'
 import { useChatRefs } from './chat-refs.hooks'
 import { GetConversationWithMessagesDocument } from './chat-session-document'
@@ -121,8 +116,6 @@ export type ChatOrigin = 'sidepanel' | 'newtab'
 
 export interface ChatSessionOptions {
   origin?: ChatOrigin
-  /** When false, messages are queued until integrations finish syncing. */
-  isIntegrationsSynced?: boolean
 }
 
 const NEWTAB_SYSTEM_PROMPT = `IMPORTANT: The user is chatting from the New Tab page. When performing browser actions, ALWAYS open content in a NEW TAB rather than navigating the current tab. The user's new tab page should remain accessible.`
@@ -138,12 +131,10 @@ const getUserSystemPrompt = (
 const buildRequestBrowserContext = ({
   activeTab,
   action,
-  enabledMcpServers,
   customMcpServers,
 }: {
   activeTab?: chrome.tabs.Tab
   action?: ChatAction
-  enabledMcpServers: Array<string | undefined>
   customMcpServers: {
     name: string
     url?: string
@@ -168,11 +159,6 @@ const buildRequestBrowserContext = ({
     }))
   }
 
-  const managedMcpServers = compact(enabledMcpServers)
-  if (managedMcpServers.length) {
-    browserContext.enabledMcpServers = managedMcpServers
-  }
-
   if (customMcpServers.length) {
     browserContext.customMcpServers = customMcpServers
   }
@@ -184,7 +170,6 @@ export const useChatSession = (options?: ChatSessionOptions) => {
   const {
     selectedLlmProviderRef,
     selectedChatTargetRef,
-    enabledMcpServersRef,
     enabledCustomServersRef,
     personalizationRef,
     chatTargets,
@@ -193,7 +178,6 @@ export const useChatSession = (options?: ChatSessionOptions) => {
     selectedLlmProvider,
     isLoadingProviders,
   } = useChatRefs()
-  const invalidateCredits = useInvalidateCredits()
   const queryClient = useQueryClient()
 
   // Incognito chats are never written to history or the cloud (#1189). Resolved
@@ -409,12 +393,9 @@ export const useChatSession = (options?: ChatSessionOptions) => {
       },
       prepareSendMessagesRequest: async ({ messages }) => {
         const target = selectedChatTargetRef.current
-        const fallbackProvider =
-          resolveChatProvider(
-            selectedLlmProviderRef.current
-              ? [selectedLlmProviderRef.current]
-              : [],
-          ) ?? createDefaultBrowserOSProvider()
+        // 提供商列表尚未加载完成时不伪造本地模型配置；省略 ID 后由服务端
+        // 读取已持久化的默认模型，避免误用旧 BrowserOS 托管模型。
+        const fallbackProvider = selectedLlmProviderRef.current ?? undefined
         // A contextual panel sends from its owning tab even if another tab
         // becomes active while provider/server preparation is awaiting I/O.
         const tabId =
@@ -431,18 +412,15 @@ export const useChatSession = (options?: ChatSessionOptions) => {
           ? (selectionMapRef.current[String(activeTab.id)] ?? null)
           : null
         const currentMode = modeRef.current
-        const enabledMcpServers = enabledMcpServersRef.current
         const customMcpServers = enabledCustomServersRef.current
         const lastUserMessage = getLastUserMessageText(messages)
         const action = textToActionRef.current.get(lastUserMessage)
         const requestBrowserContext = buildRequestBrowserContext({
           activeTab,
           action,
-          enabledMcpServers,
           customMcpServers,
         })
 
-        const declinedApps = await declinedAppsStorage.getValue()
         const historyMode = historyModeRef.current
         const previousMessages = messagesRef.current
         // In local mode the server owns history and loads it from SQLite, so
@@ -465,7 +443,6 @@ export const useChatSession = (options?: ChatSessionOptions) => {
           userWorkingDir: workingDirRef.current,
           previousConversation,
           historyMode,
-          declinedApps,
           attachments: getLastUserMessageFiles(messages).map((file) => ({
             mediaType: file.mediaType,
             data: file.url,
@@ -821,7 +798,6 @@ export const useChatSession = (options?: ChatSessionOptions) => {
         queryKey: [SERVER_CONVERSATIONS_QUERY_KEY],
       })
 
-    invalidateCredits()
   }, [status])
 
   // Save the in-flight conversation before it can be lost: on page hide (full
@@ -830,12 +806,6 @@ export const useChatSession = (options?: ChatSessionOptions) => {
   // interrupted cloud upload. The local server persists each turn during
   // /chat, so there is nothing left to buffer.
 
-  useEffect(() => {
-    if (chatError) invalidateCredits()
-  }, [chatError, invalidateCredits])
-
-  const isIntegrationsSynced = options?.isIntegrationsSynced ?? true
-  const isIntegrationsSyncedRef = useRef(isIntegrationsSynced)
   const pendingMessageRef = useRef<{
     text: string
     action?: ChatAction
@@ -897,11 +867,7 @@ export const useChatSession = (options?: ChatSessionOptions) => {
   )
 
   useEffect(() => {
-    isIntegrationsSyncedRef.current = isIntegrationsSynced
-  }, [isIntegrationsSynced])
-
-  useEffect(() => {
-    if (isIntegrationsSynced && agentServerUrl && pendingMessageRef.current) {
+    if (agentServerUrl && pendingMessageRef.current) {
       const pending = pendingMessageRef.current
       pendingMessageRef.current = null
       const { action } = pending
@@ -914,7 +880,7 @@ export const useChatSession = (options?: ChatSessionOptions) => {
       }
       dispatchMessage(pending.text, pending.files)
     }
-  }, [agentServerUrl, dispatchMessage, isIntegrationsSynced])
+  }, [agentServerUrl, dispatchMessage])
 
   const sendMessage = (params: {
     text: string
@@ -922,7 +888,7 @@ export const useChatSession = (options?: ChatSessionOptions) => {
     files?: FileUIPart[]
   }) => {
     if (isRestoringConversation || restoreError) return
-    if (!isIntegrationsSyncedRef.current || !agentUrlRef.current) {
+    if (!agentUrlRef.current) {
       pendingMessageRef.current = params
       return
     }
@@ -1069,7 +1035,7 @@ export const useChatSession = (options?: ChatSessionOptions) => {
     selectedProvider,
     isLoading: isLoadingProviders || isLoadingAgentUrl,
     canSend,
-    isSyncing: !isIntegrationsSynced,
+    isSyncing: false,
     isIncognito,
     isRestoringConversation,
     restoreError,

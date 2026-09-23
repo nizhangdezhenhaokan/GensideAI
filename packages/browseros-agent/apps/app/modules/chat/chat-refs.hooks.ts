@@ -4,32 +4,21 @@ import { type McpServer, useMcpServers } from '@/lib/mcp/mcpServerStorage'
 import { usePersonalization } from '@/lib/personalization/personalizationStorage'
 import { useChatTargetSelection } from './use-chat-target-selection'
 
-const constructMcpServers = (servers: McpServer[]) => {
-  return servers
-    .filter((eachServer) => eachServer.type === 'managed')
-    .map((each) => each.managedServerName)
-}
-
-const constructCustomServers = (servers: McpServer[]) => {
-  return servers
-    .filter((eachServer) => eachServer.type === 'custom')
-    .map((each) => ({
-      name: each.displayName,
-      url: each.config?.url,
-    }))
-}
+/** 将本地自定义服务转换为服务端 MCP 客户端需要的最小配置。 */
+const constructCustomServers = (servers: McpServer[]) =>
+  servers.map((server) => ({
+    name: server.displayName,
+    url: server.config.url,
+  }))
 
 export const useChatRefs = () => {
   const selection = useChatTargetSelection()
   const { servers: mcpServers } = useMcpServers()
   const { personalization } = usePersonalization()
-
-  const enabledMcpServersRef = useRef(constructMcpServers(mcpServers))
   const enabledCustomServersRef = useRef(constructCustomServers(mcpServers))
   const personalizationRef = useRef(personalization)
 
   useDeepCompareEffect(() => {
-    enabledMcpServersRef.current = constructMcpServers(mcpServers)
     enabledCustomServersRef.current = constructCustomServers(mcpServers)
   }, [mcpServers])
 
@@ -39,7 +28,6 @@ export const useChatRefs = () => {
 
   return {
     ...selection,
-    enabledMcpServersRef,
     enabledCustomServersRef,
     personalizationRef,
   }

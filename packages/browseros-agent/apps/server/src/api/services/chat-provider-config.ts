@@ -34,6 +34,31 @@ export type HydrationResult =
     }
   | { ok: false; error: string }
 
+/**
+ * 旧 BrowserOS 托管模型不再作为聊天回退。历史任务仍携带该 ID 时，
+ * 改为读取当前默认模型；若默认项同样是旧模型，则明确拒绝请求。
+ */
+async function resolveStoredProvider(
+  store: ChatProviderLookup,
+  namedId?: string,
+): Promise<ProviderRow | null> {
+  const namedRow = namedId ? await store.get(namedId) : null
+  const selectedRow = namedRow ?? (namedId ? null : await store.getDefault())
+
+  if (selectedRow?.kind !== 'llm' || selectedRow.type !== 'browseros') {
+    return selectedRow
+  }
+
+  if (!namedId) return null
+
+  const defaultRow = await store.getDefault()
+  if (defaultRow?.kind === 'llm' && defaultRow.type !== 'browseros') {
+    return defaultRow
+  }
+
+  return null
+}
+
 function toLlmConfig(
   row: ProviderRow,
 ): Partial<LLMConfig> & { model?: string } {
@@ -98,7 +123,7 @@ export async function hydrateChatProvider(
   }
 
   const namedId = request.target.providerId
-  const row = namedId ? await store.get(namedId) : await store.getDefault()
+  const row = await resolveStoredProvider(store, namedId)
 
   if (row && row.kind !== 'llm') {
     // Reached by naming an acp agent on the browseros path, or by having one
@@ -114,11 +139,20 @@ export async function hydrateChatProvider(
     ? { ...request, ...toLlmConfig(row) }
     : { ...request, providerId: namedId }
 
+  // 旧客户端可能仍携带 BrowserOS 托管模型的完整配置。该配置不能绕过
+  // 默认模型选择，否则在本地配置不可用时会重新访问已移除的托管回退。
+  if (hydrated.provider === 'browseros') {
+    return {
+      ok: false,
+      error: 'Legacy BrowserOS hosted provider is unavailable; select a default LLM provider',
+    }
+  }
+
   if (!hydrated.provider) {
     return {
       ok: false,
       error: namedId
-        ? `Unknown provider ${namedId}`
+        ? `Unknown or unavailable provider ${namedId}`
         : 'No provider given and none is selected',
     }
   }

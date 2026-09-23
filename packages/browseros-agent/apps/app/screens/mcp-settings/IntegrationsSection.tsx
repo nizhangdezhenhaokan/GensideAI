@@ -70,7 +70,7 @@ export const IntegrationsSection: FC<IntegrationsSectionProps> = ({
         <div className="space-y-1">
           <h2 className="font-semibold text-lg leading-tight">已连接智能体</h2>
           <p className="text-muted-foreground text-sm">
-            将 BrowserOS 添加为 AI 智能体中的 MCP 服务器，无需手动复制粘贴。
+            将 GensideAI 添加为 AI 智能体中的 MCP 服务器，无需手动复制粘贴。
           </p>
         </div>
         {detectedCount > 0 && (

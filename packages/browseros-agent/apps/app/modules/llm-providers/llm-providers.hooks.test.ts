@@ -82,7 +82,7 @@ mock.module('@/lib/browseros/prefs', () => ({
 
 mock.module('../../lib/llm-providers/storage', () => ({
   DEFAULT_PROVIDER_ID: 'browseros',
-  createDefaultBrowserOSProvider: createBrowserOSProvider,
+  createDefaultQwenProvider: createBrowserOSProvider,
   createDefaultProvidersConfig: () => [createBrowserOSProvider()],
   defaultProviderIdStorage: {
     getValue: async () => storageValues.get('local:default-provider-id'),

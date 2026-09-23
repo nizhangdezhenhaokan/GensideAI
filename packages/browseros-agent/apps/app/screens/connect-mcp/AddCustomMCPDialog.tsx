@@ -82,8 +82,8 @@ export const AddCustomMCPDialog: FC<AddCustomMCPDialogProps> = ({
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>添加自定义应用</DialogTitle>
-          <DialogDescription>配置自定义应用连接</DialogDescription>
+          <DialogTitle>添加自定义 MCP</DialogTitle>
+          <DialogDescription>配置自定义 MCP 连接</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -95,7 +95,7 @@ export const AddCustomMCPDialog: FC<AddCustomMCPDialogProps> = ({
                 <FormItem>
                   <FormLabel>服务器名称</FormLabel>
                   <FormControl>
-                    <Input placeholder="我的自定义应用" {...field} />
+                    <Input placeholder="我的自定义 MCP" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

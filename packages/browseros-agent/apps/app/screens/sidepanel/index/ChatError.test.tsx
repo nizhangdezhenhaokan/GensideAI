@@ -60,21 +60,6 @@ describe('ChatError legacy string handling', () => {
     expect(html).toContain('Try again')
   })
 
-  it('hides retry for credits-exhausted errors', () => {
-    const html = renderError(new Error('CREDITS_EXHAUSTED'))
-
-    expect(html).toContain('Daily credits exhausted')
-    expect(html).not.toContain('Try again')
-  })
-
-  it('hides retry for BrowserOS daily-limit errors', () => {
-    const html = renderError(
-      new Error('BrowserOS LLM daily limit reached for today'),
-    )
-
-    expect(html).toContain('Add your own API key')
-    expect(html).not.toContain('Try again')
-  })
 })
 
 describe('ChatError envelope handling', () => {
@@ -86,13 +71,12 @@ describe('ChatError envelope handling', () => {
         message: 'You have used all your BrowserOS credits.',
         retryable: false,
         provider: 'browseros',
-        docsUrl: '/app.html#/settings/usage',
       }),
     )
 
     expect(html).toContain('Daily limit reached')
     expect(html).toContain('You have used all your BrowserOS credits.')
-    expect(html).toContain('View Usage &amp; Billing')
+    expect(html).toContain('Open AI settings')
     expect(html).not.toContain('Try again')
   })
 
@@ -140,7 +124,7 @@ describe('ChatError envelope handling', () => {
 
     expect(html).not.toContain('Show details')
     expect(html).toContain('Full error')
-    expect(html).toContain('Copy')
+    expect(html).toContain('复制')
     expect(html).toContain('upstream said: connection reset by peer')
   })
 
@@ -185,7 +169,7 @@ describe('ChatError envelope handling', () => {
     // ...and the raw specifics the generic message hid are visible with copy.
     expect(html).not.toContain('Show details')
     expect(html).toContain('Full error')
-    expect(html).toContain('Copy')
+    expect(html).toContain('复制')
     expect(html).toContain('CREDITS_EXHAUSTED')
     expect(html).toContain('quota 0 of 100')
   })

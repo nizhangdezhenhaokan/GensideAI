@@ -271,6 +271,18 @@ export const ENV_REGISTRY: readonly EnvKeySpec[] = [
     },
   },
   {
+    key: 'QWEN_API_KEY',
+    section: 'server',
+    description:
+      'API key for the Qwen3.8 Flash provider created on a new BrowserOS profile.',
+    secret: true,
+    schema: stringSchema,
+    modes: {
+      development: { value: '', commented: true },
+      production: { value: '', commented: true },
+    },
+  },
+  {
     key: 'BROWSEROS_VLLM_BASE_URL',
     section: 'server',
     description:

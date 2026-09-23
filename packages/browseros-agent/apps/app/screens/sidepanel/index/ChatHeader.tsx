@@ -15,26 +15,10 @@ import SmartFinanceAvatar from '@/assets/smart-finance-avatar.png'
 import { BRAND_MARKS } from '@/components/agents/agent-brand-marks'
 import { ChatProviderSelector } from '@/components/chat/ChatProviderSelector'
 import type { Provider } from '@/components/chat/chatComponentTypes'
-import { CreditBadge } from '@/components/credits/CreditBadge'
 import { ThemeToggle } from '@/components/elements/theme-toggle'
-import { Feature } from '@/lib/browseros/capabilities'
 import { BrowserOSIcon, ProviderIcon } from '@/lib/llm-providers/providerIcons'
 import type { ProviderType } from '@/lib/llm-providers/types'
 import { cn } from '@/lib/utils'
-import { useCapabilities } from '@/modules/browseros/capabilities.hooks'
-import { useCredits } from '@/modules/credits/credits.hooks'
-
-const CreditsBadgeWrapper: FC = () => {
-  const { supports } = useCapabilities()
-  const { data } = useCredits()
-  if (!supports(Feature.CREDITS_SUPPORT) || data === undefined) return null
-  return (
-    <CreditBadge
-      credits={data.credits}
-      onClick={() => window.open('/app.html#/settings/usage', '_blank')}
-    />
-  )
-}
 
 export interface ChatHeaderProps {
   selectedProvider: Provider
@@ -122,7 +106,6 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
                   <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-data-[state=open]:rotate-180" />
                 </button>
               </ChatProviderSelector>
-              {selectedProvider.type === 'browseros' && <CreditsBadgeWrapper />}
             </>
           )}
         </div>

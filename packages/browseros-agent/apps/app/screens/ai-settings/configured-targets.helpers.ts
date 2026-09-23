@@ -7,7 +7,7 @@ export function providerDescription(
   provider: LlmProviderConfig,
   isBuiltIn: boolean,
 ): string {
-  if (isBuiltIn) return 'BrowserOS 托管模型，存在严格的速率限制'
+  if (isBuiltIn) return 'GensideAI 托管模型，存在严格的速率限制'
   return provider.baseUrl
     ? `${provider.modelId} · ${provider.baseUrl}`
     : provider.modelId

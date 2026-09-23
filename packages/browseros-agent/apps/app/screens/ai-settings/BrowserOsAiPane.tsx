@@ -86,7 +86,7 @@ export const BrowserOsAiPane: FC = () => {
 
   const handleTestProvider = async (provider: LlmProviderConfig) => {
     if (!agentServerUrl) {
-      toast.error('连接测试失败', { description: '暂时无法连接到 BrowserOS 服务。' })
+      toast.error('连接测试失败', { description: '暂时无法连接到 GensideAI 服务。' })
       return
     }
 
@@ -137,7 +137,7 @@ export const BrowserOsAiPane: FC = () => {
         {providersUnavailable ? (
           <Alert variant="destructive">
             <AlertDescription>
-              无法连接 BrowserOS 服务，暂时不能加载提供商列表。已保存的配置不会丢失。
+              无法连接 GensideAI 服务，暂时不能加载提供商列表。已保存的配置不会丢失。
             </AlertDescription>
           </Alert>
         ) : null}

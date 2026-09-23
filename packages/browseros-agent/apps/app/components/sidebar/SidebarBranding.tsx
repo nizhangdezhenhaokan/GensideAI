@@ -1,20 +1,9 @@
-import { ChevronDown, LogIn, LogOut, User } from 'lucide-react'
 import type { FC } from 'react'
-import { useNavigate } from 'react-router'
 import ProductLogo from '@/assets/product_logo.svg'
 import { ThemeToggle } from '@/components/elements/theme-toggle'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { useSessionInfo } from '@/lib/auth/sessionStorage'
 import { cn } from '@/lib/utils'
 import { useGraphqlQuery } from '@/modules/graphql/graphql-query.hooks'
-import { useWorkspace } from '@/modules/workspace/workspace.hooks'
 import { GetProfileByUserIdDocument } from '@/screens/profile/graphql/profileDocument'
 
 export interface SidebarBrandingProps {
@@ -24,9 +13,7 @@ export interface SidebarBrandingProps {
 export const SidebarBranding: FC<SidebarBrandingProps> = ({
   expanded = true,
 }) => {
-  const { selectedFolder } = useWorkspace()
   const { sessionInfo } = useSessionInfo()
-  const navigate = useNavigate()
 
   const user = sessionInfo?.user
   const isLoggedIn = !!user
@@ -68,87 +55,22 @@ export const SidebarBranding: FC<SidebarBrandingProps> = ({
       </div>
     )
   ) : (
-    <img src={ProductLogo} alt="BrowserOS" className="size-8" />
+    <img src={ProductLogo} alt="GensideAI" className="size-8" />
   )
 
   return (
     <div className="flex h-14 items-center justify-between border-b px-2">
-      <DropdownMenu modal={false}>
-        <DropdownMenuTrigger asChild>
-          <button
-            type="button"
-            className={cn(
-              'flex cursor-pointer items-center gap-2 rounded-lg p-1.5 text-left transition-colors hover:bg-sidebar-accent focus-visible:outline-none',
-              expanded ? 'pr-3' : '',
-            )}
-          >
-            {headerIcon}
-            <div
-              className={cn(
-                'flex min-w-0 flex-col gap-0.5 leading-none transition-opacity duration-200',
-                expanded ? 'opacity-100' : 'hidden',
-              )}
-            >
-              <div className="flex items-center gap-1">
-                <span className="truncate font-semibold">
-                  {isLoggedIn
-                    ? displayName
-                    : selectedFolder?.name || 'BrowserOS'}
-                </span>
-                <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" />
-              </div>
-              <span
-                className={cn(
-                  'truncate text-xs',
-                  isLoggedIn
-                    ? 'text-muted-foreground'
-                    : 'font-medium text-primary',
-                )}
-              >
-                {isLoggedIn ? '个人空间' : '登录'}
-              </span>
-            </div>
-          </button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          side={expanded ? 'bottom' : 'right'}
-          align="start"
-          className="w-56"
-        >
-          {isLoggedIn ? (
-            <>
-              <DropdownMenuLabel className="font-normal">
-                <div className="flex flex-col space-y-1">
-                  <p className="font-medium text-sm leading-none">
-                    {displayName}
-                  </p>
-                  <p className="text-muted-foreground text-xs leading-none">
-                    个人空间
-                  </p>
-                </div>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => navigate('/profile')}>
-                <User className="mr-2 size-4" />
-                更新个人资料
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => navigate('/logout')}
-                variant="destructive"
-              >
-                <LogOut className="mr-2 size-4" />
-                退出登录
-              </DropdownMenuItem>
-            </>
-          ) : (
-            <DropdownMenuItem onClick={() => navigate('/login')}>
-              <LogIn className="mr-2 size-4" />
-              登录
-            </DropdownMenuItem>
+      <div className="flex min-w-0 items-center gap-2 rounded-lg p-1.5">
+        {headerIcon}
+        <span
+          className={cn(
+            'truncate font-semibold transition-opacity duration-200',
+            expanded ? 'opacity-100' : 'hidden',
           )}
-        </DropdownMenuContent>
-      </DropdownMenu>
+        >
+          {isLoggedIn ? displayName : 'GensideAI'}
+        </span>
+      </div>
       <div
         className={cn(
           'shrink-0 transition-opacity duration-200',

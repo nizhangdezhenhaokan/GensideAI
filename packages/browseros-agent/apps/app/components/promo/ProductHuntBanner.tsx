@@ -34,7 +34,7 @@ export const ProductHuntBannerCard: FC<{
         We&apos;re live on Product Hunt 🎉
       </p>
       <p className="text-muted-foreground text-xs">
-        BrowserOS neo just launched. Take a look and share your feedback.
+        发现一款新发布的开源 AI 浏览器，欢迎了解并分享反馈。
       </p>
     </div>
     <Button

@@ -19,16 +19,15 @@ export const BrowserClawPromoBannerCard: FC<{
   <div className="flex items-center gap-4 rounded-xl border border-border bg-card p-4 shadow-sm transition-all hover:shadow-md">
     <img
       src={BrowserClawLogo}
-      alt="BrowserOS neo"
+      alt="开源 AI 浏览器"
       className="h-10 w-10 shrink-0 rounded-lg"
     />
     <div className="min-w-0 flex-1">
       <p className="flex items-center gap-2 font-semibold text-sm">
-        Meet BrowserOS neo — the browser for AI agents
+        探索另一款面向 AI 智能体的开源浏览器
       </p>
       <p className="text-muted-foreground text-xs">
-        A new product from the BrowserOS team — free, open source, and ready to
-        download
+        免费、开源，可前往项目网站了解详情并下载。
       </p>
     </div>
     <Button

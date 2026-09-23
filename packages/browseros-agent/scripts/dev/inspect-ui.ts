@@ -24,6 +24,7 @@ type CDPEvent = {
 class CDPClient {
   private ws!: WebSocket
   private nextId = 1
+  private eventHandlers = new Set<(event: CDPEvent) => void>()
   private pending = new Map<
     number,
     {
@@ -71,6 +72,10 @@ class CDPClient {
               entry.resolve(msg.result ?? {})
             }
           }
+        } else {
+          for (const handler of client.eventHandlers) {
+            handler(msg)
+          }
         }
       }
       client.ws.onclose = () => {
@@ -103,6 +108,12 @@ class CDPClient {
       if (sessionId) msg.sessionId = sessionId
       this.ws.send(JSON.stringify(msg))
     })
+  }
+
+  /** 订阅 CDP 事件，用于捕获页面刷新期间才会出现的运行时异常。 */
+  onEvent(handler: (event: CDPEvent) => void): () => void {
+    this.eventHandlers.add(handler)
+    return () => this.eventHandlers.delete(handler)
   }
 
   close() {
@@ -628,6 +639,96 @@ async function cmdEval(
   }
 }
 
+/** 刷新目标页面并收集运行时、控制台及网络加载错误。 */
+async function cmdRuntimeErrors(
+  cdp: CDPClient,
+  targetQuery: string,
+): Promise<void> {
+  const targets = await getTargets(cdp)
+  const target = resolveTarget(targets, targetQuery)
+  const sessionId = await attachSession(cdp, target.targetId)
+  const errors: string[] = []
+
+  const unsubscribe = cdp.onEvent((event) => {
+    if (event.sessionId !== sessionId) return
+
+    if (event.method === 'Runtime.exceptionThrown') {
+      const details = event.params?.exceptionDetails as
+        | {
+            text?: string
+            exception?: { description?: string }
+            url?: string
+            lineNumber?: number
+            columnNumber?: number
+          }
+        | undefined
+      errors.push(
+        `[Runtime] ${details?.exception?.description ?? details?.text ?? '未知异常'} ` +
+          `(${details?.url ?? '未知文件'}:${(details?.lineNumber ?? 0) + 1}:${(details?.columnNumber ?? 0) + 1})`,
+      )
+      return
+    }
+
+    if (event.method === 'Runtime.consoleAPICalled') {
+      const params = event.params as
+        | {
+            type?: string
+            args?: Array<{ value?: unknown; description?: string }>
+          }
+        | undefined
+      if (params?.type !== 'error' && params?.type !== 'warning') return
+      const message = (params.args ?? [])
+        .map((arg) =>
+          arg.value === undefined
+            ? (arg.description ?? '')
+            : typeof arg.value === 'string'
+              ? arg.value
+              : JSON.stringify(arg.value),
+        )
+        .join(' ')
+      errors.push(`[Console:${params.type}] ${message}`)
+      return
+    }
+
+    if (event.method === 'Log.entryAdded') {
+      const entry = event.params?.entry as
+        | { level?: string; text?: string; url?: string; lineNumber?: number }
+        | undefined
+      if (entry?.level === 'error' || entry?.level === 'warning') {
+        errors.push(
+          `[Log:${entry.level}] ${entry.text ?? ''} (${entry.url ?? '未知文件'}:${entry.lineNumber ?? 0})`,
+        )
+      }
+      return
+    }
+
+    if (event.method === 'Network.loadingFailed') {
+      const params = event.params as
+        | { errorText?: string; blockedReason?: string; type?: string }
+        | undefined
+      errors.push(
+        `[Network] ${params?.type ?? '请求'}：${params?.errorText ?? '加载失败'}` +
+          `${params?.blockedReason ? `，阻止原因：${params.blockedReason}` : ''}`,
+      )
+    }
+  })
+
+  try {
+    await enableDomains(cdp, sessionId, ['Runtime', 'Log', 'Network', 'Page'])
+    await cdp.send('Page.reload', { ignoreCache: true }, sessionId)
+    await new Promise((resolve) => setTimeout(resolve, 4000))
+
+    if (errors.length === 0) {
+      console.log('页面刷新期间未捕获到运行时或网络错误。')
+      return
+    }
+    console.log(errors.join('\n'))
+  } finally {
+    unsubscribe()
+    await detachSession(cdp, sessionId)
+  }
+}
+
 // ─── press_key ────────────────────────────────────────────────────────
 
 const KEY_MAP: Record<string, { code: string; keyCode: number | undefined }> = {
@@ -1067,6 +1168,7 @@ Commands:
   select_option <target> <id> <value>  Select dropdown option by value or text
   wait_for <target> text|selector <v>  Wait for text or CSS selector (timeout: 10s)
   eval <target> <expression>           Evaluate JS in target context
+  runtime-errors <target>              Reload and capture runtime/network errors
   open-sidepanel                       Open the BrowserOS agent side panel
 
 Target resolution:
@@ -1237,6 +1339,16 @@ async function main(): Promise<void> {
           process.exit(1)
         }
         await cmdEval(cdp, target, expression)
+        break
+      }
+
+      case 'runtime-errors': {
+        const target = args[1]
+        if (!target) {
+          console.error('Usage: runtime-errors <target>')
+          process.exit(1)
+        }
+        await cmdRuntimeErrors(cdp, target)
         break
       }
 

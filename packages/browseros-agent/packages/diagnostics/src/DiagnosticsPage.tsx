@@ -18,10 +18,8 @@ export function DiagnosticsPage() {
     setCopyFallback(false)
     try {
       setResult(await requestDiagnostics())
-    } catch (failure) {
-      setError(
-        failure instanceof Error ? failure.message : 'Diagnostics unavailable',
-      )
+    } catch {
+      setError('无法收集诊断信息，请刷新后重试。')
     } finally {
       setLoading(false)
     }
@@ -57,12 +55,12 @@ export function DiagnosticsPage() {
       aria-labelledby="diagnostics-title"
     >
       <p className="diagnostics-breadcrumb">
-        Help <span>/</span> Diagnostics
+        帮助 <span>/</span> 诊断信息
       </p>
       <div className="diagnostics-header">
         <div>
-          <h1 id="diagnostics-title">Diagnostics</h1>
-          <p>Version and system details to help us troubleshoot.</p>
+          <h1 id="diagnostics-title">诊断信息</h1>
+          <p>查看版本与系统详情，帮助排查问题。</p>
         </div>
         <div className="diagnostics-actions">
           <button
@@ -71,7 +69,7 @@ export function DiagnosticsPage() {
             disabled={loading}
           >
             <span aria-hidden="true">↻</span>{' '}
-            {loading ? 'Refreshing…' : 'Refresh'}
+            {loading ? '正在刷新…' : '刷新'}
           </button>
           <button
             type="button"
@@ -79,21 +77,21 @@ export function DiagnosticsPage() {
             onClick={copy}
             disabled={!result || loading}
           >
-            {copied ? 'Copied' : 'Copy diagnostics'}
+            {copied ? '已复制' : '复制诊断信息'}
           </button>
         </div>
       </div>
       <p className="diagnostics-timestamp" role="status">
         {result
-          ? `${result.cached ? 'Cached sample' : 'Collected'} · ${new Date(result.snapshot.collectedAt).toLocaleString()}`
+          ? `${result.cached ? '缓存记录' : '采集时间'} · ${new Date(result.snapshot.collectedAt).toLocaleString('zh-CN')}`
           : loading
-            ? 'Collecting diagnostics…'
-            : 'No sample available'}
+            ? '正在收集诊断信息…'
+            : '暂无可用记录'}
       </p>
       {error && (
         <p role="alert">
           {error}
-          {result ? ' Showing the previous sample.' : ''}
+          {result ? ' 当前显示的是上一次的记录。' : ''}
         </p>
       )}
       {result &&
@@ -105,13 +103,13 @@ export function DiagnosticsPage() {
           >
             <div className="diagnostics-section-heading">
               <h2>{section.title}</h2>
-              {section.title === 'Memory' && <span>At time of collection</span>}
+              {section.title === '内存' && <span>采集时的系统数据</span>}
             </div>
             <dl>
               {section.rows.map(([label, value]) => (
                 <div className="diagnostics-row" key={label}>
                   <dt>{label}</dt>
-                  <dd>{value ?? 'Unavailable'}</dd>
+                  <dd>{value ?? '不可用'}</dd>
                 </div>
               ))}
             </dl>
@@ -119,13 +117,12 @@ export function DiagnosticsPage() {
         ))}
       {result && (
         <p className="diagnostics-note">
-          Copy includes these details and the collection time. No browsing
-          history or account information.
+          复制内容仅包含以上诊断详情和采集时间，不包含浏览历史或账户信息。
         </p>
       )}
       {copyFallback && result && (
         <label className="diagnostics-fallback">
-          Clipboard unavailable. Select and copy these details:
+          剪贴板不可用，请选中后复制以下详情：
           <textarea
             readOnly
             value={formatDiagnostics(result.snapshot)}

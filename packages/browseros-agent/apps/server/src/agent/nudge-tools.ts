@@ -1,14 +1,7 @@
 import { type ToolSet, tool } from 'ai'
 import { z } from 'zod'
-import { getConnectorCatalog } from '../api/services/klavis'
 
-const appNames = getConnectorCatalog()
-  .map((server) => server.name)
-  .join(', ')
-
-// UI-control sentinel tools: the JSON text they return is intercepted by the chat UI to render
-// interactive cards (schedule / app-connection). They are not browser actions, so they live with
-// the agent rather than on the MCP browser surface.
+// UI 控制工具只返回结构化结果，由对话界面渲染为交互卡片。
 function sentinel(payload: Record<string, unknown>) {
   const text = JSON.stringify(payload)
   return {
@@ -17,6 +10,7 @@ function sentinel(payload: Record<string, unknown>) {
   }
 }
 
+/** 预置应用已移除，仅保留与应用连接无关的定时任务建议。 */
 export function buildNudgeToolSet(): ToolSet {
   return {
     suggest_schedule: tool({
@@ -46,32 +40,6 @@ export function buildNudgeToolSet(): ToolSet {
           suggestedName: args.suggestedName,
           scheduleType: args.scheduleType,
           scheduleTime: args.scheduleTime ?? '09:00',
-        }),
-      toModelOutput: ({ output }) => ({
-        type: 'text',
-        value:
-          (output as { content: { text?: string }[] }).content[0]?.text ?? '',
-      }),
-    }),
-    suggest_app_connection: tool({
-      description: `BLOCKING DECISION - Call when the user's request relates to a Connect Apps service but you don't have MCP tools for it. Your response must contain ONLY this tool call with zero text. The appName must be one of: ${appNames}.`,
-      inputSchema: z.object({
-        appName: z
-          .string()
-          .describe(
-            'The name of the app to connect (must match a supported app name exactly)',
-          ),
-        reason: z
-          .string()
-          .describe(
-            'A brief, user-friendly explanation of why connecting this app would help',
-          ),
-      }),
-      execute: async (args) =>
-        sentinel({
-          type: 'app_connection',
-          appName: args.appName,
-          reason: args.reason,
         }),
       toModelOutput: ({ output }) => ({
         type: 'text',

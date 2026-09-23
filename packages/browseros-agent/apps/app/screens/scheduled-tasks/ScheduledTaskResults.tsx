@@ -7,6 +7,7 @@ import {
   Loader2,
   RotateCcw,
   Square,
+  Trash2,
   XCircle,
 } from 'lucide-react'
 import type { FC } from 'react'
@@ -31,6 +32,7 @@ export interface ScheduledTaskResultsProps {
   onViewRun: (run: ScheduledJobRun) => void
   onCancelRun: (runId: string) => void
   onRetryRun: (jobId: string) => void
+  onDeleteRun: (runId: string) => void
 }
 
 const getStatusIcon = (status: JobRunWithDetails['status']) => {
@@ -57,6 +59,7 @@ export const ScheduledTaskResults: FC<ScheduledTaskResultsProps> = ({
   onViewRun,
   onCancelRun,
   onRetryRun,
+  onDeleteRun,
 }) => {
   const { jobRuns } = useScheduledJobRuns()
   const { jobs } = useScheduledJobs()
@@ -144,6 +147,20 @@ export const ScheduledTaskResults: FC<ScheduledTaskResultsProps> = ({
                 aria-label="重试运行"
               >
                 <RotateCcw className="h-3.5 w-3.5" />
+              </Button>
+            )}
+            {run.status !== 'running' && (
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onDeleteRun(run.id)
+                }}
+                className="shrink-0 text-muted-foreground hover:text-destructive"
+                aria-label="删除执行记录"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
               </Button>
             )}
           </div>

@@ -28,7 +28,7 @@ export const ShortcutsDialog = ({
             键盘快捷键
           </DialogTitle>
           <DialogDescription>
-            使用这些快捷键，更高效地操作 BrowserOS。
+            使用这些快捷键，更高效地操作 GensideAI。
           </DialogDescription>
         </DialogHeader>
 

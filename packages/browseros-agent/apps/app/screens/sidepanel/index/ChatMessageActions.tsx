@@ -84,7 +84,7 @@ export const ChatMessageActions: FC<ChatMessageActionsProps> = ({
             className="flex items-center gap-1 text-muted-foreground text-xs"
           >
             <CheckIcon className="size-3" />
-            <span>Feedback submitted</span>
+            <span>反馈已提交</span>
           </motion.div>
         ) : (
           <motion.div
@@ -96,9 +96,9 @@ export const ChatMessageActions: FC<ChatMessageActionsProps> = ({
             className="flex items-center gap-1"
           >
             <MessageAction
-              label="Like"
+              label="点赞"
               onClick={handleLike}
-              tooltip="Like this response"
+              tooltip="点赞此回答"
             >
               <ThumbsUpIcon
                 className="size-4"
@@ -106,9 +106,9 @@ export const ChatMessageActions: FC<ChatMessageActionsProps> = ({
               />
             </MessageAction>
             <MessageAction
-              label="Dislike"
+              label="点踩"
               onClick={handleDislikeClick}
-              tooltip="Dislike this response"
+              tooltip="点踩此回答"
             >
               <ThumbsDownIcon
                 className="size-4"
@@ -122,9 +122,9 @@ export const ChatMessageActions: FC<ChatMessageActionsProps> = ({
       <Dialog open={dislikeDialogOpen} onOpenChange={setDislikeDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>What went wrong?</DialogTitle>
+            <DialogTitle>此回答哪里不符合预期？</DialogTitle>
             <DialogDescription>
-              Help us improve by sharing what was wrong with this response.
+              请告诉我们此回答存在的问题，帮助我们持续改进。
             </DialogDescription>
           </DialogHeader>
           <Input

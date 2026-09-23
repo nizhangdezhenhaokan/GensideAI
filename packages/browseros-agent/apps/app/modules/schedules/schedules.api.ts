@@ -81,6 +81,15 @@ export async function putScheduledJobRun(run: ScheduledJobRun): Promise<void> {
   await bumpScheduleRevision()
 }
 
+export async function deleteScheduledJobRun(runId: string): Promise<void> {
+  const client = await runsClient()
+  const response = await client[':runId'].$delete({ param: { runId } })
+  if (!response.ok) {
+    throw new Error(`删除执行记录失败（HTTP ${response.status}）`)
+  }
+  await bumpScheduleRevision()
+}
+
 /**
  * Jobs for callers outside React, returning null when the server could not be
  * reached. The alarm runner uses this to tell "no jobs are due" apart from

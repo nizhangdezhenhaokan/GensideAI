@@ -25,7 +25,6 @@ import type { Provider } from '@/components/chat/chatComponentTypes'
 import { AppSelector } from '@/components/elements/AppSelector'
 import { TabPickerPopover } from '@/components/elements/tab-picker-popover'
 import { WorkspaceSelector } from '@/components/elements/workspace-selector'
-import { McpServerIcon } from '@/components/mcp/McpServerIcon'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { type StagedAttachment, stageAttachments } from '@/lib/attachments'
@@ -33,7 +32,6 @@ import { BrowserOSIcon, ProviderIcon } from '@/lib/llm-providers/providerIcons'
 import type { ProviderType } from '@/lib/llm-providers/types'
 import { useMcpServers } from '@/lib/mcp/mcpServerStorage'
 import { cn } from '@/lib/utils'
-import { useGetUserMCPIntegrations } from '@/modules/mcp/user-integrations.hooks'
 import { useWorkspace } from '@/modules/workspace/workspace.hooks'
 
 export interface ConversationInputSendInput {
@@ -146,14 +144,6 @@ function CalmContextControls({
 }) {
   const { selectedFolder } = useWorkspace()
   const { servers: mcpServers } = useMcpServers()
-  const { data: userMCPIntegrations } = useGetUserMCPIntegrations()
-
-  const connectedManagedServers = mcpServers.filter((server) => {
-    if (server.type !== 'managed' || !server.managedServerName) return false
-    return userMCPIntegrations?.integrations?.find(
-      (integration) => integration.name === server.managedServerName,
-    )?.is_authenticated
-  })
 
   return (
     <div className="mx-3 flex items-center gap-1 border-border/60 border-t border-dashed py-2">
@@ -242,21 +232,13 @@ function CalmContextControls({
           type="button"
           className="inline-flex h-6 items-center gap-1.5 rounded-full px-2.5 text-[11.5px] text-muted-foreground transition-colors hover:bg-accent hover:text-foreground data-[state=open]:bg-accent data-[state=open]:text-foreground"
         >
-          {connectedManagedServers.length > 0 ? (
-            <span className="flex items-center -space-x-1.5">
-              {connectedManagedServers.slice(0, 4).map((server) => (
-                <span key={server.id} className="rounded-full ring-2 ring-card">
-                  <McpServerIcon
-                    serverName={server.managedServerName ?? ''}
-                    size={12}
-                  />
-                </span>
-              ))}
-            </span>
-          ) : (
-            <FileText className="size-3" />
-          )}
+          <FileText className="size-3" />
           <span>应用</span>
+          {mcpServers.length > 0 && (
+            <span className="font-mono text-[10.5px] text-muted-foreground/70">
+              {mcpServers.length}
+            </span>
+          )}
           <ChevronDown className="size-3" />
         </button>
       </AppSelector>

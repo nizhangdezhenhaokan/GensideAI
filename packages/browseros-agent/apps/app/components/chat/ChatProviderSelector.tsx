@@ -42,10 +42,7 @@ export const ChatProviderSelector: FC<
       <PopoverTrigger asChild>{children}</PopoverTrigger>
       <PopoverContent side="bottom" align="start" className="w-64 p-0">
         <Command>
-          <CommandInput
-            placeholder="搜索服务提供方或智能体……"
-            className="h-9"
-          />
+          <CommandInput placeholder="搜索LLM服务提供方" className="h-9" />
           <CommandList>
             <CommandEmpty>未找到服务提供方</CommandEmpty>
             {groups.map((group) => (

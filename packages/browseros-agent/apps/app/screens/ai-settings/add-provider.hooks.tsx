@@ -208,7 +208,8 @@ export function useAddProvider(input: {
 
       setTemplateValues({
         type: template.id,
-        name: template.name,
+        // 自定义兼容接口的服务名称应由用户填写，不能预填为协议名称。
+        name: template.id === 'openai-compatible' ? '' : template.name,
         baseUrl: template.defaultBaseUrl,
         modelId: template.defaultModelId,
         supportsImages: template.supportsImages,
